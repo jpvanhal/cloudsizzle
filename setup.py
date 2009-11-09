@@ -13,6 +13,8 @@ setup(
     license = 'BSD',
     url = 'http://cloudsizzle.cs.hut.fi',
     description = 'Social study planner for Aalto University students',
-    install_requires = ['Django >= 1.1', 'Scrapy = 0.7'],
+    install_requires = ['Django >= 1.1', 'Scrapy == 0.7'],
+    setup_requires=['nose>=0.11'],
     packages = find_packages(),
+    test_suite = 'nose.collector'
 )

@@ -14,7 +14,14 @@ setup(
     url = 'http://cloudsizzle.cs.hut.fi',
     description = 'Social study planner for Aalto University students',
     install_requires = ['Django >= 1.1', 'Scrapy == 0.7'],
-    setup_requires=['nose>=0.11'],
     packages = find_packages(),
-    test_suite = 'nose.collector'
+    test_suite = 'cloudsizzle.tests.suite',
+    tests_require = [
+        'bitten',
+    ],
+    entry_points = {
+        'distutils.commands': [
+            'unittest = bitten.util.testrunner:unittest'
+        ],
+    }
 )

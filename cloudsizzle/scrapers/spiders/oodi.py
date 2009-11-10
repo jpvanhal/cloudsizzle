@@ -1,8 +1,8 @@
 from scrapy.http import Request, FormRequest
 from scrapy.spider import BaseSpider
 
-USERNAME = "jpvanhal"
-PASSWORD = "IcmCiJo3"
+USERNAME = "user"
+PASSWORD = "secret"
 
 class OodiSpider(BaseSpider):
     domain_name = 'oodi.tkk.fi'

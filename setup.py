@@ -10,7 +10,7 @@ setup(
     version = '0.1',
     author = '',
     author_email = '',
-    license = 'BSD',
+    license = 'MIT',
     url = 'http://cloudsizzle.cs.hut.fi',
     description = 'Social study planner for Aalto University students',
     install_requires = ['Django >= 1.1', 'Scrapy == 0.7'],

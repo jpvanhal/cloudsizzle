@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY cloudsizzle "http://cloudsizzle.cs.hut.fi#" >
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://cloudsizzle.cs.hut.fi#"
+     xml:base="http://cloudsizzle.cs.hut.fi"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:cloudsizzle="http://cloudsizzle.cs.hut.fi#">
+    <owl:Ontology rdf:about=""/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#hasCourse -->
+
+    <owl:ObjectProperty rdf:about="#hasCourse">
+        <rdfs:range rdf:resource="#Course"/>
+        <rdfs:domain rdf:resource="#Department"/>
+        <owl:inverseOf rdf:resource="#isMemberOfDepartment"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#hasDepartment -->
+
+    <owl:ObjectProperty rdf:about="#hasDepartment">
+        <rdfs:range rdf:resource="#Department"/>
+        <rdfs:domain rdf:resource="#Faculty"/>
+        <owl:inverseOf rdf:resource="#isMemberOfFaculty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#isMemberOfDepartment -->
+
+    <owl:ObjectProperty rdf:about="#isMemberOfDepartment">
+        <rdfs:domain rdf:resource="#Course"/>
+        <rdfs:range rdf:resource="#Department"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#isMemberOfFaculty -->
+
+    <owl:ObjectProperty rdf:about="#isMemberOfFaculty">
+        <rdfs:domain rdf:resource="#Department"/>
+        <rdfs:range rdf:resource="#Faculty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#code -->
+
+    <owl:DatatypeProperty rdf:about="#code">
+        <rdfs:domain rdf:resource="#Course"/>
+        <rdfs:domain rdf:resource="#Department"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#content -->
+
+    <owl:DatatypeProperty rdf:about="#content">
+        <rdfs:domain rdf:resource="#Course"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#extent -->
+
+    <owl:DatatypeProperty rdf:about="#extent">
+        <rdfs:domain rdf:resource="#Course"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#learningGoals -->
+
+    <owl:DatatypeProperty rdf:about="#learningGoals">
+        <rdfs:domain rdf:resource="#Course"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#name -->
+
+    <owl:DatatypeProperty rdf:about="#name">
+        <rdfs:domain rdf:resource="#Course"/>
+        <rdfs:domain rdf:resource="#Department"/>
+        <rdfs:domain rdf:resource="#Faculty"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#prerequisites -->
+
+    <owl:DatatypeProperty rdf:about="#prerequisites">
+        <rdfs:domain rdf:resource="#Course"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#studyMaterials -->
+
+    <owl:DatatypeProperty rdf:about="#studyMaterials">
+        <rdfs:domain rdf:resource="#Course"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#substitutesFor -->
+
+    <owl:DatatypeProperty rdf:about="#substitutesFor">
+        <rdfs:domain rdf:resource="#Course"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#teachingPeriod -->
+
+    <owl:DatatypeProperty rdf:about="#teachingPeriod">
+        <rdfs:domain rdf:resource="#Course"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#Course -->
+
+    <owl:Class rdf:about="#Course"/>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#Department -->
+
+    <owl:Class rdf:about="#Department">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#Faculty -->
+
+    <owl:Class rdf:about="#Faculty">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 2.2.1.1138) http://owlapi.sourceforge.net -->
+

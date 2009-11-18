@@ -34,26 +34,6 @@
     
 
 
-    <!-- http://cloudsizzle.cs.hut.fi#hasCourse -->
-
-    <owl:ObjectProperty rdf:about="#hasCourse">
-        <rdfs:range rdf:resource="#Course"/>
-        <rdfs:domain rdf:resource="#Department"/>
-        <owl:inverseOf rdf:resource="#isMemberOfDepartment"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://cloudsizzle.cs.hut.fi#hasDepartment -->
-
-    <owl:ObjectProperty rdf:about="#hasDepartment">
-        <rdfs:range rdf:resource="#Department"/>
-        <rdfs:domain rdf:resource="#Faculty"/>
-        <owl:inverseOf rdf:resource="#isMemberOfFaculty"/>
-    </owl:ObjectProperty>
-    
-
-
     <!-- http://cloudsizzle.cs.hut.fi#isMemberOfDepartment -->
 
     <owl:ObjectProperty rdf:about="#isMemberOfDepartment">
@@ -172,16 +152,26 @@
     
 
 
+    <!-- http://cloudsizzle.cs.hut.fi#Assistant -->
+
+    <owl:Class rdf:about="#Assistant">
+        <rdfs:subClassOf rdf:resource="#Person"/>
+    </owl:Class>
+    
+
+
     <!-- http://cloudsizzle.cs.hut.fi#Course -->
 
-    <owl:Class rdf:about="#Course"/>
+    <owl:Class rdf:about="#Course">
+        <rdfs:subClassOf rdf:resource="#Department"/>
+    </owl:Class>
     
 
 
     <!-- http://cloudsizzle.cs.hut.fi#Department -->
 
     <owl:Class rdf:about="#Department">
-        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:subClassOf rdf:resource="#Faculty"/>
     </owl:Class>
     
 
@@ -189,14 +179,36 @@
     <!-- http://cloudsizzle.cs.hut.fi#Faculty -->
 
     <owl:Class rdf:about="#Faculty">
-        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:subClassOf rdf:resource="#University"/>
     </owl:Class>
     
 
 
-    <!-- http://www.w3.org/2002/07/owl#Thing -->
+    <!-- http://cloudsizzle.cs.hut.fi#Person -->
 
-    <owl:Class rdf:about="&owl;Thing"/>
+    <owl:Class rdf:about="#Person"/>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#Student -->
+
+    <owl:Class rdf:about="#Student">
+        <rdfs:subClassOf rdf:resource="#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#Teacher -->
+
+    <owl:Class rdf:about="#Teacher">
+        <rdfs:subClassOf rdf:resource="#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi#University -->
+
+    <owl:Class rdf:about="#University"/>
 </rdf:RDF>
 
 

@@ -1,29 +1,57 @@
-from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.spider import BaseSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.contrib.loader import XPathItemLoader
-from scrapy.contrib.loader.processor import Compose, Join
 from scrapy.selector import HtmlXPathSelector
-from cloudsizzle.scrapers.items import CourseItem
+from scrapy.http import Request
+from scrapy.utils.url import urljoin_rfc
+from cloudsizzle.scrapers.items import ItemLoader, CourseItem, FacultyItem, DepartmentItem
 
-class CourseItemLoader(XPathItemLoader):
-    default_item_class = CourseItem
-    default_output_processor = Compose(Join(), unicode.strip)
-
-class NoppaSpider(CrawlSpider):
+class NoppaSpider(BaseSpider):
     domain_name = 'noppa.tkk.fi'
     start_urls = ['https://noppa.tkk.fi/noppa/kurssit']
 
-    rules = (
-        Rule(SgmlLinkExtractor(allow=(r'/noppa/kurssit/[a-z]+$', ))),
-        Rule(SgmlLinkExtractor(allow=(r'/noppa/kurssit/[a-z]+/[a-z0-9-]+$', )),
-             callback='parse_course_list'),
-        Rule(SgmlLinkExtractor(allow=(r'/noppa/kurssi/[a-z0-9-\.]+/esite', )),
-             callback='parse_course_overview'),
-    )
+    def parse_faculty_list(self, response):
+        """Parses list of faculties page in Noppa.
+
+        For each faculty in the page, yields a FacultyItem and a Request to
+        faculty's list of departments page in Noppa.
+
+        """
+        hxs = HtmlXPathSelector(response)
+        rows = hxs.select('//tr[starts-with(@id, "informal_")]')
+        for row in rows:
+            loader = ItemLoader(FacultyItem(), selector=row)
+            loader.add_xpath('name', 'td/a/text()')
+            faculty = loader.load_item()
+            department_url = row.select('td/a/@href').extract()[0]
+            yield faculty
+            yield Request(
+                urljoin_rfc(response.url, department_url),
+                lambda r: self.parse_department_list(r, faculty)
+            )
+
+    def parse_department_list(self, response, faculty):
+        hxs = HtmlXPathSelector(response)
+        rows = hxs.select('//tr[starts-with(@id, "informal_")]')
+        for row in rows:
+            loader = ItemLoader(DepartmentItem(), selector=row)
+            loader.add_value('faculty', faculty)
+            loader.add_xpath('code', 'td[1]/text()')
+            loader.add_xpath('name', 'td[2]/a/text()')
+            department = loader.load_item()
+            url = row.select('td[2]/a/@href').extract()[0]
+            yield department
+            yield Request(
+                urljoin_rfc(response.url, url), 
+                lambda r: self.parse_course_list(r, department)
+            )
 
     def parse_course_overview(self, response):
+        """Parses a course overview page and returns a CourseItem containing 
+        the parsed data.
+         
+        """
         hxs = HtmlXPathSelector(response)
-        loader = CourseItemLoader(
+        loader = ItemLoader(CourseItem(),
             selector=hxs.select('//table[contains(@class, "courseBrochure")]'))
 
         def build_xpath(*args):
@@ -56,5 +84,7 @@ class NoppaSpider(CrawlSpider):
             course['code'] = row.select('td[1]/text()')[0].extract().strip()
             course['name'] = row.select('td[2]/a/text()')[0].extract().strip()
             yield course
+
+    parse = parse_faculty_list
 
 SPIDER = NoppaSpider()

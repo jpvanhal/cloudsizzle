@@ -1,9 +1,10 @@
+# coding=utf8
 from scrapy.spider import BaseSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import HtmlXPathSelector
 from scrapy.http import Request
 from scrapy.utils.url import urljoin_rfc
-from cloudsizzle.scrapers.items import ItemLoader, CourseItem, FacultyItem, DepartmentItem
+from cloudsizzle.scrapers.items import *
 
 class NoppaSpider(BaseSpider):
     domain_name = 'noppa.tkk.fi'
@@ -34,7 +35,7 @@ class NoppaSpider(BaseSpider):
         rows = hxs.select('//tr[starts-with(@id, "informal_")]')
         for row in rows:
             loader = ItemLoader(DepartmentItem(), selector=row)
-            loader.add_value('faculty', faculty)
+            loader.item['faculty'] = faculty
             loader.add_xpath('code', 'td[1]/text()')
             loader.add_xpath('name', 'td[2]/a/text()')
             department = loader.load_item()
@@ -45,45 +46,88 @@ class NoppaSpider(BaseSpider):
                 lambda r: self.parse_course_list(r, department)
             )
 
-    def parse_course_overview(self, response):
+    def parse_course_frontpage(self, response, course):
+        overview_url = response.url.replace('/etusivu', '/esite')
+        yield Request(
+            overview_url, 
+            callback=lambda r: parse_course_overview(r, course)
+        )
+
+    def parse_course_overview(self, response, course):
         """Parses a course overview page and returns a CourseItem containing 
         the parsed data.
          
         """
         hxs = HtmlXPathSelector(response)
-        loader = ItemLoader(CourseItem(),
+        loader = ItemLoader(CourseOverviewItem(),
             selector=hxs.select('//table[contains(@class, "courseBrochure")]'))
 
         def build_xpath(*args):
             condition = ' or '.join(
                 'contains(text(), "{0}")'.format(header) for header in args)
-            xpath = 'tr/td[{0}]/following-sibling::td/node()'.format(condition)
+            xpath = 'tr/td[{0}]/following-sibling::td'.format(condition)
             return xpath
-
-        loader.add_value('code', self.parse_course_code_from_course_page(response))
-        loader.add_xpath('credits', build_xpath('Credits'), re=r'(\d+(?:-\d+)?)')
-        loader.add_xpath('teaching_period', build_xpath('Teaching period'))
-        loader.add_xpath('learning_outcomes', build_xpath('Learning outcomes'))
-        loader.add_xpath('content', build_xpath('Content'))
-        loader.add_xpath('prerequisites', build_xpath('Prerequisites'))
+        
+        loader.item['course'] = course
+        loader.add_xpath(
+            'credits', 
+            build_xpath(
+                'Credits', 
+                'Laajuus', 
+                'Omfattning'
+            ), 
+            re=r'(\d+(?:-\d+)?)'
+        )
+        loader.add_xpath(
+            'teaching_period', 
+            build_xpath(
+                'Teaching period', 
+                'Opetusjakso', 
+                'Undervisningsperiod'
+            )
+        )
+        loader.add_xpath(
+            'learning_outcomes', 
+            build_xpath(
+                'Learning outcomes', 
+                'Osaamistavoitteet', 
+                'Kompetensmålsättningar'
+            )
+        )
+        loader.add_xpath(
+            'content', 
+            build_xpath(
+                'Content', 
+                'Sisältö', 
+                'Innehåll'
+            )
+        )
+        loader.add_xpath(
+            'prerequisites', 
+            build_xpath(
+                'Prerequisites', 
+                'Esitiedot', 
+                'Förkunskaper'
+            )
+        )
         return loader.load_item()
 
-    def parse_course_code_from_course_page(self, response):
+    def parse_course_list(self, response, department):
         hxs = HtmlXPathSelector(response)
-        title = hxs.select('//title/text()').extract()[0]
-        course_code = title.split(' ')[0]
-        return course_code
-
-    def parse_course_list(self, response):
-        hxs = HtmlXPathSelector(response)
-        rows = hxs.select('//table[@id="courseTableView"]/tr')
-
-        # ignore header row and last empty row
-        for row in rows[1:-1]:
-            course = CourseItem()
-            course['code'] = row.select('td[1]/text()')[0].extract().strip()
-            course['name'] = row.select('td[2]/a/text()')[0].extract().strip()
+        rows = hxs.select('//tr[starts-with(@id, "informal_")]')
+        for row in rows:
+            loader = ItemLoader(CourseItem(), selector=row)
+            loader.item['department'] = department
+            loader.add_xpath('code', 'td[1]/text()')
+            loader.add_xpath('name', 'td[2]/a/text()')
+            course = loader.load_item()
+            course_url = row.select('td[2]/a/@href').extract()[0]
             yield course
+            yield Request(
+               urljoin_rfc(response.url, course_url), 
+                lambda r: self.parse_course_frontpage(r, course)
+            )
+        
 
     parse = parse_faculty_list
 

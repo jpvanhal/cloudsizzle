@@ -15,7 +15,7 @@ class FacultyItem(Item):
 class DepartmentItem(Item):
     code = Field()
     name = Field()
-    faculty = Field(input_processor=Identity(), output_processor=Identity())
+    faculty = Field()
 
 class CourseItem(Item):
     code = Field()

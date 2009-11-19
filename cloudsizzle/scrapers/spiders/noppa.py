@@ -50,7 +50,7 @@ class NoppaSpider(BaseSpider):
         overview_url = response.url.replace('/etusivu', '/esite')
         yield Request(
             overview_url,
-            callback=lambda r: parse_course_overview(r, course)
+            callback=lambda r: self.parse_course_overview(r, course)
         )
 
     def parse_course_overview(self, response, course):

@@ -1,90 +1,169 @@
 # coding=utf8
 import unittest
 
+from scrapy.http import Request
 from cloudsizzle.scrapers.items import CourseItem, FacultyItem, DepartmentItem, CourseOverviewItem
 from cloudsizzle.scrapers.spiders.noppa import SPIDER
 from cloudsizzle.scrapers.tests.mock import MockResponse
 
-class NoppaSpiderTestCase(unittest.TestCase):
-    def test_parse_faculties(self):
+class ParseFaculties(unittest.TestCase):
+    def __init__(self, methodName='runTest'):
+        unittest.TestCase.__init__(self, methodName)
         response = MockResponse(
             'https://noppa.tkk.fi/noppa/kurssit',
             'faculty_list.html'
         )
         returned = list(SPIDER.parse_faculty_list(response))
-        faculties = returned[::2]
-        requests = returned[1::2]
+        self.faculties = returned[::2]
+        self.requests = returned[1::2]
 
-        self.assertEqual(5, len(faculties))
-        self.assertEqual(u'Other separate courses', faculties[0]['name'])
+    def test_correct_number_of_faculties_scraped(self):
+        self.assertEqual(5, len(self.faculties))
+
+    def test_faculty_names_scraped(self):
+        self.assertEqual(u'Other separate courses', self.faculties[0]['name'])
         self.assertEqual(u'Faculty of Chemistry and Materials Sciences',
-            faculties[4]['name'])
+            self.faculties[-1]['name'])
 
-    def test_parse_departments(self):
+    def test_requests_to_department_list_pages_generated(self):
+        self.assertTrue(isinstance(self.requests[0], Request))
+        self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/eri',
+            self.requests[0].url)
+        self.assertTrue(isinstance(self.requests[-1], Request))
+        self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/km',
+            self.requests[-1].url)
+
+class ParseDepartments(unittest.TestCase):
+    def __init__(self, methodName='runTest'):
+        unittest.TestCase.__init__(self, methodName)
         response = MockResponse(
             'https://noppa.tkk.fi/noppa/kurssit/il',
             'department_list.html'
         )
-        faculty = FacultyItem()
-        faculty['name'] = 'Faculty of Information and Natural Sciences'
-        returned = list(SPIDER.parse_department_list(response, faculty))
-        departments = returned[::2]
-        requests = returned[1::2]
-        
-        self.assertEqual(10, len(departments))
-        self.assertEqual(u'IL-0', departments[0]['code'])
-        self.assertEqual(u'Common courses for the faculty', departments[0]['name'])
-        self.assertEqual(u'T3090', departments[9]['code'])
-        self.assertEqual(u'Language Centre', departments[9]['name'])
+        self.faculty = FacultyItem()
+        self.faculty['name'] = 'Faculty of Information and Natural Sciences'
+        returned = list(SPIDER.parse_department_list(response, self.faculty))
+        self.departments = returned[::2]
+        self.requests = returned[1::2]
 
-    def test_parse_course_list(self):
+    def test_correct_number_of_departments_scraped(self):
+        self.assertEqual(10, len(self.departments))
+
+    def test_department_names_scraped(self):
+        self.assertEqual(u'Common courses for the faculty', self.departments[0]['name'])
+        self.assertEqual(u'Language Centre', self.departments[-1]['name'])
+
+    def test_department_codes_scraped(self):
+        self.assertEqual(u'IL-0', self.departments[0]['code'])
+        self.assertEqual(u'T3090', self.departments[-1]['code'])
+
+    def test_departments_have_faculty_set(self):
+        self.assertEqual(id(self.faculty), id(self.departments[0]['faculty']))
+
+    def test_requests_to_course_list_pages_generated(self):
+        self.assertTrue(isinstance(self.requests[0], Request))
+        self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/il/il-0',
+            self.requests[0].url)
+        self.assertTrue(isinstance(self.requests[-1], Request))
+        self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/il/t3090',
+            self.requests[-1].url)
+
+class ParseCourses(unittest.TestCase):
+    def __init__(self, methodName='runTest'):
+        unittest.TestCase.__init__(self, methodName)
         response = MockResponse(
             'https://noppa.tkk.fi/noppa/kurssit/il/t3050',
             'course_list.html'
         )
-        department = DepartmentItem()
-        department['name'] = 'Department of Computer Science and Engineering'
-        returned = list(SPIDER.parse_course_list(response, department))
-        courses = returned[::2]
-        requests = returned[1::2]
+        self.department = DepartmentItem()
+        self.department['name'] = u'Department of Computer Science and Engineering'
+        returned = list(SPIDER.parse_course_list(response, self.department))
+        self.courses = returned[::2]
+        self.requests = returned[1::2]
 
-        self.assertEqual(182, len(courses))
-        self.assertEqual(u'T-0.7050', courses[0]['code'])
-        self.assertEqual(u'T-93.6400', courses[-1]['code'])
+    def test_correct_number_of_courses_scraped(self):
+        self.assertEqual(182, len(self.courses))
+
+    def test_course_codes_scraped(self):
+        self.assertEqual(u'T-0.7050', self.courses[0]['code'])
+        self.assertEqual(u'T-93.6400', self.courses[-1]['code'])
+
+    def test_course_names_scraped(self):
         self.assertEqual(
             u'Introduction to Postgraduate Studies in Computer Science P',
-            courses[0]['name'])
-        self.assertEqual(u'Yksilölliset opinnot L', courses[-1]['name'],)
+            self.courses[0]['name'])
+        self.assertEqual(u'Yksilölliset opinnot L', self.courses[-1]['name'])
 
-    def test_parse_course_overview(self):
+    def test_courses_have_department_set(self):
+        self.assertEqual(id(self.department), id(self.courses[0]['department']))
+
+    def test_requests_to_course_front_page_generated(self):
+        self.assertTrue(isinstance(self.requests[0], Request))
+        self.assertEqual('https://noppa.tkk.fi/noppa/kurssi/t-0.7050/etusivu',
+            self.requests[0].url)
+        self.assertTrue(isinstance(self.requests[-1], Request))
+        self.assertEqual('https://noppa.tkk.fi/noppa/kurssi/t-93.6400/etusivu',
+            self.requests[-1].url)
+
+class ParseCourseOverview(unittest.TestCase):
+    def __init__(self, methodName='runTest'):
+        unittest.TestCase.__init__(self, methodName)
         response = MockResponse(
             'https://noppa.tkk.fi/noppa/kurssi/t-76.4115/esite',
             'course_overview.html'
         )
-        course = CourseItem()
-        course['code'] = 'T-76.4115'
-        course['name'] = 'Software Development Project I'
-        overview = SPIDER.parse_course_overview(response, course)
+        self.course = CourseItem()
+        self.course['code'] = 'T-76.4115'
+        self.course['name'] = 'Software Development Project I'
+        self.overview = SPIDER.parse_course_overview(response, self.course)
 
-        self.assertEqual(u'5-8', overview['credits'])
-        self.assertEqual(u'I-III', overview['teaching_period'])
+    def test_course_extent_scraped(self):
+        self.assertEqual(u'5-8', self.overview['extent'])
 
-        expected = u"You learn to apply in a practical software project " \
-                   u"computer science and software engineering methods and " \
-                   u"tools that have been taught on other courses. You " \
-                   u"learn to evaluate the practical utility of the "\
-                   u"different methods and tools in various situations. You " \
-                   u"learn to work as a software developer in a large group."
-        self.assertEqual(expected, overview['learning_outcomes'])
-        
-        expected = u"""Studying software engineering tools and practices in the context of a software development project done as a team for a real customer. The project includes project planning, requirements specification, technical design, coding, quality assurance, system delivery and producing documentation related to the previous activities. Course participants generally work in activities related to the technical implementation of the system."""
-        self.assertEqual(expected, overview['content'])
-        expected =  u"""T-76.3601 (mandatory), T-76.4602 (recommended), moderate programming skills"""
-        self.assertEqual(expected, overview['prerequisites'])
+    def test_teaching_period_scraped(self):
+        self.assertEqual(u'I-III', self.overview['teaching_period'])
+
+    def test_learning_outcomes_scraped(self):
+        expected = (
+            u"You learn to apply in a practical software project computer "
+            u"science and software engineering methods and tools that have "
+            u"been taught on other courses. You learn to evaluate the "
+            u"practical utility of the different methods and tools in various "
+            u"situations. You learn to work as a software developer in a large"
+            u" group.")
+        self.assertEqual(expected, self.overview['learning_outcomes'])
+
+    def test_course_content_scraped(self):
+        expected = (
+            u"Studying software engineering tools and practices in the context"
+            u" of a software development project done as a team for a real "
+            u"customer. The project includes project planning, requirements "
+            u"specification, technical design, coding, quality assurance, "
+            u"system delivery and producing documentation related to the "
+            u"previous activities. Course participants generally work in "
+            u"activities related to the technical implementation of the "
+            u"system.")
+        self.assertEqual(expected, self.overview['content'])
+
+    def test_prerequisites_scraped(self):
+        expected = (
+            u"T-76.3601 (mandatory), T-76.4602 (recommended), moderate "
+            u"programming skills")
+        self.assertEqual(expected, self.overview['prerequisites'])
+
+    def test_study_materials_scraped(self):
+        self.assertEqual(u"Instructions for the project work.",
+            self.overview['study_materials'])
+
+    def test_overview_has_course_reference_set(self):
+        self.assertEqual(id(self.course), id(self.overview['course']))
 
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(NoppaSpiderTestCase, 'test'))
+    suite.addTest(unittest.makeSuite(ParseFaculties, 'test'))
+    suite.addTest(unittest.makeSuite(ParseDepartments, 'test'))
+    suite.addTest(unittest.makeSuite(ParseCourses, 'test'))
+    suite.addTest(unittest.makeSuite(ParseCourseOverview, 'test'))
     return suite
 
 if __name__ == '__main__':

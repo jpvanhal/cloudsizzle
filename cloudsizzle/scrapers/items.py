@@ -24,18 +24,18 @@ class CourseItem(Item):
 
 class CourseOverviewItem(Item):
     course = Field()
-    credits = Field()
+    extent = Field()
     teaching_period = Field()
     learning_outcomes = Field()
     content = Field()
     prerequisites = Field()
+    study_materials = Field()
 
 class ItemLoader(XPathItemLoader):
     default_input_processor = MapCompose(
-        lambda text: replace_tags(text, ' '), 
-        remove_entities, 
+        lambda text: replace_tags(text, ' '),
+        remove_entities,
         unicode.strip,
         remove_extra_whitespace
     )
     default_output_processor = Join()
-

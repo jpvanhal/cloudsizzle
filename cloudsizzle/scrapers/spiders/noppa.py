@@ -42,74 +42,32 @@ class NoppaSpider(BaseSpider):
             url = row.select('td[2]/a/@href').extract()[0]
             yield department
             yield Request(
-                urljoin_rfc(response.url, url), 
+                urljoin_rfc(response.url, url),
                 lambda r: self.parse_course_list(r, department)
             )
 
     def parse_course_frontpage(self, response, course):
         overview_url = response.url.replace('/etusivu', '/esite')
         yield Request(
-            overview_url, 
+            overview_url,
             callback=lambda r: parse_course_overview(r, course)
         )
 
     def parse_course_overview(self, response, course):
-        """Parses a course overview page and returns a CourseItem containing 
+        """Parses a course overview page and returns a CourseItem containing
         the parsed data.
-         
+
         """
         hxs = HtmlXPathSelector(response)
-        loader = ItemLoader(CourseOverviewItem(),
-            selector=hxs.select('//table[contains(@class, "courseBrochure")]'))
-
-        def build_xpath(*args):
-            condition = ' or '.join(
-                'contains(text(), "{0}")'.format(header) for header in args)
-            xpath = 'tr/td[{0}]/following-sibling::td'.format(condition)
-            return xpath
-        
+        xpath = '//table[contains(@class, "courseBrochure")]'
+        loader = ItemLoader(CourseOverviewItem(), selector=hxs.select(xpath))
         loader.item['course'] = course
-        loader.add_xpath(
-            'credits', 
-            build_xpath(
-                'Credits', 
-                'Laajuus', 
-                'Omfattning'
-            ), 
-            re=r'(\d+(?:-\d+)?)'
-        )
-        loader.add_xpath(
-            'teaching_period', 
-            build_xpath(
-                'Teaching period', 
-                'Opetusjakso', 
-                'Undervisningsperiod'
-            )
-        )
-        loader.add_xpath(
-            'learning_outcomes', 
-            build_xpath(
-                'Learning outcomes', 
-                'Osaamistavoitteet', 
-                'Kompetensmålsättningar'
-            )
-        )
-        loader.add_xpath(
-            'content', 
-            build_xpath(
-                'Content', 
-                'Sisältö', 
-                'Innehåll'
-            )
-        )
-        loader.add_xpath(
-            'prerequisites', 
-            build_xpath(
-                'Prerequisites', 
-                'Esitiedot', 
-                'Förkunskaper'
-            )
-        )
+        loader.add_xpath('extent', 'tr[1]/td[2]', re=r'(\d+(?:-\d+)?)')
+        loader.add_xpath('teaching_period', 'tr[2]/td[2]')
+        loader.add_xpath('learning_outcomes', 'tr[3]/td[2]')
+        loader.add_xpath('content', 'tr[4]/td[2]')
+        loader.add_xpath('prerequisites', 'tr[5]/td[2]')
+        loader.add_xpath('study_materials', 'tr[11]/td[2]')
         return loader.load_item()
 
     def parse_course_list(self, response, department):
@@ -124,10 +82,9 @@ class NoppaSpider(BaseSpider):
             course_url = row.select('td[2]/a/@href').extract()[0]
             yield course
             yield Request(
-               urljoin_rfc(response.url, course_url), 
+               urljoin_rfc(response.url, course_url),
                 lambda r: self.parse_course_frontpage(r, course)
             )
-        
 
     parse = parse_faculty_list
 

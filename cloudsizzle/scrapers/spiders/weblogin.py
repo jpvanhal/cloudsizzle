@@ -2,40 +2,57 @@ from scrapy.spider import BaseSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.http import Request, FormRequest
 from scrapy.selector import HtmlXPathSelector
+from scrapy.conf import settings
 
 class WebloginSpider(BaseSpider):
+    """Logs into web services that use TKK's Weblogin system.
+
+    This class should not be instantiated directly, but extended by a spider
+    that needs to authenticate with Weblogin.
+
+    The user credentials that are used for logging in can be defined in
+    Scrapy's settings (see cloudsizzle.scrapers.settings) or passed in as
+    command line parameters when starting the spider. The settings are
+    TKK_WEBLOGIN_USERNAME for the username and TKK_WEBLOGIN_PASSWORD for the
+    password.
+
+    """
+    login_url = None
     extra_domain_names = ['weblogin.tkk.fi', 'idp.tkk.fi']
 
     def start_requests(self):
         self.log("Inititiating login procedure...")
-        yield Request(self.start_urls[0], callback=self.before_login,
+        if self.login_url is None:
+            raise Exception(
+                "You must set the login_url class attribute that is the url " \
+                "of the 'Login' link the user clicks.")
+        yield Request(self.login_url, callback=self.redirect_to_login_form,
             dont_filter=True)
 
-    def before_login(self, response):
+    def redirect_to_login_form(self, response):
         self.log("Clicking continue...")
-        return FormRequest.from_response(response, callback=self.login,
-            dont_filter=True)
-
-    def login(self, response):
-        self.log("Filling login form...")
-        USERNAME = raw_input("Username: ")
-        PASSWORD = raw_input("Password: ")
         return FormRequest.from_response(response,
-            formdata={'user': USERNAME, 'pass': PASSWORD},
-            callback=self.after_login, dont_filter=True)
+            callback=self.fill_login_form, dont_filter=True)
 
-    def after_login(self, response):
-        if "authentication failed" in response.body:
+    def fill_login_form(self, response):
+        self.log("Filling login form...")
+        formdata = {
+            'user': settings.get('TKK_WEBLOGIN_USERNAME'),
+            'pass': settings.get('TKK_WEBLOGIN_PASSWORD')
+        }
+        return FormRequest.from_response(response, formdata=formdata,
+            callback=self.check_authentication_result, dont_filter=True)
+
+    def check_authentication_result(self, response):
+        if "Authentication Failed." in response.body:
             self.log("Authentication failed!", "ERROR")
             return
         self.log("Authentication succesful!")
         self.log("Clicking continue again...")
-        return FormRequest.from_response(response, callback=self.after_login2,
+        return FormRequest.from_response(response, callback=self.finish_login,
             dont_filter=True)
 
-    def after_login2(self, response):
+    def finish_login(self, response):
         self.log("Clicking continue the third time....")
         return FormRequest.from_response(response, callback=self.parse,
             dont_filter=True)
-
-SPIDER = WebloginSpider()

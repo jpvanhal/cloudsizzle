@@ -13,10 +13,9 @@ from cloudsizzle.scrapers.utils import remove_extra_whitespace
 class DateField(Field):
     def __init__(self, date_format):
         def date_from_string(text):
-            return datetime.datetime.strptime(s, date_format).date()
+            return datetime.datetime.strptime(text, date_format).date()
         super(DateField, self).__init__(
-            output_processor=MapCompose(date_from_string)
-        )
+            output_processor=MapCompose(date_from_string))
 
 class FacultyItem(Item):
     name = Field()
@@ -48,6 +47,11 @@ class CompletedCourseItem(Item):
     grade = Field()
     date = DateField('%d.%m.%Y')
     teacher = Field()
+    module = Field()
+
+class ModuleItem(Item):
+    name = Field()
+    code = Field()
 
 class ItemLoader(XPathItemLoader):
     default_input_processor = MapCompose(

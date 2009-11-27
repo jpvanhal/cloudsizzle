@@ -4,4 +4,4 @@
 #
 #"T2090" rdf:type Department
 
-
+from kpwrapper import SIBConnection, Triple

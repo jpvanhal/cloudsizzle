@@ -1,10 +1,9 @@
 # coding=utf8
 from scrapy.spider import BaseSpider
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import HtmlXPathSelector
 from scrapy.http import Request
 from scrapy.utils.url import urljoin_rfc
-from cloudsizzle.scrapers.items import *
+from cloudsizzle.scrapers.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem, ItemLoader
 
 class NoppaSpider(BaseSpider):
     domain_name = 'noppa.tkk.fi'
@@ -27,15 +26,15 @@ class NoppaSpider(BaseSpider):
             yield faculty
             yield Request(
                 urljoin_rfc(response.url, department_url),
-                lambda r: self.parse_department_list(r, faculty)
+                meta={'faculty': faculty}, callback=self.parse_department_list
             )
 
-    def parse_department_list(self, response, faculty):
+    def parse_department_list(self, response):
         hxs = HtmlXPathSelector(response)
         rows = hxs.select('//tr[starts-with(@id, "informal_")]')
         for row in rows:
             loader = ItemLoader(DepartmentItem(), selector=row)
-            loader.item['faculty'] = faculty
+            loader.item['faculty'] = response.request.meta['faculty']
             loader.add_xpath('code', 'td[1]/text()')
             loader.add_xpath('name', 'td[2]/a/text()')
             department = loader.load_item()
@@ -43,17 +42,14 @@ class NoppaSpider(BaseSpider):
             yield department
             yield Request(
                 urljoin_rfc(response.url, url),
-                lambda r: self.parse_course_list(r, department)
+                meta={'department': department}, callback=self.parse_course_list
             )
 
-    def parse_course_frontpage(self, response, course):
+    def parse_course_frontpage(self, response):
         overview_url = response.url.replace('/etusivu', '/esite')
-        yield Request(
-            overview_url,
-            callback=lambda r: self.parse_course_overview(r, course)
-        )
+        yield response.request.replace(url=overview_url)
 
-    def parse_course_overview(self, response, course):
+    def parse_course_overview(self, response):
         """Parses a course overview page and returns a CourseItem containing
         the parsed data.
 
@@ -61,7 +57,7 @@ class NoppaSpider(BaseSpider):
         hxs = HtmlXPathSelector(response)
         xpath = '//table[contains(@class, "courseBrochure")]'
         loader = ItemLoader(CourseOverviewItem(), selector=hxs.select(xpath))
-        loader.item['course'] = course
+        loader.item['course'] = response.request.meta['course']
         loader.add_xpath('extent', 'tr[1]/td[2]', re=r'(\d+(?:-\d+)?)')
         loader.add_xpath('teaching_period', 'tr[2]/td[2]')
         loader.add_xpath('learning_outcomes', 'tr[3]/td[2]')
@@ -70,20 +66,20 @@ class NoppaSpider(BaseSpider):
         loader.add_xpath('study_materials', 'tr[11]/td[2]')
         return loader.load_item()
 
-    def parse_course_list(self, response, department):
+    def parse_course_list(self, response):
         hxs = HtmlXPathSelector(response)
         rows = hxs.select('//tr[starts-with(@id, "informal_")]')
         for row in rows:
             loader = ItemLoader(CourseItem(), selector=row)
-            loader.item['department'] = department
+            loader.item['department'] = response.request.meta['department']
             loader.add_xpath('code', 'td[1]/text()')
             loader.add_xpath('name', 'td[2]/a/text()')
             course = loader.load_item()
             course_url = row.select('td[2]/a/@href').extract()[0]
             yield course
             yield Request(
-               urljoin_rfc(response.url, course_url),
-                lambda r: self.parse_course_frontpage(r, course)
+                urljoin_rfc(response.url, course_url),
+                meta={'course': course}, callback=self.parse_course_frontpage
             )
 
     parse = parse_faculty_list

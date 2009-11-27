@@ -13,9 +13,9 @@ class ParseFaculties(unittest.TestCase):
             'https://noppa.tkk.fi/noppa/kurssit',
             'faculty_list.html'
         )
-        returned = list(SPIDER.parse_faculty_list(response))
-        self.faculties = returned[::2]
-        self.requests = returned[1::2]
+        items = list(SPIDER.parse_faculty_list(response))
+        self.faculties = [item for item in items if isinstance(item, FacultyItem)]
+        self.requests = [item for item in items if isinstance(item, Request)]
 
     def test_correct_number_of_faculties_scraped(self):
         self.assertEqual(5, len(self.faculties))
@@ -29,22 +29,26 @@ class ParseFaculties(unittest.TestCase):
         self.assertTrue(isinstance(self.requests[0], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/eri',
             self.requests[0].url)
+        self.assertEqual(id(self.faculties[0]), id(self.requests[0].meta['faculty']))
+
         self.assertTrue(isinstance(self.requests[-1], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/km',
             self.requests[-1].url)
+        self.assertEqual(id(self.faculties[-1]), id(self.requests[-1].meta['faculty']))
 
 class ParseDepartments(unittest.TestCase):
-    def __init__(self, methodName='runTest'):
-        unittest.TestCase.__init__(self, methodName)
-        response = MockResponse(
-            'https://noppa.tkk.fi/noppa/kurssit/il',
-            'department_list.html'
-        )
+    def setUp(self):
         self.faculty = FacultyItem()
         self.faculty['name'] = 'Faculty of Information and Natural Sciences'
-        returned = list(SPIDER.parse_department_list(response, self.faculty))
-        self.departments = returned[::2]
-        self.requests = returned[1::2]
+
+        response = MockResponse(
+            'https://noppa.tkk.fi/noppa/kurssit/il',
+            'department_list.html')
+        response.request.meta['faculty'] = self.faculty
+
+        items = list(SPIDER.parse_department_list(response))
+        self.departments = [item for item in items if isinstance(item, DepartmentItem)]
+        self.requests = [item for item in items if isinstance(item, Request)]
 
     def test_correct_number_of_departments_scraped(self):
         self.assertEqual(10, len(self.departments))
@@ -64,22 +68,25 @@ class ParseDepartments(unittest.TestCase):
         self.assertTrue(isinstance(self.requests[0], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/il/il-0',
             self.requests[0].url)
+        self.assertEqual(id(self.departments[0]), id(self.requests[0].meta['department']))
         self.assertTrue(isinstance(self.requests[-1], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/il/t3090',
             self.requests[-1].url)
+        self.assertEqual(id(self.departments[-1]), id(self.requests[-1].meta['department']))
 
 class ParseCourses(unittest.TestCase):
-    def __init__(self, methodName='runTest'):
-        unittest.TestCase.__init__(self, methodName)
-        response = MockResponse(
-            'https://noppa.tkk.fi/noppa/kurssit/il/t3050',
-            'course_list.html'
-        )
+    def setUp(self):
         self.department = DepartmentItem()
         self.department['name'] = u'Department of Computer Science and Engineering'
-        returned = list(SPIDER.parse_course_list(response, self.department))
-        self.courses = returned[::2]
-        self.requests = returned[1::2]
+
+        response = MockResponse(
+            'https://noppa.tkk.fi/noppa/kurssit/il/t3050',
+            'course_list.html')
+        response.request.meta['department'] = self.department
+
+        items = list(SPIDER.parse_course_list(response))
+        self.courses = [item for item in items if isinstance(item, CourseItem)]
+        self.requests = [item for item in items if isinstance(item, Request)]
 
     def test_correct_number_of_courses_scraped(self):
         self.assertEqual(182, len(self.courses))
@@ -101,21 +108,24 @@ class ParseCourses(unittest.TestCase):
         self.assertTrue(isinstance(self.requests[0], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssi/t-0.7050/etusivu',
             self.requests[0].url)
+        self.assertEqual(id(self.courses[0]), id(self.requests[0].meta['course']))
         self.assertTrue(isinstance(self.requests[-1], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssi/t-93.6400/etusivu',
             self.requests[-1].url)
+        self.assertEqual(id(self.courses[-1]), id(self.requests[-1].meta['course']))
 
 class ParseCourseOverview(unittest.TestCase):
-    def __init__(self, methodName='runTest'):
-        unittest.TestCase.__init__(self, methodName)
-        response = MockResponse(
-            'https://noppa.tkk.fi/noppa/kurssi/t-76.4115/esite',
-            'course_overview.html'
-        )
+    def setUp(self):
         self.course = CourseItem()
         self.course['code'] = 'T-76.4115'
         self.course['name'] = 'Software Development Project I'
-        self.overview = SPIDER.parse_course_overview(response, self.course)
+
+        response = MockResponse(
+            'https://noppa.tkk.fi/noppa/kurssi/t-76.4115/esite',
+            'course_overview.html')
+        response.request.meta['course'] = self.course
+
+        self.overview = SPIDER.parse_course_overview(response)
 
     def test_course_extent_scraped(self):
         self.assertEqual(u'5-8', self.overview['extent'])

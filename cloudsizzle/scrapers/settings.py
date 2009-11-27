@@ -17,3 +17,8 @@ SPIDER_MODULES = ['cloudsizzle.scrapers.spiders']
 NEWSPIDER_MODULE = 'cloudsizzle.scrapers.spiders'
 DEFAULT_ITEM_CLASS = 'cloudsizzle.items.CourseItem'
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
+
+ITEM_PIPELINES = [
+    'cloudsizzle.scrapers.pipelines.SIBPipeline',
+]
+

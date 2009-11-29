@@ -7,5 +7,4 @@ def index(request):
     results = sc.query(Triple(None, 'rdf:type', 'Course'))
     ret = [triple.object for triple in results]
     sc.close()
-
-    return HttpResponse(ret)
+    return HttpResponse("hello")

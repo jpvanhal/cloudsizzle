@@ -72,9 +72,9 @@
   <h3>Courses</h3>
   <div class="jj">
     <p><ul>
-    {% for course in course_list %}
-        <li>{{course.code}}</li>
-     {%endfor%}   
+    {% for c in courselist %}
+        <li>{{c.course_code}}</li>
+     {% endfor %}   
      </ul></p>
   </div>
   <h3 class="pr">Completed Courses </h3>

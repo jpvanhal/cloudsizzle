@@ -1,13 +1,10 @@
 # Create your views here.
 from django.http import HttpResponse
-from kpwrapper import SIBConnection, Triple
+from django.template import Context, loader
+from cloudsizzle.courselist.models import Course
 
 def index(request):
-    html = ""
-    with SIBConnection('SIB console', 'preconfigured') as sc:        
-        results = sc.query(Triple(None, 'rdf:type', 'Course'))
-        html = "<html><head><title>courselist</title></head><body><ul>"
-        for triple in results:
-            html += "<li>%s</li>" % triple.subject
-        html += "</ul></body></html>"
-    return HttpResponse(html)
+    course_list = Course.objects.all() 
+    t = loader.get_template('UI1.0.html')
+    c = Context({'courselist': course_list})
+    return HttpResponse(t.render(c))

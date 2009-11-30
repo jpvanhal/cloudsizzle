@@ -19,6 +19,8 @@ DEFAULT_ITEM_CLASS = 'cloudsizzle.items.CourseItem'
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 
 ITEM_PIPELINES = [
+    'cloudsizzle.scrapers.pipelines.UTF8Pipeline',
     'cloudsizzle.scrapers.pipelines.SIBPipeline',
 ]
 
+LOG_LEVEL = 'WARNING'

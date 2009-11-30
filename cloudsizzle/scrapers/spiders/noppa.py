@@ -47,7 +47,8 @@ class NoppaSpider(BaseSpider):
 
     def parse_course_frontpage(self, response):
         overview_url = response.url.replace('/etusivu', '/esite')
-        yield response.request.replace(url=overview_url)
+        yield response.request.replace(url=overview_url,
+            callback=self.parse_course_overview)
 
     def parse_course_overview(self, response):
         """Parses a course overview page and returns a CourseItem containing

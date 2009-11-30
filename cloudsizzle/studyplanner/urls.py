@@ -16,5 +16,5 @@ urlpatterns = patterns('',
     # (r'^admin/', include(admin.site.urls)),
     
     #courselist application for the first demonstration
-    (r'^courselist/$', 'cloudsizzle.courselist.views.index'),
+    (r'^courselist/$', 'studyplanner.courselist.views.index'),
 )

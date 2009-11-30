@@ -19,6 +19,10 @@ class ParseFaculties(unittest.TestCase):
     def test_correct_number_of_faculties_scraped(self):
         self.assertEqual(5, len(self.faculties))
 
+    def test_faculty_ids_scraped(self):
+        self.assertEqual(u'eri', self.faculties[0]['id'])
+        self.assertEqual(u'km', self.faculties[-1]['id'])
+
     def test_faculty_names_scraped(self):
         self.assertEqual(u'Other separate courses', self.faculties[0]['name'])
         self.assertEqual(u'Faculty of Chemistry and Materials Sciences',

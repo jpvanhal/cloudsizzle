@@ -1,6 +1,5 @@
 # coding=utf-8
 import unittest
-import mox
 from scrapy.item import Item, Field
 from cloudsizzle.scrapers.pipelines import UTF8Pipeline
 

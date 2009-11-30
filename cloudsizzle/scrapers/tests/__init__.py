@@ -1,10 +1,11 @@
 import unittest
-from cloudsizzle.scrapers.tests import noppa, oodi
+from cloudsizzle.scrapers.tests import pipelines
+from cloudsizzle.scrapers.spiders import tests as spiders
 
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(noppa.suite())
-    suite.addTest(oodi.suite())
+    suite.addTest(pipelines.suite())
+    suite.addTest(spiders.suite())
     return suite
 
 if __name__ == '__main__':

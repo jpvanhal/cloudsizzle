@@ -4,11 +4,10 @@ import unittest
 from scrapy.http import Request
 from cloudsizzle.scrapers.items import CourseItem, FacultyItem, DepartmentItem, CourseOverviewItem
 from cloudsizzle.scrapers.spiders.noppa import SPIDER
-from cloudsizzle.scrapers.tests.mock import MockResponse
+from cloudsizzle.scrapers.spiders.tests.mock import MockResponse
 
 class ParseFaculties(unittest.TestCase):
-    def __init__(self, methodName='runTest'):
-        unittest.TestCase.__init__(self, methodName)
+    def setUp(self):
         response = MockResponse(
             'https://noppa.tkk.fi/noppa/kurssit',
             'faculty_list.html'

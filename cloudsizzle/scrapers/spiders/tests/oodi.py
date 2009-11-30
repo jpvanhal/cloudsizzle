@@ -4,7 +4,7 @@ import unittest
 from scrapy.http import Request
 from cloudsizzle.scrapers.items import CourseItem, FacultyItem, DepartmentItem, CourseOverviewItem
 from cloudsizzle.scrapers.spiders.oodi import SPIDER
-from cloudsizzle.scrapers.tests.mock import MockResponse
+from cloudsizzle.scrapers.spiders.tests.mock import MockResponse
 
 class ParseCompletedStudies(unittest.TestCase):
     def setUp(self):

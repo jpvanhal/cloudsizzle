@@ -16,7 +16,7 @@ setup(
     install_requires = [
         'Django >= 1.1',
         'Scrapy == 0.7',
-        'kpwrapper >= 0.9',
+        'kpwrapper >= 0.9.2',
     ],
     packages = find_packages(),
     test_suite = 'cloudsizzle.tests.suite',

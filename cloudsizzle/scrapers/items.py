@@ -6,7 +6,7 @@ import datetime
 from scrapy.item import Item, Field
 from scrapy.contrib.loader.processor import Identity
 from scrapy.contrib.loader import XPathItemLoader
-from scrapy.contrib.loader.processor import MapCompose, Join, Identity
+from scrapy.contrib.loader.processor import Compose, MapCompose, Join, Identity, TakeFirst
 from scrapy.utils.markup import replace_tags, remove_entities
 from cloudsizzle.scrapers.utils import remove_extra_whitespace
 
@@ -15,7 +15,7 @@ class DateField(Field):
         def date_from_string(text):
             return datetime.datetime.strptime(text, date_format).date()
         super(DateField, self).__init__(
-            output_processor=MapCompose(date_from_string))
+            output_processor=Compose(TakeFirst(), date_from_string))
 
 class FacultyItem(Item):
     name = Field()

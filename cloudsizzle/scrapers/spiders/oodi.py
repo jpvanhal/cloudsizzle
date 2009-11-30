@@ -54,9 +54,9 @@ class OodiSpider(WebloginSpider):
             else:
                 loader = ItemLoader(CompletedCourseItem(), selector=row)
                 loader.add_xpath('code', 'td[1]/a/text()')
-                loader.add_xpath('name', 'td[1]/text()')
-                loader.add_xpath('cr', 'td[2]/text()')
-                loader.add_xpath('ocr', 'td[3]/text()')
+                loader.add_xpath('name', 'td[1]/text()[2]')
+                loader.add_xpath('cr', 'td[2]/b/text()')
+                loader.add_xpath('ocr', 'td[3]/b/text()')
                 loader.add_xpath('grade', 'td[4]/text()')
                 loader.add_xpath('date', 'td[5]/text()')
                 loader.add_xpath('teacher', 'td[6]/text()')

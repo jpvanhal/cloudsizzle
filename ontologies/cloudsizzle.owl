@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY asi "http://cloudsizzle.cs.hut.fi/asi.owl#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://cloudsizzle.cs.hut.fi/asi.owl#"
+     xml:base="http://cloudsizzle.cs.hut.fi/asi.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:asi="http://cloudsizzle.cs.hut.fi/asi.owl#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about=""/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#description -->
+
+    <owl:ObjectProperty rdf:about="#description">
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#displayvalue -->
+
+    <owl:ObjectProperty rdf:about="#displayvalue">
+        <rdfs:domain rdf:resource="#Female"/>
+        <rdfs:domain rdf:resource="#Male"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#email -->
+
+    <owl:ObjectProperty rdf:about="#email">
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#hasAddress -->
+
+    <owl:ObjectProperty rdf:about="#hasAddress">
+        <rdfs:range rdf:resource="#Address"/>
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#hasAvatar -->
+
+    <owl:ObjectProperty rdf:about="#hasAvatar">
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#hasCompletedCourse -->
+
+    <owl:ObjectProperty rdf:about="#hasCompletedCourse">
+        <rdfs:range rdf:resource="#Course"/>
+        <rdfs:domain rdf:resource="#Person"/>
+        <owl:propertyDisjointWith rdf:resource="#hasPlannedCourse"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#hasGender -->
+
+    <owl:ObjectProperty rdf:about="#hasGender">
+        <rdfs:range rdf:resource="#Female"/>
+        <rdfs:range rdf:resource="#Male"/>
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#hasPlannedCourse -->
+
+    <owl:ObjectProperty rdf:about="#hasPlannedCourse">
+        <rdfs:range rdf:resource="#Course"/>
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#irc_nick -->
+
+    <owl:ObjectProperty rdf:about="#irc_nick">
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#key -->
+
+    <owl:ObjectProperty rdf:about="#key">
+        <rdfs:domain rdf:resource="#Female"/>
+        <rdfs:domain rdf:resource="#Male"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#locality -->
+
+    <owl:ObjectProperty rdf:about="#locality">
+        <rdfs:domain rdf:resource="#Address"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#role -->
+
+    <owl:ObjectProperty rdf:about="#role">
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#status -->
+
+    <owl:ObjectProperty rdf:about="#status">
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#updated_at -->
+
+    <owl:ObjectProperty rdf:about="#updated_at">
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#username -->
+
+    <owl:ObjectProperty rdf:about="#username">
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#website -->
+
+    <owl:ObjectProperty rdf:about="#website">
+        <rdfs:domain rdf:resource="#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#Address -->
+
+    <owl:Class rdf:about="#Address"/>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#Course -->
+
+    <owl:Class rdf:about="#Course"/>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#Female -->
+
+    <owl:Class rdf:about="#Female">
+        <rdfs:subClassOf rdf:resource="#Person"/>
+        <owl:disjointWith rdf:resource="#Male"/>
+    </owl:Class>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#Male -->
+
+    <owl:Class rdf:about="#Male">
+        <rdfs:subClassOf rdf:resource="#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#Person -->
+
+    <owl:Class rdf:about="#Person"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 2.2.1.1138) http://owlapi.sourceforge.net -->
+

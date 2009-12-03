@@ -1,0 +1,537 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY noppa "http://noppa.tkk.fi/noppa.owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY asi "http://cos.alpha.sizl.org/asi.owl#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY asi2 "http://cloudsizzle.cs.hut.fi/asi.owl#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY asi_noppa "http://cloudsizzle.cs.hut.fi/asi_noppa.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://cloudsizzle.cs.hut.fi/asi_noppa.owl#"
+     xml:base="http://cloudsizzle.cs.hut.fi/asi_noppa.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:asi="http://cos.alpha.sizl.org/asi.owl#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:asi2="http://cloudsizzle.cs.hut.fi/asi.owl#"
+     xmlns:noppa="http://noppa.tkk.fi/noppa.owl#"
+     xmlns:asi_noppa="http://cloudsizzle.cs.hut.fi/asi_noppa.owl#">
+    <owl:Ontology rdf:about=""/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#address -->
+
+    <owl:ObjectProperty rdf:about="&asi2;address">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+        <rdfs:range rdf:resource="&asi;Address"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#avatar -->
+
+    <owl:ObjectProperty rdf:about="&asi2;avatar">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#description -->
+
+    <owl:ObjectProperty rdf:about="&asi2;description">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#email -->
+
+    <owl:ObjectProperty rdf:about="&asi2;email">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#hasGender -->
+
+    <owl:ObjectProperty rdf:about="&asi2;hasGender">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+        <rdfs:range rdf:resource="&asi;Gender"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#hasStatus -->
+
+    <owl:ObjectProperty rdf:about="&asi2;hasStatus">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+        <rdfs:domain rdf:resource="&asi;Avatar"/>
+        <rdfs:range rdf:resource="&asi;Status"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#irc_nick -->
+
+    <owl:ObjectProperty rdf:about="&asi2;irc_nick">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#role -->
+
+    <owl:ObjectProperty rdf:about="&asi2;role">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#updated_at -->
+
+    <owl:ObjectProperty rdf:about="&asi2;updated_at">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#username -->
+
+    <owl:ObjectProperty rdf:about="&asi2;username">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#website -->
+
+    <owl:ObjectProperty rdf:about="&asi2;website">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi_noppa.owl#completed_course -->
+
+    <owl:ObjectProperty rdf:about="#completed_course">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+        <rdfs:range rdf:resource="&noppa;Course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi_noppa.owl#planned_course -->
+
+    <owl:ObjectProperty rdf:about="#planned_course">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+        <rdfs:range rdf:resource="&noppa;Course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#app_id -->
+
+    <owl:ObjectProperty rdf:about="&asi;app_id">
+        <rdfs:domain rdf:resource="&asi;Session"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#birthdate -->
+
+    <owl:ObjectProperty rdf:about="&asi;birthdate">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#changed -->
+
+    <owl:ObjectProperty rdf:about="&asi;changed">
+        <rdfs:domain rdf:resource="&asi;Status"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#displayvalue -->
+
+    <owl:ObjectProperty rdf:about="&asi;displayvalue">
+        <rdfs:domain rdf:resource="&asi;Gender"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#family_name -->
+
+    <owl:ObjectProperty rdf:about="&asi;family_name">
+        <rdfs:domain rdf:resource="&asi;Name"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#given_name -->
+
+    <owl:ObjectProperty rdf:about="&asi;given_name">
+        <rdfs:domain rdf:resource="&asi;Name"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#hasAddress -->
+
+    <owl:ObjectProperty rdf:about="&asi;hasAddress">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+        <rdfs:range rdf:resource="&asi;Name"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#hasLink -->
+
+    <owl:ObjectProperty rdf:about="&asi;hasLink">
+        <rdfs:domain rdf:resource="&asi;Avatar"/>
+        <rdfs:range rdf:resource="&asi;Link"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#hasName -->
+
+    <owl:ObjectProperty rdf:about="&asi;hasName">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+        <rdfs:range rdf:resource="&asi;Name"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#hasPerson -->
+
+    <owl:ObjectProperty rdf:about="&asi;hasPerson">
+        <rdfs:range rdf:resource="&asi2;Person"/>
+        <rdfs:domain rdf:resource="&asi;Service"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#href -->
+
+    <owl:ObjectProperty rdf:about="&asi;href">
+        <rdfs:domain rdf:resource="&asi;Link"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#id -->
+
+    <owl:ObjectProperty rdf:about="&asi;id">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#is_association -->
+
+    <owl:ObjectProperty rdf:about="&asi;is_association">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#key -->
+
+    <owl:ObjectProperty rdf:about="&asi;key">
+        <rdfs:domain rdf:resource="&asi;Gender"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#locality -->
+
+    <owl:ObjectProperty rdf:about="&asi;locality">
+        <rdfs:domain rdf:resource="&asi;Address"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#message -->
+
+    <owl:ObjectProperty rdf:about="&asi;message">
+        <rdfs:domain rdf:resource="&asi;Status"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#msn_nick -->
+
+    <owl:ObjectProperty rdf:about="&asi;msn_nick">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#phone_number -->
+
+    <owl:ObjectProperty rdf:about="&asi;phone_number">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#postal_code -->
+
+    <owl:ObjectProperty rdf:about="&asi;postal_code">
+        <rdfs:domain rdf:resource="&asi;Address"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#rel -->
+
+    <owl:ObjectProperty rdf:about="&asi;rel">
+        <rdfs:domain rdf:resource="&asi;Link"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#session -->
+
+    <owl:ObjectProperty rdf:about="&asi;session">
+        <rdfs:domain rdf:resource="&asi;Service"/>
+        <rdfs:range rdf:resource="&asi;Session"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#status_message -->
+
+    <owl:ObjectProperty rdf:about="&asi;status_message">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#street_address -->
+
+    <owl:ObjectProperty rdf:about="&asi;street_address">
+        <rdfs:domain rdf:resource="&asi;Address"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#unstructured -->
+
+    <owl:ObjectProperty rdf:about="&asi;unstructured">
+        <rdfs:domain rdf:resource="&asi;Address"/>
+        <rdfs:domain rdf:resource="&asi;Name"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#updated_at -->
+
+    <owl:ObjectProperty rdf:about="&asi;updated_at">
+        <rdfs:domain rdf:resource="&asi2;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#user_id -->
+
+    <owl:ObjectProperty rdf:about="&asi;user_id">
+        <rdfs:domain rdf:resource="&asi;Session"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#content -->
+
+    <owl:ObjectProperty rdf:about="&noppa;content">
+        <rdfs:domain rdf:resource="&noppa;Course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#department -->
+
+    <owl:ObjectProperty rdf:about="&noppa;department">
+        <rdfs:domain rdf:resource="&noppa;Course"/>
+        <rdfs:range rdf:resource="&noppa;Department"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#extent -->
+
+    <owl:ObjectProperty rdf:about="&noppa;extent">
+        <rdfs:domain rdf:resource="&noppa;Course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#faculty -->
+
+    <owl:ObjectProperty rdf:about="&noppa;faculty">
+        <rdfs:domain rdf:resource="&noppa;Department"/>
+        <rdfs:range rdf:resource="&noppa;Faculty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#learning_outcomes -->
+
+    <owl:ObjectProperty rdf:about="&noppa;learning_outcomes">
+        <rdfs:domain rdf:resource="&noppa;Course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#name -->
+
+    <owl:ObjectProperty rdf:about="&noppa;name">
+        <rdfs:domain rdf:resource="&noppa;Course"/>
+        <rdfs:domain rdf:resource="&noppa;Department"/>
+        <rdfs:domain rdf:resource="&noppa;Faculty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#prerequisites -->
+
+    <owl:ObjectProperty rdf:about="&noppa;prerequisites">
+        <rdfs:range rdf:resource="&noppa;Course"/>
+        <rdfs:domain rdf:resource="&noppa;Course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#study_materials -->
+
+    <owl:ObjectProperty rdf:about="&noppa;study_materials">
+        <rdfs:domain rdf:resource="&noppa;Course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#teaching_period -->
+
+    <owl:ObjectProperty rdf:about="&noppa;teaching_period">
+        <rdfs:domain rdf:resource="&noppa;Course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://cloudsizzle.cs.hut.fi/asi.owl#Person -->
+
+    <owl:Class rdf:about="&asi2;Person"/>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#Address -->
+
+    <owl:Class rdf:about="&asi;Address"/>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#Avatar -->
+
+    <owl:Class rdf:about="&asi;Avatar"/>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#Gender -->
+
+    <owl:Class rdf:about="&asi;Gender"/>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#Link -->
+
+    <owl:Class rdf:about="&asi;Link"/>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#Name -->
+
+    <owl:Class rdf:about="&asi;Name"/>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#Service -->
+
+    <owl:Class rdf:about="&asi;Service"/>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#Session -->
+
+    <owl:Class rdf:about="&asi;Session">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#Status -->
+
+    <owl:Class rdf:about="&asi;Status"/>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#Course -->
+
+    <owl:Class rdf:about="&noppa;Course"/>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#Department -->
+
+    <owl:Class rdf:about="&noppa;Department"/>
+    
+
+
+    <!-- http://noppa.tkk.fi/noppa.owl#Faculty -->
+
+    <owl:Class rdf:about="&noppa;Faculty"/>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 2.2.1.1138) http://owlapi.sourceforge.net -->
+

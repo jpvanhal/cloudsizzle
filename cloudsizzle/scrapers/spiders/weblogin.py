@@ -1,8 +1,10 @@
+from getpass import getpass
 from scrapy.spider import BaseSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.http import Request, FormRequest
 from scrapy.selector import HtmlXPathSelector
 from scrapy.conf import settings
+from scrapy import log
 
 class WebloginSpider(BaseSpider):
     """Logs into web services that use TKK's Weblogin system.
@@ -36,16 +38,22 @@ class WebloginSpider(BaseSpider):
 
     def fill_login_form(self, response):
         self.log("Filling login form...")
+        username = settings['TKK_WEBLOGIN_USERNAME']
+        password = settings['TKK_WEBLOGIN_PASSWORD']
+        if not username:
+            username = raw_input('Username: ')
+        if not password:
+            password = getpass('Password: ')
         formdata = {
-            'user': settings.get('TKK_WEBLOGIN_USERNAME'),
-            'pass': settings.get('TKK_WEBLOGIN_PASSWORD')
+            'user': username,
+            'pass': password
         }
         return FormRequest.from_response(response, formdata=formdata,
             callback=self.check_authentication_result, dont_filter=True)
 
     def check_authentication_result(self, response):
         if "Authentication Failed." in response.body:
-            self.log("Authentication failed!", "ERROR")
+            self.log("Authentication failed!", level=log.ERROR)
             return
         self.log("Authentication succesful!")
         self.log("Clicking continue again...")

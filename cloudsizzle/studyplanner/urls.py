@@ -17,4 +17,7 @@ urlpatterns = patterns('',
     
     #courselist application for the first demonstration
     (r'^courselist/$', 'studyplanner.courselist.views.index'),
+    
+    #Login application, demo as well
+    (r'^session/$', 'studyplanner.session.views.index'),
 )

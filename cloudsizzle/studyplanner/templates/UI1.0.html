@@ -71,11 +71,9 @@
 <div id="tab01">
   <h3>Courses</h3>
   <div class="jj">
-    <p><ul>
-    {% for c in courselist %}
-        <li>{{c.course_code}}</li>
-     {% endfor %}   
-     </ul></p>
+  {% if list %}
+    <p>{{ list }}</p>
+  {% endif %}
   </div>
   <h3 class="pr">Completed Courses </h3>
   <div>

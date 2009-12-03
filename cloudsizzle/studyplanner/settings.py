@@ -79,5 +79,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'cloudsizzle.studyplanner.courselist',
+    'studyplanner.courselist',
+    'studyplanner.main',
 )

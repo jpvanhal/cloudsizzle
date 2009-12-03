@@ -40,6 +40,7 @@
 
     <owl:ObjectProperty rdf:about="&asi;address">
         <rdfs:domain rdf:resource="&asi;Person"/>
+        <rdfs:range rdf:resource="#Address"/>
     </owl:ObjectProperty>
     
 
@@ -127,6 +128,14 @@
     
 
 
+    <!-- http://cos.alpha.sizl.org/asi.owl#app_id -->
+
+    <owl:ObjectProperty rdf:about="#app_id">
+        <rdfs:domain rdf:resource="#Session"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://cos.alpha.sizl.org/asi.owl#birthdate -->
 
     <owl:ObjectProperty rdf:about="#birthdate">
@@ -190,6 +199,15 @@
     <owl:ObjectProperty rdf:about="#hasName">
         <rdfs:domain rdf:resource="&asi;Person"/>
         <rdfs:range rdf:resource="#Name"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#hasPerson -->
+
+    <owl:ObjectProperty rdf:about="#hasPerson">
+        <rdfs:range rdf:resource="&asi;Person"/>
+        <rdfs:domain rdf:resource="#Service"/>
     </owl:ObjectProperty>
     
 
@@ -274,6 +292,15 @@
     
 
 
+    <!-- http://cos.alpha.sizl.org/asi.owl#session -->
+
+    <owl:ObjectProperty rdf:about="#session">
+        <rdfs:domain rdf:resource="#Service"/>
+        <rdfs:range rdf:resource="#Session"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://cos.alpha.sizl.org/asi.owl#status_message -->
 
     <owl:ObjectProperty rdf:about="#status_message">
@@ -303,6 +330,14 @@
 
     <owl:ObjectProperty rdf:about="#updated_at">
         <rdfs:domain rdf:resource="&asi;Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#user_id -->
+
+    <owl:ObjectProperty rdf:about="#user_id">
+        <rdfs:domain rdf:resource="#Session"/>
     </owl:ObjectProperty>
     
 
@@ -354,9 +389,29 @@
     
 
 
+    <!-- http://cos.alpha.sizl.org/asi.owl#Service -->
+
+    <owl:Class rdf:about="#Service"/>
+    
+
+
+    <!-- http://cos.alpha.sizl.org/asi.owl#Session -->
+
+    <owl:Class rdf:about="#Session">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
     <!-- http://cos.alpha.sizl.org/asi.owl#Status -->
 
     <owl:Class rdf:about="#Status"/>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
 </rdf:RDF>
 
 

@@ -12,11 +12,12 @@ setup(
     author_email = '',
     license = 'MIT',
     url = 'http://cloudsizzle.cs.hut.fi',
-    description = 'Social study planner for Aalto University students',
+    description = 'Social study plan9er for Aalto University students',
     install_requires = [
         'Django >= 1.1',
         'Scrapy == 0.7',
         'kpwrapper >= 0.9.2',
+        'asi >= 0.9',
     ],
     packages = find_packages(),
     test_suite = 'cloudsizzle.tests.suite',

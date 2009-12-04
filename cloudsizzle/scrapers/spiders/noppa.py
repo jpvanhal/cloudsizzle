@@ -46,11 +46,6 @@ class NoppaSpider(BaseSpider):
                 meta={'department': department}, callback=self.parse_course_list
             )
 
-    def parse_course_frontpage(self, response):
-        overview_url = response.url.replace('/etusivu', '/esite')
-        yield response.request.replace(url=overview_url,
-            callback=self.parse_course_overview)
-
     def parse_course_overview(self, response):
         """Parses a course overview page and returns a CourseItem containing
         the parsed data.
@@ -80,8 +75,8 @@ class NoppaSpider(BaseSpider):
             course_url = row.select('td[2]/a/@href').extract()[0]
             yield course
             yield Request(
-                urljoin_rfc(response.url, course_url),
-                meta={'course': course}, callback=self.parse_course_frontpage
+                urljoin_rfc(response.url, course_url[:-7] + 'esite'),
+                meta={'course': course}, callback=self.parse_course_overview
             )
 
     parse = parse_faculty_list

@@ -1,0 +1,12 @@
+<h1>{{ course.code }} {{ course.name }}</h1>
+
+<table>
+    <tbody>
+        <tr><th>Extent</th><td>{% if course.extent %}{{ course.extent }} cr{% endif %}</td></tr>
+        <tr><th>Teaching period</th><td>{{ course.teaching_period }}</td></tr>
+        <tr><th>Learning outcomes</th><td>{{ course.learning_outcomes }}</td></tr>
+        <tr><th>Content</th><td>{{ course.content }}</td></tr>
+        <tr><th>Prerequisites</th><td>{{ course.prerequisites }}</td></tr>
+        <tr><th>Study materials</th><td>{{ course.study_materials }}</td></tr>
+    </tbody>
+</table>

@@ -2,6 +2,6 @@
 
 <ul>
 {% for course in courses %}
-    <li><a href="{% url course.views.show course.slug %}">{{course.code}} {{ course.name }}</a></li>
+    <li><a href="{{ department.slug }}/{{course.slug }}">{{course.code}} {{ course.name }}</a></li>
 {% endfor %}
 </ul>

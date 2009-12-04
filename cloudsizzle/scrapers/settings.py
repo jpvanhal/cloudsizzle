@@ -22,4 +22,4 @@ ITEM_PIPELINES = [
     'cloudsizzle.scrapers.pipelines.SIBPipeline',
 ]
 
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'INFO'

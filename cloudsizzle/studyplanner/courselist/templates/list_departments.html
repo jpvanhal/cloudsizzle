@@ -1,5 +1,10 @@
 <h1>{{ faculty.name }}</h1>
 
+<ul class="breadcrumbs">
+    <li><a href="{% url courselist.views.list_faculties %}">Courses by unit</a></li>
+    <li>{{ faculty.name }}</li>
+</ul>
+
 <ul>
 {% for department in departments %}
     <li><a href="{% url courselist.views.list_courses faculty.slug, department.slug %}">{{department.code}} {{ department.name }}</a></li>

@@ -21,4 +21,8 @@ def list_departments(request, faculty):
         'faculty': faculty, 'departments': departments})
 
 def show_course(request, faculty, department, course):
-    pass
+    faculty = Faculty.objects.get(slug=faculty)
+    department = Department.objects.get(slug=department)
+    course = Course.objects.get(slug=course)
+    return render_to_response('show_course.html', {
+        'faculty': faculty, 'department': department, 'course': course})

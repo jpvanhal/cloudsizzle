@@ -30,18 +30,23 @@ class LoginHandler(threading.Thread):
         })
 	
         with ASIConnection(**conf['asi_app_params']) as ac:
-            uid = ac.session['entry']['user_id']
-            debug_print( 'uid :'+ uid)
+            try:
+                if 'messages' in ac.session:
+                    debug_print(self.username+" authenticate failed "+ac.session['messages'])
+                    self.kp.insert(Triple(self.username, 'authenticate', 'failed')) 
+                    return
+                uid = ac.session['entry']['user_id']
+                debug_print( 'uid :'+ uid)
 
-        if uid != 'null' or uid != None:
-            debug_print( self.username + " logged in" )
-            self.kp.remove(Triple('users', 'login', self.username+" "+self.pw)) 
-            debug_print( self.username+ 'authenticate'+ 'succeed')
-            self.kp.remove(Triple(self.username, 'authenticate', 'succeed'))
-            self.kp.insert(Triple(self.username, 'authenticate', 'succeed')) 
+                if uid != 'null' or uid != None:
+                    debug_print( self.username + " logged in" )
+                    self.kp.remove(Triple('users', 'login', self.username+" "+self.pw)) 
+                    debug_print( self.username+ 'authenticate'+ 'succeed')
+                    self.kp.remove(Triple(self.username, 'authenticate', 'succeed'))
+                    self.kp.insert(Triple(self.username, 'authenticate', 'succeed')) 
 				
-        else:
-            debug_print(self.username+" authenticate failed")
-            self.kp.insert(Triple(self.username, 'authenticate', 'failed')) 
+            except Exception:
+                debug_print(self.username+" authenticate failed")
+                self.kp.insert(Triple(self.username, 'authenticate', 'failed')) 
 
 

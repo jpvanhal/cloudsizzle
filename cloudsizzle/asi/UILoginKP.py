@@ -23,7 +23,7 @@ class UIKP:
         self.sc = kpwrapper.SIBConnection('subscribe', method='preconfigured')
         self.sc1 = kpwrapper.SIBConnection('query', method='preconfigured')
         self.subscribe_result = None
-        self.callback = callback
+        self.call_back = callback
 
     def __del__(self):
         self.stop()
@@ -53,7 +53,7 @@ class UIKP:
                 debug_print("add "+ added[0].subject+added[0].predicate+added[0].object)
                 if added[0].predicate == 'authenticate':                   
                     self.sc1.remove(Triple(added[0].subject, added[0].predicate, added[0].object)) 
-                    self.callback(added[0].object)
+                    self.call_back(added[0].object)
                     self.stop()
                 else:
                    debug_print('not match')
@@ -71,5 +71,5 @@ class UIKP:
 if __name__ == '__main__':
     def callback(result):
         print result
-    UIKP(callback).Login('pang1 123456')     
+    UIKP(callback).Login('pang1 12345622')     
  

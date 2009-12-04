@@ -1,0 +1,7 @@
+<h1>Courses by unit</h1>
+
+<ul>
+{% for faculty in faculties %}
+    <li><a href="{% url courselist.views.list_departments faculty.slug %}">{{ faculty.name }}</a></li>
+{% endfor %}
+</ul>

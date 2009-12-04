@@ -22,7 +22,7 @@ class NoppaSpider(BaseSpider):
             loader = ItemLoader(FacultyItem(), selector=row)
             loader.add_xpath('name', 'td/a/text()')
             department_url = row.select('td/a/@href').extract()[0]
-            loader.add_value('id', department_url.split('/')[-1])
+            loader.add_value('code', department_url.split('/')[-1])
             faculty = loader.load_item()
             yield faculty
             yield Request(

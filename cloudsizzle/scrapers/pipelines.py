@@ -5,7 +5,7 @@
 # See: http://doc.scrapy.org/topics/item-pipeline.html
 
 from cloudsizzle.scrapers.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem
-from kpwrapper import SIBConnection, Triple, literal
+from kpwrapper import SIBConnection, Triple, literal, uri
 
 class UTF8Pipeline(object):
     def process_item(self, domain, item):
@@ -25,18 +25,18 @@ class SIBPipeline(object):
     def transform_to_triples(self, item):
         if isinstance(item, FacultyItem):
             return [
-                Triple(item['id'], 'rdf:type', 'Faculty'),
-                Triple(item['id'], 'name', item['name'])]
+                Triple(item['code'], 'rdf:type', 'Faculty'),
+                Triple(item['code'], 'name', item['name'])]
         elif isinstance(item, DepartmentItem):
             return [
                 Triple(item['code'], 'rdf:type', 'Department'),
                 Triple(item['code'], 'name', item['name']),
-                Triple(item['code'], 'faculty', item['faculty']['id'])]
+                Triple(item['code'], 'faculty', uri(item['faculty']['code']))]
         elif isinstance(item, CourseItem):
             return [
                 Triple(item['code'], 'rdf:type', 'Course'),
                 Triple(item['code'], 'name', item['name']),
-                Triple(item['code'], 'department', item['department']['code'])]
+                Triple(item['code'], 'department', uri(item['department']['code']))]
         elif isinstance(item, CourseOverviewItem):
             subject = item['course']['code']
             return [

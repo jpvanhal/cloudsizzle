@@ -1,0 +1,7 @@
+<h1>{{ department.name }}</h1>
+
+<ul>
+{% for course in courses %}
+    <li><a href="{% url course.views.show course.slug %}">{{course.code}} {{ course.name }}</a></li>
+{% endfor %}
+</ul>

@@ -18,7 +18,7 @@ class DateField(Field):
             output_processor=Compose(TakeFirst(), date_from_string))
 
 class FacultyItem(Item):
-    id = Field()
+    code = Field()
     name = Field()
 
 class DepartmentItem(Item):

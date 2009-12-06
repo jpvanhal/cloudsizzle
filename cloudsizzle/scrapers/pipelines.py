@@ -6,7 +6,7 @@
 
 from cloudsizzle.scrapers.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem
 from kpwrapper import SIBConnection, Triple, literal, uri
-from scrapy.conf import settings
+from cloudsizzle.scrapers.spiders.oodi import spider
 
 class UTF8Pipeline(object):
     def process_item(self, domain, item):
@@ -49,7 +49,7 @@ class SIBPipeline(object):
                 Triple(subject, 'study_materials', item['study_materials'])]
         elif isinstance(item, CompletedCourseItem):
             return [
-                Triple(settings['TKK_WEBLOGIN_USERNAME'], 'hasCompleted', item['code']),
+                Triple(spider.username, 'hasCompleted', item['code']),
                 Triple(item['code'], 'rdf:type', 'Course'),
                 Triple(item['code'], 'cr', item['cr']),
                 Triple(item['code'], 'name', item['name']),

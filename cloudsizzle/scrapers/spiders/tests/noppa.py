@@ -107,16 +107,6 @@ class ParseCourses(unittest.TestCase):
     def test_courses_have_department_set(self):
         self.assertEqual(id(self.department), id(self.courses[0]['department']))
 
-    def test_requests_to_course_front_page_generated(self):
-        self.assertTrue(isinstance(self.requests[0], Request))
-        self.assertEqual('https://noppa.tkk.fi/noppa/kurssi/t-0.7050/etusivu',
-            self.requests[0].url)
-        self.assertEqual(id(self.courses[0]), id(self.requests[0].meta['course']))
-        self.assertTrue(isinstance(self.requests[-1], Request))
-        self.assertEqual('https://noppa.tkk.fi/noppa/kurssi/t-93.6400/etusivu',
-            self.requests[-1].url)
-        self.assertEqual(id(self.courses[-1]), id(self.requests[-1].meta['course']))
-
 class ParseCourseOverview(unittest.TestCase):
     def setUp(self):
         self.course = CourseItem()

@@ -22,6 +22,9 @@ class WebloginSpider(BaseSpider):
     login_url = None
     extra_domain_names = ['weblogin.tkk.fi', 'idp.tkk.fi']
 
+    def __init__(self):
+        BaseSpider.__init__(self)
+
     def start_requests(self):
         self.log("Inititiating login procedure...")
         if self.login_url is None:
@@ -38,15 +41,15 @@ class WebloginSpider(BaseSpider):
 
     def fill_login_form(self, response):
         self.log("Filling login form...")
-        username = settings['TKK_WEBLOGIN_USERNAME']
-        password = settings['TKK_WEBLOGIN_PASSWORD']
-        if not username:
-            username = raw_input('Username: ')
-        if not password:
-            password = getpass('Password: ')
+        self.username = settings['TKK_WEBLOGIN_USERNAME']
+        if not self.username:
+            self.username = raw_input('Username: ')
+        self.password = settings['TKK_WEBLOGIN_PASSWORD']
+        if not self.password:
+            self.password = getpass('Password: ')
         formdata = {
-            'user': username,
-            'pass': password
+            'user': self.username,
+            'pass': self.password
         }
         return FormRequest.from_response(response, formdata=formdata,
             callback=self.check_authentication_result, dont_filter=True)

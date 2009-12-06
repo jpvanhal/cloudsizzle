@@ -1,0 +1,9 @@
+# Use this configuration file as a template for general settings file
+#
+# Procedure:
+#    1) Copy this file to cloudsizzle/settings.py
+#    2) Edit the file and fill in your settings.
+
+ASI_APP_NAME = ''       # Fill in your ASI application name here
+ASI_APP_PASSWORD = ''   # Fill in your ASI application password here
+ASI_BASE_URL = 'http://cos.alpha.sizl.org'

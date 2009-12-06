@@ -6,6 +6,7 @@
 
 from cloudsizzle.scrapers.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem
 from kpwrapper import SIBConnection, Triple, literal, uri
+from scrapy.conf import settings
 
 class UTF8Pipeline(object):
     def process_item(self, domain, item):
@@ -46,6 +47,22 @@ class SIBPipeline(object):
                 Triple(subject, 'content', item['content']),
                 Triple(subject, 'prerequisites', item['prerequisites']),
                 Triple(subject, 'study_materials', item['study_materials'])]
+        elif isinstance(item, CompletedCourseItem):
+            return [
+                Triple(settings['TKK_WEBLOGIN_USERNAME'], 'hasCompleted', item['code']),
+                Triple(item['code'], 'rdf:type', 'Course'),
+                Triple(item['code'], 'cr', item['cr']),
+                Triple(item['code'], 'name', item['name']),
+                Triple(item['code'], 'ocr', item['ocr']),
+                Triple(item['code'], 'grade', item['grade']),
+                Triple(item['code'], 'date', item['date']),
+                Triple(item['code'], 'teacher', item['teacher']),
+                Triple(item['code'], 'module', item['module'])]
+        elif isinstance(item,ModuleItem):
+            return [
+                Triple(item['code'], 'rdf:type', 'Module'),
+                Triple(item['code'], 'name', item['name'])]
+        elif isinstance
 
     def process_item(self, domain, item):
         triples = [triple for triple in self.transform_to_triples(item) if triple.object]

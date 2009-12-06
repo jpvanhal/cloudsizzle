@@ -4,9 +4,9 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/topics/item-pipeline.html
 
-from cloudsizzle.scrapers.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem
+from cloudsizzle.scrapers.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem, CompletedCourseItem, ModuleItem
 from kpwrapper import SIBConnection, Triple, literal, uri
-from cloudsizzle.scrapers.spiders.oodi import spider
+from scrapy.conf import settings
 
 class UTF8Pipeline(object):
     def process_item(self, domain, item):
@@ -22,6 +22,14 @@ class SIBPipeline(object):
 
     def __del__(self):
         self.sc.close()
+
+    @property
+    def asi_username(self):
+        if not hasattr(self, '_asi_username'):
+            self._asi_username = settings['ASI_USERNAME']
+            if not self._asi_username:
+                self._asi_username = raw_input('ASI Username: ')
+        return self._asi_username
 
     def transform_to_triples(self, item):
         if isinstance(item, FacultyItem):
@@ -49,20 +57,19 @@ class SIBPipeline(object):
                 Triple(subject, 'study_materials', item['study_materials'])]
         elif isinstance(item, CompletedCourseItem):
             return [
-                Triple(spider.username, 'hasCompleted', item['code']),
-                Triple(item['code'], 'rdf:type', 'Course'),
+                Triple(self.asi_username, 'hasCompleted', item['code']),
+                Triple(item['code'], 'rdf:type', 'CompletedCourse'),
                 Triple(item['code'], 'cr', item['cr']),
                 Triple(item['code'], 'name', item['name']),
                 Triple(item['code'], 'ocr', item['ocr']),
                 Triple(item['code'], 'grade', item['grade']),
                 Triple(item['code'], 'date', item['date']),
                 Triple(item['code'], 'teacher', item['teacher']),
-                Triple(item['code'], 'module', item['module'])]
+                Triple(item['code'], 'module', item['module']['code'])]
         elif isinstance(item,ModuleItem):
             return [
                 Triple(item['code'], 'rdf:type', 'Module'),
                 Triple(item['code'], 'name', item['name'])]
-        elif isinstance
 
     def process_item(self, domain, item):
         triples = [triple for triple in self.transform_to_triples(item) if triple.object]

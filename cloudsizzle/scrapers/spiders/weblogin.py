@@ -43,10 +43,10 @@ class WebloginSpider(BaseSpider):
         self.log("Filling login form...")
         self.username = settings['TKK_WEBLOGIN_USERNAME']
         if not self.username:
-            self.username = raw_input('Username: ')
+            self.username = raw_input('TKK Weblogin username: ')
         self.password = settings['TKK_WEBLOGIN_PASSWORD']
         if not self.password:
-            self.password = getpass('Password: ')
+            self.password = getpass('TKK Weblogin password: ')
         formdata = {
             'user': self.username,
             'pass': self.password

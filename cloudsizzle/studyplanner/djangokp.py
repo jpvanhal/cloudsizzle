@@ -45,17 +45,16 @@ with SIBConnection('SIB console', 'preconfigured') as sc:
         course.slug = course.code.lower()
         course.department = department_map[str(department_triple.object)]
         course.save()
-    
+
     completedcr = sc.query(Triple(None, 'has_completed', None))
-    for triple in completedcr:   
+    for triple in completedcr:
         username = triple.subject
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            user = User(username)
+            user = User(username=username)
             user.save()
         course = CompletedCourse()
         course.student = user
         populate_object(course, triple.object, ['code', 'name', 'cr', 'ocr', 'grade', 'date', 'teacher'])
         course.save()
-

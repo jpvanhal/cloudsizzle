@@ -1,8 +1,9 @@
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cloudsizzle.studyplanner.settings'
-
+from django.contrib.auth.models import User
 from kpwrapper import SIBConnection, Triple
 from courselist.models import Course, Faculty, Department
+from completedstudies.models import CompletedCourse
 
 def populate_object(obj, subject, allowed_predicates):
     try:
@@ -44,3 +45,17 @@ with SIBConnection('SIB console', 'preconfigured') as sc:
         course.slug = course.code.lower()
         course.department = department_map[str(department_triple.object)]
         course.save()
+    
+    completedcr = sc.query(Triple(None, 'has_completed', None))
+    for triple in completedcr:   
+        username = triple.subject
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user = User(username)
+            user.save()
+        course = CompletedCourse()
+        course.student = user
+        populate_object(course, triple.object, ['code', 'name', 'cr', 'ocr', 'grade', 'date', 'teacher'])
+        course.save()
+

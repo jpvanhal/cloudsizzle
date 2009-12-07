@@ -57,6 +57,7 @@ class SIBPipeline(object):
                 Triple(subject, 'study_materials', item['study_materials'])]
         elif isinstance(item, CompletedCourseItem):
             return [
+                Triple(self.asi_username, 'rdf:type', 'Person'),
                 Triple(self.asi_username, 'has_completed', bnode('id')),
                 Triple(bnode('id'), 'rdf:type', 'CompletedCourse'),
                 Triple(bnode('id'), 'code', item['code']),

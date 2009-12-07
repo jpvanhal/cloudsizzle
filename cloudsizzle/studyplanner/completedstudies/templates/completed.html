@@ -20,12 +20,12 @@
     <tbody>
     {% for c in courses %}
         <tr>
-            <td>{{ c.code }} {{ c.name }}</td>
-            <td>{% if c.cr %}{{ c.cr }}{% endif %}</td>
-            <td>{% if c.ocr %}{{ c.ocr }}{% endif %}</td>
-            <td>{{ c.grade }}</td>
-            <td>{{ c.date }}</td>
-            <td>{{ c.teacher }}</td>
+            <td>{{ c.code }} {{ c.name }}</td>
+            <td>{% if c.cr %}{{ c.cr }}{% endif %}</td>
+            <td>{% if c.ocr %}{{ c.ocr }}{% endif %}</td>
+            <td>{{ c.grade }}</td>
+            <td>{{ c.date }}</td>
+            <td>{{ c.teacher }}</td>
         </tr>
     {% endfor %}
     </tbody>

@@ -26,7 +26,9 @@
     <ul>
         <li><a href="/">Frontpage</a></li>
         <li><a href="{% url courselist.views.list_faculties %}">Courses</li>
-        <li><a href="">Users</a></li>
+    {% if user.is_authenticated %}
+        <li><a href="{% url completedstudies.views.index %}">Completed Studies</a></li>
+    {% endif %}
     </ul>
 </div>
 

@@ -1,4 +1,5 @@
 import threading
+from django.contrib.auth.models import User
 from kpwrapper import SIBConnection, Triple, bnode, uri, literal
 from cloudsizzle.utils import make_graph
 
@@ -39,10 +40,17 @@ class SIBBackend:
             handler = LoginResponseHandler(sc, request_id)
             handler.run()
             handler.lock.acquire()
-            print "User ID:", handler.user_id
+            login_valid = handler.user_id != "None"
+            if login_valid:
+                try:
+                    user = User.objects.get(username=username)
+                except User.DoesNotExist:
+                    user = User(username=username)
+                    user.save()
+                return user
 
-if __name__ == '__main__':
-    backend = SIBBackend()
-    for username, password in (('pang1', '12346'), ('foobar', '12346')):
-        print username, password
-        backend.authenticate(username, password)
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None

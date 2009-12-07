@@ -15,9 +15,12 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # (r'^admin/', include(admin.site.urls)),
 
+    url(r'^$', 'django.views.generic.simple.direct_to_template', {'template': 'frontpage.html'}, name='frontpage'),
+
     #courselist application for the first demonstration
-    (r'^courses/', include('courselist.urls')),
+    url(r'^courses/', include('courselist.urls')),
 
     #Login application, demo as well
-    #(r'^session/$', 'studyplanner.session.views.index'),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
 )

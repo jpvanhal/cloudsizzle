@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>CloudSizzle</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+</head>
+<body>
+
+<h1>CloudSizzle</h1>
+
+<div id="account-information">
+    <h2>Account information</h2>
+    <ul>
+    {% if user.is_authenticated %}
+        <li>Logged in as {{ user.username }}</li>
+        <li><a href="{% url logout %}">Logout</a></li>
+    {% else %}
+        <li><a href="{% url login %}">Login</a></li>
+        <li>Register</li>
+    {% endif %}
+    </ul>
+</div>
+
+<div id="navi">
+    <h2>Navigation</h2>
+    <ul>
+        <li><a href="/">Frontpage</a></li>
+        <li><a href="{% url courselist.views.list_faculties %}">Courses</li>
+        <li><a href="">Users</a></li>
+    </ul>
+</div>
+
+<div id="content">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

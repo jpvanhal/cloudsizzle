@@ -1,6 +1,10 @@
-<p>Hello!</p>
-{% if login %}
-<p>You are logged in as: {{ login }}</p>
-{% else %}
-<p>You are not logged in</p>
-{% endif %}
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<h2>Front page</h2>
+
+<p>Hello world!</p>
+
+{% endblock %}

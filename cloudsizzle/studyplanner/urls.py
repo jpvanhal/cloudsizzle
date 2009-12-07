@@ -19,6 +19,7 @@ urlpatterns = patterns('',
 
     #courselist application for the first demonstration
     url(r'^courses/', include('courselist.urls')),
+    url(r'^completed/', 'completedstudies.views.index'),
 
     #Login application, demo as well
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),

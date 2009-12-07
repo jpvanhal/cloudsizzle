@@ -1,4 +1,8 @@
-<h1>{{ course.code }} {{ course.name }}</h1>
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>{{ course.code }} {{ course.name }}</h2>
 
 <table>
     <tbody>
@@ -10,3 +14,5 @@
         <tr><th>Study materials</th><td>{{ course.study_materials }}</td></tr>
     </tbody>
 </table>
+
+{% endblock %}

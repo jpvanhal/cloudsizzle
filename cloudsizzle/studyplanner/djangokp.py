@@ -6,13 +6,10 @@ from courselist.models import Course, Faculty, Department
 from completedstudies.models import CompletedCourse
 
 def populate_object(obj, subject, allowed_predicates):
-    try:
-        triples = sc.query(Triple(subject, None, None))
-        for triple in triples:
-            if str(triple.predicate) in allowed_predicates:
-                setattr(obj, str(triple.predicate), unicode(triple.object))
-    except UnicodeError, e:
-        print e
+    triples = sc.query(Triple(subject, None, None))
+    for triple in triples:
+        if str(triple.predicate) in allowed_predicates:
+            setattr(obj, str(triple.predicate), unicode(triple.object))
 
 faculty_map = {}
 department_map = {}
@@ -30,7 +27,7 @@ with SIBConnection('SIB console', 'preconfigured') as sc:
     departments = sc.query(Triple(None, 'rdf:type', 'Department'))
     for triple in departments:
         department = Department(code=triple.subject)
-        populate_object(faculty, triple.subject, ['name'])
+        populate_object(department, triple.subject, ['name'])
         faculty_triple = sc.query(Triple(triple.subject, 'faculty', None))[0]
         department.faculty = faculty_map[str(faculty_triple.object)]
         department.slug = department.code.lower()
@@ -40,7 +37,7 @@ with SIBConnection('SIB console', 'preconfigured') as sc:
     courses = sc.query(Triple(None, 'rdf:type', 'Course'))
     for triple in courses:
         course = Course(code=triple.subject)
-        populate_object(faculty, triple.subject, ['name', 'extent', 'content', 'teaching_period', 'learning_outcomes', 'prerequisites', 'study_materials'])
+        populate_object(course, triple.subject, ['name', 'extent', 'content', 'teaching_period', 'learning_outcomes', 'prerequisites', 'study_materials'])
         department_triple = sc.query(Triple(triple.subject, 'department', None))[0]
         course.slug = course.code.lower()
         course.department = department_map[str(department_triple.object)]

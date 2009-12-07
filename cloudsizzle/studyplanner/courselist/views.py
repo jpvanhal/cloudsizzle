@@ -7,22 +7,23 @@ from studyplanner.courselist.models import Department
 def list_courses(request, faculty, department):
     department = Department.objects.get(slug=department)
     courses = department.courses.all()
-    return render_to_response('list_courses.html', {
+    return render_to_response('list_courses.html', {'user': request.user,
         'department': department, 'courses': courses})
 
 def list_faculties(request):
     faculties = Faculty.objects.all()
-    return render_to_response('list_faculties.html', {'faculties': faculties})
+    return render_to_response('list_faculties.html', {'user': request.user,
+        'faculties': faculties})
 
 def list_departments(request, faculty):
     faculty = Faculty.objects.get(slug=faculty)
     departments = faculty.departments.all()
-    return render_to_response('list_departments.html', {
+    return render_to_response('list_departments.html', {'user': request.user,
         'faculty': faculty, 'departments': departments})
 
 def show_course(request, faculty, department, course):
     faculty = Faculty.objects.get(slug=faculty)
     department = Department.objects.get(slug=department)
     course = Course.objects.get(slug=course)
-    return render_to_response('show_course.html', {
+    return render_to_response('show_course.html', {'user': request.user,
         'faculty': faculty, 'department': department, 'course': course})

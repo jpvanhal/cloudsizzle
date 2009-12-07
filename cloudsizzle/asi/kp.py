@@ -24,7 +24,6 @@ class ASIKnowledgeProcessor(object):
             self.sc = None
 
     def callback(self, added, removed):
-        print added, removed
         for triple in added:
             request_triples = self.sc.query(Triple(triple.subject, None, None))
             self.sc.remove(request_triples)
@@ -41,7 +40,6 @@ class ASIKnowledgeProcessor(object):
             }
 
             with ASIConnection(**params) as ac:
-                print ac.session
                 try:
                     user_id = ac.session['entry']['user_id']
                 except KeyError:

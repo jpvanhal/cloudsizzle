@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<h2>Completed courses</h2>
+
+{% if courses %}
+    <table>
+    <thead>
+        <tr>
+            <th>Course</th>
+            <th>cr</th>
+            <th>ocr</th>
+            <th>Grade</th>
+            <th>Date</th>
+            <th>Teacher</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for c in courses %}
+        <tr>
+            <td>{{ c.code }} {{ c.name }}</td>
+            <td>{% if c.cr %}{{ c.cr }}{% endif %}</td>
+            <td>{% if c.ocr %}{{ c.ocr }}{% endif %}</td>
+            <td>{{ c.grade }}</td>
+            <td>{{ c.date }}</td>
+            <td>{{ c.teacher }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% else %}
+<p>You have no completed courses.</p>
+{% endif %}
+
+{% endblock %}

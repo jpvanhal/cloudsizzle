@@ -5,7 +5,7 @@
 # See: http://doc.scrapy.org/topics/item-pipeline.html
 
 from cloudsizzle.scrapers.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem, CompletedCourseItem, ModuleItem
-from kpwrapper import SIBConnection, Triple, literal, uri
+from kpwrapper import SIBConnection, Triple, literal, uri, bnode
 from scrapy.conf import settings
 
 class UTF8Pipeline(object):
@@ -57,15 +57,16 @@ class SIBPipeline(object):
                 Triple(subject, 'study_materials', item['study_materials'])]
         elif isinstance(item, CompletedCourseItem):
             return [
-                Triple(self.asi_username, 'hasCompleted', item['code']),
-                Triple(item['code'], 'rdf:type', 'CompletedCourse'),
-                Triple(item['code'], 'cr', item['cr']),
-                Triple(item['code'], 'name', item['name']),
-                Triple(item['code'], 'ocr', item['ocr']),
-                Triple(item['code'], 'grade', item['grade']),
-                Triple(item['code'], 'date', item['date']),
-                Triple(item['code'], 'teacher', item['teacher']),
-                Triple(item['code'], 'module', item['module']['code'])]
+                Triple(self.asi_username, 'has_completed', bnode('id')),
+                Triple(bnode('id'), 'rdf:type', 'CompletedCourse'),
+                Triple(bnode('id'), 'code', item['code']),
+                Triple(bnode('id'), 'name', item['name']),
+                Triple(bnode('id'), 'cr', item['cr']),
+                Triple(bnode('id'), 'ocr', item['ocr']),
+                Triple(bnode('id'), 'grade', item['grade']),
+                Triple(bnode('id'), 'date', item['date'].isoformat()),
+                Triple(bnode('id'), 'teacher', item['teacher'])]
+                # TODO: module is missing
         elif isinstance(item,ModuleItem):
             return [
                 Triple(item['code'], 'rdf:type', 'Module'),

@@ -20,6 +20,7 @@ setup(
         'asi >= 0.9',
     ],
     packages = find_packages(),
+    include_package_data = True,
     test_suite = 'cloudsizzle.tests.suite',
     dependency_links = [
         'http://public.futurice.com/~ekan/eggs',

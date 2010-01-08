@@ -15,7 +15,7 @@ setup(
     description = 'Social study plan9er for Aalto University students',
     install_requires = [
         'Django >= 1.1',
-        'Scrapy == 0.7',
+        'Scrapy == 0.8',
         'kpwrapper >= 0.9.2',
         'asi >= 0.9',
     ],

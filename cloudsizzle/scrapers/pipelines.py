@@ -73,7 +73,7 @@ class SIBPipeline(object):
                 Triple(item['code'], 'rdf:type', 'Module'),
                 Triple(item['code'], 'name', item['name'])]
 
-    def process_item(self, domain, item):
+    def process_item(self, spider, item):
         triples = [triple for triple in self.transform_to_triples(item) if triple.object]
         self.sc.insert(triples)
         return item

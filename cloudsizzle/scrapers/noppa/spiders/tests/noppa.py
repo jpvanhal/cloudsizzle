@@ -1,14 +1,17 @@
 # coding=utf8
+import os
 import unittest
 
 from scrapy.http import Request
-from cloudsizzle.scrapers.items import CourseItem, FacultyItem, DepartmentItem, CourseOverviewItem
-from cloudsizzle.scrapers.spiders.noppa import SPIDER
-from cloudsizzle.scrapers.spiders.tests.mock import MockResponse
+from cloudsizzle.scrapers.noppa.items import CourseItem, FacultyItem, DepartmentItem, CourseOverviewItem
+from cloudsizzle.scrapers.noppa.spiders.noppa import SPIDER
+from cloudsizzle.scrapers.tests.mock import MockResponseFactory
+
+response_factory = MockResponseFactory(os.path.dirname(__file__))
 
 class ParseFaculties(unittest.TestCase):
     def setUp(self):
-        response = MockResponse(
+        response = response_factory.create_response(
             'https://noppa.tkk.fi/noppa/kurssit',
             'faculty_list.html'
         )
@@ -44,7 +47,7 @@ class ParseDepartments(unittest.TestCase):
         self.faculty = FacultyItem()
         self.faculty['name'] = 'Faculty of Information and Natural Sciences'
 
-        response = MockResponse(
+        response = response_factory.create_response(
             'https://noppa.tkk.fi/noppa/kurssit/il',
             'department_list.html')
         response.request.meta['faculty'] = self.faculty
@@ -82,7 +85,7 @@ class ParseCourses(unittest.TestCase):
         self.department = DepartmentItem()
         self.department['name'] = u'Department of Computer Science and Engineering'
 
-        response = MockResponse(
+        response = response_factory.create_response(
             'https://noppa.tkk.fi/noppa/kurssit/il/t3050',
             'course_list.html')
         response.request.meta['department'] = self.department
@@ -92,20 +95,23 @@ class ParseCourses(unittest.TestCase):
         self.requests = [item for item in items if isinstance(item, Request)]
 
     def test_correct_number_of_courses_scraped(self):
-        self.assertEqual(182, len(self.courses))
+        self.assertEqual(22, len(self.courses))
 
     def test_course_codes_scraped(self):
         self.assertEqual(u'T-0.7050', self.courses[0]['code'])
-        self.assertEqual(u'T-93.6400', self.courses[-1]['code'])
+        self.assertEqual(u'T-106.3101', self.courses[-1]['code'])
 
     def test_course_names_scraped(self):
-        self.assertEqual(
-            u'Introduction to Postgraduate Studies in Computer Science P',
-            self.courses[0]['name'])
-        self.assertEqual(u'Yksilölliset opinnot L', self.courses[-1]['name'])
+        self.assertEqual(u'Introduction to Postgraduate Studies in Computer Science P', self.courses[0]['name'])
+        self.assertEqual(u'Ohjelmoinnin jatkokurssi T2 (C-kieli)', self.courses[-1]['name'])
 
     def test_courses_have_department_set(self):
         self.assertEqual(id(self.department), id(self.courses[0]['department']))
+
+    def test_crawls_to_next_course_list_page(self):
+        request = self.requests[0]
+        self.assertTrue('linkFwd' in request.url)
+        self.assertEqual(id(request.meta['department']), id(self.department))
 
 class ParseCourseOverview(unittest.TestCase):
     def setUp(self):
@@ -113,7 +119,7 @@ class ParseCourseOverview(unittest.TestCase):
         self.course['code'] = 'T-76.4115'
         self.course['name'] = 'Software Development Project I'
 
-        response = MockResponse(
+        response = response_factory.create_response(
             'https://noppa.tkk.fi/noppa/kurssi/t-76.4115/esite',
             'course_overview.html')
         response.request.meta['course'] = self.course

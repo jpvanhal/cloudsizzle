@@ -3,7 +3,8 @@ from scrapy.spider import BaseSpider
 from scrapy.selector import HtmlXPathSelector
 from scrapy.http import Request
 from scrapy.utils.url import urljoin_rfc
-from cloudsizzle.scrapers.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem, ItemLoader
+from cloudsizzle.scrapers.noppa.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem
+from cloudsizzle.scrapers.items import ItemLoader
 
 class NoppaSpider(BaseSpider):
     domain_name = 'noppa.tkk.fi'
@@ -65,10 +66,24 @@ class NoppaSpider(BaseSpider):
 
     def parse_course_list(self, response):
         hxs = HtmlXPathSelector(response)
+        department = response.request.meta['department']
+
+        # Crawl to the next course list page
+        try:
+            next_page = hxs.select('//a[@id="linkFwd"]/@href').extract()[0]
+        except IndexError:
+            # This is the last page in pagination
+            pass
+        else:
+            yield Request(
+                url="https://noppa.tkk.fi" + next_page,
+                meta={'department': department},
+                callback=self.parse_course_list)
+
         rows = hxs.select('//tr[starts-with(@id, "informal_")]')
         for row in rows:
             loader = ItemLoader(CourseItem(), selector=row)
-            loader.item['department'] = response.request.meta['department']
+            loader.item['department'] = department
             loader.add_xpath('code', 'td[1]/text()')
             loader.add_xpath('name', 'td[2]/a/text()')
             course = loader.load_item()
@@ -78,6 +93,7 @@ class NoppaSpider(BaseSpider):
                 urljoin_rfc(response.url, course_url[:-7] + 'esite'),
                 meta={'course': course}, callback=self.parse_course_overview
             )
+
 
     parse = parse_faculty_list
 

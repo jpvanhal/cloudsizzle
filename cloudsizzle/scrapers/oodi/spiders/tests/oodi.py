@@ -1,20 +1,23 @@
 # coding=utf8
+import os
 import unittest
 import datetime
 
 from scrapy.http import Request
-from cloudsizzle.scrapers.items import CourseItem, FacultyItem, DepartmentItem, CourseOverviewItem, CompletedCourseItem, ModuleItem
-from cloudsizzle.scrapers.spiders.oodi import SPIDER
-from cloudsizzle.scrapers.spiders.tests.mock import MockResponse
+from cloudsizzle.scrapers.oodi.items import CompletedCourseItem, ModuleItem
+from cloudsizzle.scrapers.oodi.spiders.oodi import SPIDER
+from cloudsizzle.scrapers.tests.mock import MockResponseFactory
+
+response_factory = MockResponseFactory(os.path.dirname(__file__))
 
 class ParseCompletedStudies(unittest.TestCase):
     def test_empty_completed_studies(self):
-        response = MockResponse('', 'empty_completed_studies.html')
+        response = response_factory.create_response('', 'empty_completed_studies.html')
         items = list(SPIDER.parse_completed_studies(response))
         self.assertEqual(0, len(items))
 
     def test_single_ungrouped_course_in_completed_studies(self):
-        response = MockResponse('', 'single_ungrouped_course_in_completed_studies.html')
+        response = response_factory.create_response('', 'single_ungrouped_course_in_completed_studies.html')
         items = list(SPIDER.parse_completed_studies(response))
         self.assertTrue(isinstance(items[0], CompletedCourseItem))
         self.assertEqual(1, len(items))
@@ -27,7 +30,7 @@ class ParseCompletedStudies(unittest.TestCase):
         self.assertEqual('Tomi Janhunen', items[0]['teacher'])
 
     def test_many_ungrouped_courses_in_completed_studies(self):
-        response = MockResponse('', 'many_ungrouped_courses_in_completed_studies.html')
+        response = response_factory.create_response('', 'many_ungrouped_courses_in_completed_studies.html')
         items = list(SPIDER.parse_completed_studies(response))
         self.assertEqual(3, len(items))
         self.assertEqual('TU-22.1103', items[0]['code'])
@@ -35,7 +38,7 @@ class ParseCompletedStudies(unittest.TestCase):
         self.assertEqual('T-121.2100', items[2]['code'])
 
     def test_one_module_in_completed_studies(self):
-        response = MockResponse('', 'one_module_in_completed_studies.html')
+        response = response_factory.create_response('', 'one_module_in_completed_studies.html')
         items = list(SPIDER.parse_completed_studies(response))
         self.assertEqual(5, len(items))
         self.assertTrue(isinstance(items[0], ModuleItem))

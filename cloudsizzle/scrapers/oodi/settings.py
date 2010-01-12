@@ -13,13 +13,12 @@
 BOT_NAME = 'cloudsizzle'
 BOT_VERSION = '1.0'
 
-SPIDER_MODULES = ['cloudsizzle.scrapers.spiders']
-NEWSPIDER_MODULE = 'cloudsizzle.scrapers.spiders'
+SPIDER_MODULES = ['cloudsizzle.oodi.scrapers.spiders']
+NEWSPIDER_MODULE = 'cloudsizzle.oodi.scrapers.spiders'
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 
-ITEM_PIPELINES = [
-    'cloudsizzle.scrapers.pipelines.UTF8Pipeline',
-    'cloudsizzle.scrapers.pipelines.SIBPipeline',
-]
+LOG_LEVEL = 'DEBUG'
 
-LOG_LEVEL = 'INFO'
+ITEM_PIPELINES = [
+    'cloudsizzle.scrapers.oodi.pipelines.SIBPipeline',
+]

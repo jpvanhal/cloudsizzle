@@ -4,7 +4,8 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.http import Request, FormRequest
 from scrapy.selector import HtmlXPathSelector
 from cloudsizzle.scrapers.spiders.weblogin import WebloginSpider
-from cloudsizzle.scrapers.items import CompletedCourseItem, ModuleItem, ItemLoader
+from cloudsizzle.scrapers.oodi.items import CompletedCourseItem, ModuleItem
+from cloudsizzle.scrapers.items import ItemLoader
 
 class OodiSpider(WebloginSpider):
     domain_name = 'oodi.tkk.fi'

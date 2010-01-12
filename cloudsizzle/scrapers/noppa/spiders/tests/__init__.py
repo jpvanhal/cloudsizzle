@@ -1,11 +1,9 @@
 import unittest
-from cloudsizzle.scrapers.noppa import tests as noppa
-from cloudsizzle.scrapers.oodi import tests as oodi
+from cloudsizzle.scrapers.noppa.spiders.tests import noppa
 
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(noppa.suite())
-    suite.addTest(oodi.suite())
     return suite
 
 if __name__ == '__main__':

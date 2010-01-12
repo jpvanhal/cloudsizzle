@@ -16,7 +16,7 @@ setup(
     install_requires = [
         'Django >= 1.1',
         'Scrapy == 0.8',
-        'kpwrapper >= 0.9.2',
+        'kpwrapper >= 1.0.0',
         'asi >= 0.9',
     ],
     packages = find_packages(),

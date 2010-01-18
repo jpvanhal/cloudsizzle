@@ -1,0 +1,19 @@
+Which party stores which data:
+
+Smart-m3
+--------
+users
+courses
+friends
+users' completed courses + enrollments
+
+request/response functionalities (through smart-m3):
+login
+registration
+add friends, accept friends, reject friends
+
+Django (not necessarily model, but planner local storage)
+------
+Events
+Planned courses
+Users: major, minor, user id, privacy settings

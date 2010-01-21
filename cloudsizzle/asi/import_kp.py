@@ -1,9 +1,10 @@
-from asi import ASIConnection
+from asilib import ASIConnection
 # This probably not a public interface, but we need to use it
 # because we want to copy all users not synchronize a single user
 from asibsync.sib_agent import to_rdf_instance
 from kpwrapper import SIBConnection, Triple, bnode, uri, literal
 #from cloudsizzle import settings
+
 
 def import_asi():
     # These are used to construct the URIs in RDF
@@ -30,11 +31,34 @@ def import_asi():
     # Either need to convert the triplets one by one or patch
     # asibsync
     print "Converting ASI output to Triplets"
-    user_triplets = to_rdf_instance(users, RDF_BASE_URI, RDF_BASE_TYPE, 'id')
+    for index, user in enumerate(users):
+        print index, len(users), "\r"
+        try:
+            friends = ac.get_friends(user['id'])
+            user_triplet = to_rdf_instance(user, RDF_BASE_URI, RDF_BASE_TYPE, 'id')
+            for friend in friends:
+                user_triplet.append(
+                    Triple(
+                        "people:{0}".format(user['id']), 
+                        'people:has_friend', 
+                        "people:{0}".format(friend['id'])))
+        except KeyError:
+            print "Faulty userdata for ASI:"
+            print user
+        else:
+#            print "Inserting:"
+#            print user_triplet
+            print "Printing friends"
+            print friends
+            sc.insert(user_triplet)
     
     # This alone is not enough, old triplets need to be removed first
     # Perhaps add a 'data owner' triplets identifying all subjects
     # that can be removed? Or just query for all triplets, find ones
     # containing RDF_BASE_URI and remove them
-    print "Inserting Triplets to SIB"
-    sc.insert(user_triplets)
+#    print "Inserting Triplets to SIB"
+#    sc.insert(user_triplets)
+
+if __name__ == '__main__':
+    import_asi()
+    

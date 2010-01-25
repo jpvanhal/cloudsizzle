@@ -37,19 +37,20 @@ def import_asi():
             friends = ac.get_friends(user['id'])
             user_triplet = to_rdf_instance(user, RDF_BASE_URI, RDF_BASE_TYPE, 'id')
             for friend in friends:
+                # This probably ought to be converted to ASI URL format
                 user_triplet.append(
                     Triple(
-                        "people:{0}".format(user['id']), 
-                        'people:has_friend', 
-                        "people:{0}".format(friend['id'])))
+                        "http://cloudsizzle.cs.hut.fi/onto/people/{0}".format(user['id']), 
+                        'has_friend', 
+                        "http://cloudsizzle.cs.hut.fi/onto/people/{0}".format(friend['id'])))
         except KeyError:
             print "Faulty userdata for ASI:"
             print user
         else:
 #            print "Inserting:"
 #            print user_triplet
-            print "Printing friends"
-            print friends
+            print "Inserting the following triplet:"
+            print user_triplet
             sc.insert(user_triplet)
     
     # This alone is not enough, old triplets need to be removed first

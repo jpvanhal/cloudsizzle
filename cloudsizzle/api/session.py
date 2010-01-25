@@ -28,7 +28,7 @@ class Session(object):
         """
         pass
 
-    def remove_friend(self friend_id):
+    def remove_friend(self, friend_id):
         """Removes a friend connection.
 
         Arguments:
@@ -52,7 +52,7 @@ class Session(object):
         """
         pass
 
-    def reject_friend_request(self friend_id):
+    def reject_friend_request(self, friend_id):
         """Rejects a friend request.
 
         Arguments:

@@ -1,5 +1,8 @@
 Which party stores which data:
 
+These are from the point of view of Study Planner. Smart-m3 contains
+everything that the study planner does not handle.
+
 Smart-m3
 --------
 users

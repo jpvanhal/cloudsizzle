@@ -1,3 +1,6 @@
+from kpwrapper import SIBConnection, Triple, bnode, uri, literal
+import time
+
 class UserAlreadyExists(Exception):
     pass
 
@@ -72,6 +75,10 @@ def get(user_id):
     }
 
     """
+    
+    sc = SIBConnection('ASI gatherer', method='preconfigured')
+    
+    
     pass
 
 def get_all():
@@ -169,7 +176,18 @@ def get_friends(user_id):
     user_id -- The user id of the user.
 
     """
-    pass
+    COS_ALPHA_URI_BASE = "http://cos.alpha.sizl.org/people/"
+    # This needs to go, but at least it is contained within API
+    SIZZLE_PEOPLE_BASE = "http://cloudsizzle.cs.hut.fi/onto/people/"
+
+    with SIBConnection('People gatherer', method='preconfigured') as sc:
+      t1 = time.time()
+      friend_ids = [ str(triple.object)[len(SIZZLE_PEOPLE_BASE):] for triple in sc.query(Triple(SIZZLE_PEOPLE_BASE + user_id, "has_friend",None)) ]
+      t2 = time.time()
+
+    print 'SIB took %0.3f ms' % ((t2-t1)*1000.0)
+    
+    return friend_ids
 
 def search(query):
     """Return users based on their real names and usernames.
@@ -179,4 +197,18 @@ def search(query):
              query string will be returned.
 
     """
-    pass
+    with SIBConnection('People gatherer', method='preconfigured') as sc:
+      query = query.lower()
+
+      # This duplicates users (it looks both in name & username). FIXME
+      t1 = time.time()
+      usernames = sc.query(Triple(None,"http://cos.alpha.sizl.org/people#username",None))
+      usernames.extend(sc.query(Triple(None,"http://cos.alpha.sizl.org/people#name",None)))
+      t2 = time.time()
+      asi_ids = [ str(user.subject) for user in usernames if query in user.object.lower() ]
+      t3 = time.time()
+
+    print 'SIB took %0.3f ms' % ((t2-t1)*1000.0)
+    print 'Python combine & search took %0.3f ms' % ((t3-t2)*1000.0)
+    
+    return asi_ids

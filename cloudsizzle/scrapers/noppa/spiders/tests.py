@@ -4,8 +4,8 @@ import unittest
 
 from scrapy.http import Request
 from cloudsizzle.scrapers.noppa.items import CourseItem, FacultyItem, DepartmentItem, CourseOverviewItem
-from cloudsizzle.scrapers.noppa.spiders.noppa import SPIDER
-from cloudsizzle.scrapers.tests.mock import MockResponseFactory
+from cloudsizzle.scrapers.mock import MockResponseFactory
+from noppa import SPIDER
 
 response_factory = MockResponseFactory(os.path.dirname(__file__))
 

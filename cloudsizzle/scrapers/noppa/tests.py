@@ -1,5 +1,5 @@
 import unittest
-from cloudsizzle.scrapers.oodi.spiders import tests as spiders
+import cloudsizzle.scrapers.noppa.spiders.tests as spiders
 
 def suite():
     suite = unittest.TestSuite()

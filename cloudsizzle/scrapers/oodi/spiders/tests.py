@@ -6,7 +6,7 @@ import datetime
 from scrapy.http import Request
 from cloudsizzle.scrapers.oodi.items import CompletedCourseItem, ModuleItem
 from cloudsizzle.scrapers.oodi.spiders.oodi import SPIDER
-from cloudsizzle.scrapers.tests.mock import MockResponseFactory
+from cloudsizzle.scrapers.mock import MockResponseFactory
 
 response_factory = MockResponseFactory(os.path.dirname(__file__))
 

@@ -26,7 +26,6 @@
 import re
 import kpwrapper
 from kpwrapper import Triple as _Triple, wrap_if_not_none, SIBConnection, bnode, literal, uri, _any, get_class
-from urllib import quote, unquote
 
 __all__ = ['Triple', 'SIBConnection', 'bnode', 'literal', 'uri']
 
@@ -73,17 +72,26 @@ def unescape(string):
 # The following code is pretty much copied from kpwrapper module. from_tuple and
 # to_tuple methods are overriden in order to escape and unescape triple data.
 class Triple(_Triple):
+    """
+    >>> triple = Triple('foo', 'bar', '<A & B>')
+    >>> tuple = triple.to_tuple()
+    >>> tuple
+    (('foo', 'bar', '%3CA %26 B%3E'), 'uri', 'literal')
+    >>> triple == Triple.from_tuple(tuple)
+    True
+
+    """
     @staticmethod
     def from_tuple(tuple):
         subject = tuple[0][0]
         predicate = tuple[0][1]
         object = tuple[0][2]
         if subject:
-            subject = unquote(subject)
+            subject = unescape(subject)
         if predicate:
-            predicate = unquote(predicate)
+            predicate = unescape(predicate)
         if object:
-            object = unquote(object)
+            object = unescape(object)
         s_type = get_class(tuple[1]) if len(tuple)==3 else str
         p_type = str
         o_type = get_class(tuple[2] if len(tuple)==3 else tuple[1])
@@ -101,9 +109,9 @@ class Triple(_Triple):
             else:
                 return default
 
-        tuple = ((wrap_if_not_none(quote, wrap_if_not_none(str, self.subject)),
-                  wrap_if_not_none(quote, wrap_if_not_none(str, self.predicate)),
-                  wrap_if_not_none(quote, wrap_if_not_none(str, self.object))),)
+        tuple = ((wrap_if_not_none(escape, wrap_if_not_none(str, self.subject)),
+                  wrap_if_not_none(escape, wrap_if_not_none(str, self.predicate)),
+                  wrap_if_not_none(escape, wrap_if_not_none(str, self.object))),)
 
         s_typestr = get_typestr(self.subject, default_stype)
         if s_typestr is not None:

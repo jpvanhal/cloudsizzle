@@ -1,7 +1,7 @@
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cloudsizzle.studyplanner.settings'
 from django.contrib.auth.models import User
-from kpwrapper import SIBConnection, Triple
+from cloudsizzle.kp import SIBConnection, Triple
 from courselist.models import Course, Faculty, Department
 from completedstudies.models import CompletedCourse
 

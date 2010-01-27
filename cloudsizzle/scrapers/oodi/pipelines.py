@@ -5,7 +5,7 @@
 # See: http://doc.scrapy.org/topics/item-pipeline.html
 
 from cloudsizzle.scrapers.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem, CompletedCourseItem, ModuleItem
-from kpwrapper import SIBConnection, Triple, literal, uri, bnode
+from cloudsizzle.kp import SIBConnection, Triple, literal, uri, bnode
 from scrapy.conf import settings
 
 class SIBPipeline(object):

@@ -1,7 +1,7 @@
 def make_graph(triples):
     """Transforms a list of triples into a graph.
 
-    >>> from kpwrapper import Triple
+    >>> from cloudsizzle.kp import Triple
     >>> triples = [Triple('T-76.4115', 'rdf:type', 'Course'),
     ...     Triple('T-76.4115', 'name', 'Software Development Project'),
     ...     Triple('T-76.4115', 'extent', '5-8')]

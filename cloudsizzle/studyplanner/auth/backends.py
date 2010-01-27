@@ -1,6 +1,6 @@
 import threading
 from django.contrib.auth.models import User
-from kpwrapper import SIBConnection, Triple, bnode, uri, literal
+from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 from cloudsizzle.utils import make_graph
 
 class LoginResponseHandler(threading.Thread):

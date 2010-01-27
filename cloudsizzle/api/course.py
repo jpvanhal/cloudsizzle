@@ -1,6 +1,6 @@
-from kpwrapper import SIBConnection, Triple, bnode, uri, literal
 import time
 from cloudsizzle import pool
+from cloudsizzle.kp import Triple, bnode, uri, literal
 
 # Also do these preserve unicode characters?
 

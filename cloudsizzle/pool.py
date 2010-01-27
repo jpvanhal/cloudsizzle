@@ -1,6 +1,6 @@
-from threading import Condition
-from kpwrapper import SIBConnection
 from contextlib import contextmanager
+from threading import Condition
+from cloudsizzle.kp import SIBConnection
 
 class ObjectPool(object):
     """A cache for objects so that they can be reused."""

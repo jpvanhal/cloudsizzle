@@ -1,5 +1,5 @@
 from asi import ASIConnection
-from kpwrapper import SIBConnection, Triple, bnode, uri, literal
+from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 from cloudsizzle import settings
 from cloudsizzle.utils import make_graph
 

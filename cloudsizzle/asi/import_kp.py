@@ -2,7 +2,7 @@ from asilib import ASIConnection
 # This probably not a public interface, but we need to use it
 # because we want to copy all users not synchronize a single user
 from asibsync.sib_agent import to_rdf_instance
-from kpwrapper import SIBConnection, Triple, bnode, uri, literal
+from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 #from cloudsizzle import settings
 
 

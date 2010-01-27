@@ -1,5 +1,5 @@
-from kpwrapper import SIBConnection, Triple, bnode, uri, literal
 import time
+from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 
 class UserAlreadyExists(Exception):
     pass

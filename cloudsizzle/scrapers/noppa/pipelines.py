@@ -5,7 +5,7 @@
 # See: http://doc.scrapy.org/topics/item-pipeline.html
 
 from .items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem
-from kpwrapper import SIBConnection, Triple, literal, uri, bnode
+from cloudsizzle.kp import SIBConnection, Triple, literal, uri, bnode
 
 class SIBPipeline(object):
     def __init__(self):

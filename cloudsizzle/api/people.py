@@ -1,6 +1,9 @@
 import time
 from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
-
+from cloudsizzle.asi import sib_agent
+from cloudsizzle import pool
+import collections
+RDF_BASE_URI = 'http://cos.alpha.sizl.org/people/'
 class UserAlreadyExists(Exception):
     pass
 
@@ -34,139 +37,57 @@ def get(user_id):
 
     Example:
     >>> get("azZ1LaRdCr3OiIaaWPfx7J")
-    {
-        "name": {
-          "unstructured": "Essi Esimerkki",
-          "family_name": "Esimerkki",
-          "given_name": "Essi"
-        },
-        "address": {
-          "unstructured": "Yrj\u00f6-Koskisenkatu 42, 00170 Helsinki",
-          "postal_code": "00170",
-          "street_address": "Yrj\u00f6-Koskisenkatu 42",
-          "locality": "Helsinki"
-        },
-        "birthdate": "1940-06-01",
-        "updated_at": "2009-09-28T13:59:12Z",
-        "is_association": null,
-        "username": "8d6ofvkusti",
-        "gender": {
-          "displayvalue": "MALE",
-          "key": "MALE"
-        },
-        "id": "azZ1LaRdCr3OiIaaWPfx7J",
-        "avatar": {
-          "link": {
-            "href": "\/people\/azZ1LaRdCr3OiIaaWPfx7J\/@avatar",
-            "rel": "self"
-          },
-          "status": "not_set"
-        },
-        "msn_nick": "maison",
-        "phone_number": "+358 40 834 7176",
-        "website": "http:\/\/example.com",
-        "irc_nick": "pelle",
-        "description": "About me",
-        "status": {
-          "changed": "2009-09-28T13:59:12Z",
-          "message": "Valid person rocks."
-        },
-        "status_message": "Valid person rocks."
+    {           
+                'website': 'None',
+                'username': 'pang1',
+                'name': 'None',
+                'gender': 'None',
+                'is_association': 'None',
+                'updated_at': '2009-11-30T08:46:58Z',
+                'birthdate': 'None',
+                'msn_nick': 'None',
+                'status': {'message': 'None', 'changed': 'None'},
+                'irc_nick': 'None',
+                'connection': 'you',
+                'role': 'user',
+                'avatar': {'status': 'not_set', 'link': {'href': '/people/dRq9He3yWr3QUKaaWPEYjL/@avatar', 'rel': 'self'}}, 
+                'address': 'None', 
+                'phone_number': 'None', 
+                'email': 'testman1@example.com',
+                'description': 'None'
     }
 
+
     """
-    
-    sc = SIBConnection('ASI gatherer', method='preconfigured')
-    
-    
+    QUERY_WITH_UID = Triple(uri(RDF_BASE_URI+'ID#'+str(user_id)),
+                           None,
+                           None)
+    with pool.get_connection() as querySc:
+        all_information = querySc.query(QUERY_WITH_UID)
+    if not all_information:
+        raise UserDoesNotExist
+    informationDic = sib_agent.to_struct(all_information) 
+    return informationDic
     pass
 
 def get_all():
-    """Return all the users.
+    """Return all the users' uid.
 
     Example:
     >>> get_all()
-      [
-        {
-          "name": {
-            "unstructured": "Essi Esimerkki",
-            "family_name": "Esimerkki",
-            "given_name": "Essi"
-          },
-          "address": {
-            "unstructured": "Yrj\u00f6-Koskisenkatu 42, 00170 Helsinki",
-            "postal_code": "00170",
-            "street_address": "Yrj\u00f6-Koskisenkatu 42",
-            "locality": "Helsinki"
-          },
-          "birthdate": "1940-06-01",
-          "updated_at": "2009-09-28T13:59:11Z",
-          "is_association": null,
-          "username": "2l6d6jkusti",
-          "gender": {
-            "displayvalue": "MALE",
-            "key": "MALE"
-          },
-          "id": "azAC7-RdCr3OiIaaWPfx7J",
-          "avatar": {
-            "link": {
-              "href": "\/people\/azAC7-RdCr3OiIaaWPfx7J\/@avatar",
-              "rel": "self"
-            },
-            "status": "not_set"
-          },
-          "msn_nick": "maison",
-          "phone_number": "+358 40 834 7176",
-          "website": "http:\/\/example.com",
-          "irc_nick": "pelle",
-          "description": "About me",
-          "status": {
-            "changed": "2009-09-28T13:59:11Z",
-            "message": "Valid person rocks."
-          },
-          "status_message": "Valid person rocks."
-        },
-        {
-          "name": {
-            "unstructured": "Essi Esimerkki",
-            "family_name": "Esimerkki",
-            "given_name": "Essi"
-          },
-          "address": {
-            "unstructured": "Yrj\u00f6-Koskisenkatu 42, 00170 Helsinki",
-            "postal_code": "00170",
-            "street_address": "Yrj\u00f6-Koskisenkatu 42",
-            "locality": "Helsinki"
-          },
-          "birthdate": "1940-06-01",
-          "updated_at": "2009-09-28T13:59:11Z",
-          "is_association": null,
-          "username": "dv99s1kusti",
-          "gender": {
-            "displayvalue": "MALE",
-            "key": "MALE"
-          },
-          "id": "azEe6yRdCr3OiIaaWPfx7J",
-          "avatar": {
-            "link": {
-              "href": "\/people\/azEe6yRdCr3OiIaaWPfx7J\/@avatar",
-              "rel": "self"
-            },
-            "status": "not_set"
-          },
-          "msn_nick": "maison",
-          "phone_number": "+358 40 834 7176",
-          "website": "http:\/\/example.com",
-          "irc_nick": "pelle",
-          "description": "About me",
-          "status": {
-            "changed": "2009-09-28T13:59:11Z",
-            "message": "Valid person rocks."
-          },
-          "status_message": "Valid person rocks."
-        }
-      ]
     """
+    QUERY_USERS = Triple(None,
+                           None,
+                           uri('http://cos.alpha.sizl.org/people#Person'))
+    with pool.get_connection() as querySc:
+        all_users = querySc.query(QUERY_USERS)
+    if all_users:
+        uids = []
+        for user in all_users:
+            uid = user.subject.split('http://cos.alpha.sizl.org/people/ID#')[1]
+            uids.append(uid)
+        return uids
+    return None
     pass
 
 def get_friends(user_id):
@@ -198,17 +119,20 @@ def search(query):
 
     """
     with SIBConnection('People gatherer', method='preconfigured') as sc:
-      query = query.lower()
+        query = query.lower()
 
       # This duplicates users (it looks both in name & username). FIXME
-      t1 = time.time()
-      usernames = sc.query(Triple(None,"http://cos.alpha.sizl.org/people#username",None))
-      usernames.extend(sc.query(Triple(None,"http://cos.alpha.sizl.org/people#name",None)))
-      t2 = time.time()
-      asi_ids = [ str(user.subject) for user in usernames if query in user.object.lower() ]
-      t3 = time.time()
+        t1 = time.time()
+        usernames = sc.query(Triple(None,"http://cos.alpha.sizl.org/people#username",None))
+        usernames.extend(sc.query(Triple(None,"http://cos.alpha.sizl.org/people#name",None)))
+        t2 = time.time()
+        asi_ids = [ str(user.subject) for user in usernames if query in user.object.lower() ]
+        t3 = time.time()
 
     print 'SIB took %0.3f ms' % ((t2-t1)*1000.0)
     print 'Python combine & search took %0.3f ms' % ((t3-t2)*1000.0)
     
     return asi_ids
+if __name__ == '__main__':
+    # for test
+    get_all()

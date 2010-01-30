@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 from cloudsizzle.utils import make_graph
 
-class LoginResponseHandler(threading.Thread):
+from cloudsizzle.api.ResponseHandler import LoginResponseHandler
+
+class LoginResponseHandler1(threading.Thread):
     QUERY_TRIPLE = Triple(None, 'rdf:type', 'LoginResponse')
 
     def __init__(self, sc, request_id):
@@ -13,7 +15,7 @@ class LoginResponseHandler(threading.Thread):
         self.subscribe_tx = None
         self.lock = threading.Lock()
         self.lock.acquire()
-
+        
     def callback(self, added, removed):
         for triple in added:
             response_triples = self.sc.query(Triple(triple.subject, None, None))
@@ -30,24 +32,22 @@ class LoginResponseHandler(threading.Thread):
 
 class SIBBackend:
     def authenticate(self, username, password):
-        with SIBConnection(method='preconfigured') as sc:
-            sc.insert([
-                Triple(bnode('id'), 'rdf:type', 'LoginRequest'),
-                Triple(bnode('id'), 'username', username),
-                Triple(bnode('id'), 'password', password)
-            ])
-            request_id = sc.last_result[1]['id']
-            handler = LoginResponseHandler(sc, request_id)
-            handler.run()
-            handler.lock.acquire()
-            login_valid = handler.user_id != "None"
-            if login_valid:
-                try:
-                    user = User.objects.get(username=username)
-                except User.DoesNotExist:
-                    user = User(username=username)
-                    user.save()
-                return user
+        
+
+        handler = LoginResponseHandler.getInstance()
+        token = handler.do_request(username = username, password = password)
+        request_id = token[0]
+        lock = token[1]
+        lock.acquire()
+        user_id = str(handler.get_result(request_id))
+        login_valid = user_id != "None"
+        if login_valid:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = User(username=username)
+                user.save()
+            return user
 
     def get_user(self, user_id):
         try:

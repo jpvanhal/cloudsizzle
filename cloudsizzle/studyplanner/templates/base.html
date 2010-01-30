@@ -3,38 +3,28 @@
 <head>
   <title>CloudSizzle</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.0r4/build/reset/reset-min.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/style.css" />
 </head>
 <body>
 
-<h1>CloudSizzle</h1>
+<div id="cont">
 
-<div id="account-information">
-    <h2>Account information</h2>
-    <ul>
-    {% if user.is_authenticated %}
-        <li>Logged in as {{ user.username }}</li>
-        <li><a href="{% url logout %}">Logout</a></li>
-    {% else %}
-        <li><a href="{% url login %}">Login</a></li>
-        <li>Register</li>
-    {% endif %}
-    </ul>
+<div id="header">
+<div id="logo"></div>
+{% block header %}
+{% endblock header %}
 </div>
-
-<div id="navi">
-    <h2>Navigation</h2>
-    <ul>
-        <li><a href="/">Frontpage</a></li>
-        <li><a href="{% url courselist.views.list_faculties %}">Courses</a></li>
-    {% if user.is_authenticated %}
-        <li><a href="{% url completedstudies.views.index %}">Completed Studies</a></li>
-    {% endif %}
-    </ul>
+<div id="sep">
 </div>
 
 <div id="content">
-    {% block content %}{% endblock %}
+{% block content %}
+{% endblock content %}
 </div>
+
+
+</div> <!-- end of cont -->
 
 </body>
 </html>

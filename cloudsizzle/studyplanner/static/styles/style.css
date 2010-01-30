@@ -1,0 +1,34 @@
+/*
+center the content
+*/
+#cont  {
+position: absolute;
+width: 1024px;
+left: 50%;
+margin-left: -512px;
+}
+
+#logo {
+position: absolute;
+width: 70px;
+height: 70px;
+top: 20px;
+background-color: blue;
+}
+
+#sep {
+position: absolute;
+width: 95%;
+border: 1px solid gray;
+top: 100px;
+}
+
+#header #login {
+position: absolute;
+right: 70px;
+top: 20px;
+}
+
+.bg-blue {
+background-color: blue;
+]

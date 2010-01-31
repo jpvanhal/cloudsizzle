@@ -14,7 +14,3 @@ class RegisterForm(UserCreationForm):
     firstname = forms.CharField(label='First name', widget=forms.TextInput())
     lastname = forms.CharField(label='Last name', widget=forms.TextInput())
     email = forms.EmailField(label='Email', widget=forms.TextInput())
-
-
-def submit_registration(request):
-    

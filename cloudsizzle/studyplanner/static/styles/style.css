@@ -29,6 +29,15 @@ right: 70px;
 top: 20px;
 }
 
+#content #register {
+position: absolute;
+top: 200px;
+}
+
+#content #register  th {
+vertical-align: top;
+}
+
 .bg-blue {
 background-color: blue;
 ]

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block header %}
-<form method="POST" action="">
-<table id="login">
+<form id="login" method="POST" action="">
+<table>
 {{ loginform.as_table }}
 <tr>
 <th></th>
@@ -15,5 +15,15 @@
 {% endblock header %}
 
 {% block content %}
-
+<form id="register" method="POST" action="">
+<table>
+{{ registerform.as_table }}
+<tr>
+<th></th>
+<td>
+<input type="submit" value="sign up" />
+</td>
+</tr>
+</table>
+</form>
 {% endblock content %}

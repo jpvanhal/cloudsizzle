@@ -2,13 +2,20 @@ import time
 from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 from cloudsizzle.asi import sib_agent
 from cloudsizzle import pool
-import collections
+from cloudsizzle.singletonmixin import Singleton
+import collections,threading
+from cloudsizzle.utils import make_graph
+from cloudsizzle.api.ResponseHandler import RegisterResponseHandler
 RDF_BASE_URI = 'http://cos.alpha.sizl.org/people/'
 class UserAlreadyExists(Exception):
     pass
 
 class UserDoesNotExist(Exception):
     pass
+class ParameterError(Exception):
+    def __init__(self,messages):
+        self.message = messages
+        
 
 def create(username, password, email):
     """Create a new user.
@@ -20,11 +27,19 @@ def create(username, password, email):
     email -- User's email address.
 
     Exceptions:
-    ValueError -- Given parameters were invalid.
-    UserAlreadyExists -- User with the given username already exists.
+    ParameterError -- Given parameters were invalid.
 
+    
     """
-    pass
+    handler = RegisterResponseHandler.getInstance()
+    token = handler.do_request(request_type= 'RegisterRequest', username = username,password = password,email = email)
+    request_id = token[0]
+    lock = token[1]
+    lock.acquire()
+    result = handler.get_result(request_id)
+    if result.startswith('messages'): # failed
+        raise ParameterError(result)
+    return result                     # return UID
 
 def get(user_id):
     """Get the information of the user specified by user_id.
@@ -51,7 +66,7 @@ def get(user_id):
                 'connection': 'you',
                 'role': 'user',
                 'avatar': {'status': 'not_set', 'link': {'href': '/people/dRq9He3yWr3QUKaaWPEYjL/@avatar', 'rel': 'self'}}, 
-                'address': 'None', 
+                'address': None, 
                 'phone_number': 'None', 
                 'email': 'testman1@example.com',
                 'description': 'None'
@@ -135,4 +150,4 @@ def search(query):
     return asi_ids
 if __name__ == '__main__':
     # for test
-    get_all()
+    print(create(username = 'Pang142',password = '1234567',email = "d2s@hot.com"))

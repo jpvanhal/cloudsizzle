@@ -78,13 +78,22 @@ class LoginResponseHandler(ResponseHandler):
         if answer:   
             return answer[uri('user_id')]
         return None
+class RegisterResponseHandler(ResponseHandler):
+    def get_result(self,request_id):
+        answer = self.get_answer(request_id)
+        if answer:
+            if uri('user_id') in answer.keys():
+                return answer[uri('user_id')]
+            if uri('messages') in answer.keys():
+                return 'messages: '+answer[uri('messages')]
+        return None
 if __name__ == '__main__':
     # for test
-    handler = LoginResponseHandler.getInstance()
-    token = handler.do_request(username = 'Pang1',password = '123456')
+    handler = RegisterResponseHandler.getInstance()
+    token = handler.do_request(request_type= 'RegisterRequest', username = 'Pang14',password = '1234567',email = "ds@hot.com")
     request_id = token[0]
-
     lock = token[1]
     lock.acquire()
-    print (handler.get_result(request_id))
+    result = handler.get_result(request_id)
+    print (str(result))
         

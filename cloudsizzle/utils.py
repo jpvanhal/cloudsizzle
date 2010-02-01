@@ -17,7 +17,7 @@ def make_graph(triples):
         s, p, o = triple.subject, triple.predicate, triple.object
         if s not in graph:
             graph[s] = {}
-        if graph[s] and graph[s][p]:
+        if p in graph[s].keys():
             graph[s][p] = graph[s][p] +" " + o
         else:    
             graph[s][p] = o

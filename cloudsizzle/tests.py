@@ -7,7 +7,8 @@ from cloudsizzle import kp
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(scrapers.suite())
-    suite.addTest(doctest.DocTestSuite(utils))
+    suite.addTest(
+        doctest.DocTestSuite(utils, optionflags=doctest.NORMALIZE_WHITESPACE))
     suite.addTest(doctest.DocTestSuite(kp))
     return suite
 

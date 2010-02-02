@@ -22,6 +22,9 @@ setup(
     packages = find_packages(),
     include_package_data = True,
     test_suite = 'cloudsizzle.tests.suite',
+    tests_require = [
+        'MiniMock >= 1.2',
+    ],
     dependency_links = [
         'http://public.futurice.com/~ekan/eggs',
         'http://ftp.edgewall.com/pub/bitten/',

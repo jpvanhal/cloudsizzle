@@ -6,16 +6,14 @@ from cloudsizzle.singletonmixin import Singleton
 import collections,threading
 from cloudsizzle.utils import make_graph
 from cloudsizzle.api.ResponseHandler import RegisterResponseHandler
+
 RDF_BASE_URI = 'http://cos.alpha.sizl.org/people/'
+
 class UserAlreadyExists(Exception):
     pass
 
 class UserDoesNotExist(Exception):
     pass
-class ParameterError(Exception):
-    def __init__(self,messages):
-        self.message = messages
-        
 
 def create(username, password, email):
     """Create a new user.
@@ -27,9 +25,9 @@ def create(username, password, email):
     email -- User's email address.
 
     Exceptions:
-    ParameterError -- Given parameters were invalid.
+    ValueError -- Given parameters were invalid.
 
-    
+
     """
     handler = RegisterResponseHandler.getInstance()
     token = handler.do_request(request_type= 'RegisterRequest', username = username,password = password,email = email)
@@ -38,7 +36,7 @@ def create(username, password, email):
     lock.acquire()
     result = handler.get_result(request_id)
     if result.startswith('messages'): # failed
-        raise ParameterError(result)
+        raise ValueError(result)
     return result                     # return UID
 
 def get(user_id):
@@ -52,7 +50,7 @@ def get(user_id):
 
     Example:
     >>> get("azZ1LaRdCr3OiIaaWPfx7J")
-    {           
+    {
                 'website': 'None',
                 'username': 'pang1',
                 'name': 'None',
@@ -65,9 +63,9 @@ def get(user_id):
                 'irc_nick': 'None',
                 'connection': 'you',
                 'role': 'user',
-                'avatar': {'status': 'not_set', 'link': {'href': '/people/dRq9He3yWr3QUKaaWPEYjL/@avatar', 'rel': 'self'}}, 
-                'address': None, 
-                'phone_number': 'None', 
+                'avatar': {'status': 'not_set', 'link': {'href': '/people/dRq9He3yWr3QUKaaWPEYjL/@avatar', 'rel': 'self'}},
+                'address': None,
+                'phone_number': 'None',
                 'email': 'testman1@example.com',
                 'description': 'None'
     }
@@ -81,7 +79,7 @@ def get(user_id):
         all_information = querySc.query(QUERY_WITH_UID)
     if not all_information:
         raise UserDoesNotExist
-    informationDic = sib_agent.to_struct(all_information) 
+    informationDic = sib_agent.to_struct(all_information)
     return informationDic
     pass
 
@@ -122,7 +120,7 @@ def get_friends(user_id):
       t2 = time.time()
 
     print 'SIB took %0.3f ms' % ((t2-t1)*1000.0)
-    
+
     return friend_ids
 
 def search(query):
@@ -146,7 +144,7 @@ def search(query):
 
     print 'SIB took %0.3f ms' % ((t2-t1)*1000.0)
     print 'Python combine & search took %0.3f ms' % ((t3-t2)*1000.0)
-    
+
     return asi_ids
 if __name__ == '__main__':
     # for test

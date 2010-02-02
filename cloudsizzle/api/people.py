@@ -1,10 +1,12 @@
+"""
+This module contains CloudSizzle API functions related to people.
+
+"""
 import time
 from itertools import chain
-from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
+from cloudsizzle.kp import Triple, bnode, uri, literal
 from cloudsizzle.asi import sib_agent
 from cloudsizzle import pool
-import collections,threading
-from cloudsizzle.utils import make_graph
 from cloudsizzle.api.ResponseHandler import RegisterResponseHandler
 
 RDF_BASE_URI = 'http://cos.alpha.sizl.org/people/'
@@ -27,7 +29,6 @@ def create(username, password, email):
     Exceptions:
     ValueError -- Given parameters were invalid.
 
-
     """
     handler = RegisterResponseHandler.getInstance()
     token = handler.do_request(request_type= 'RegisterRequest', username = username,password = password,email = email)
@@ -49,7 +50,7 @@ def get(user_id):
     UserDoesNotExist -- User with specified user_id does not exist.
 
     Example:
-    >>> get("azZ1LaRdCr3OiIaaWPfx7J")
+    >>> #get("azZ1LaRdCr3OiIaaWPfx7J")
     {
                 'website': 'None',
                 'username': 'pang1',
@@ -65,7 +66,7 @@ def get(user_id):
                 'role': 'user',
                 'avatar': {'status': 'not_set', 'link': {'href': '/people/dRq9He3yWr3QUKaaWPEYjL/@avatar', 'rel': 'self'}},
                 'address': None,
-                'phone_number': 'None',
+                'phone_number': 'None','bG1oHm3yWr3RiVaaWPEYjL'
                 'email': 'testman1@example.com',
                 'description': 'None'
     }
@@ -87,7 +88,7 @@ def get_all():
     """Return all the users' uid.
 
     Example:
-    >>> get_all()
+    >>> #get_all()
     """
     QUERY_USERS = Triple(None,
                            None,
@@ -115,11 +116,10 @@ def get_friends(user_id):
     SIZZLE_PEOPLE_BASE = "http://cloudsizzle.cs.hut.fi/onto/people/"
 
     with pool.get_connection() as sc:
-      t1 = time.time()
-      friend_ids = [ str(triple.object)[len(SIZZLE_PEOPLE_BASE):] for triple in sc.query(Triple(SIZZLE_PEOPLE_BASE + user_id, "has_friend",None)) ]
-      t2 = time.time()
-
-    print 'SIB took %0.3f ms' % ((t2-t1)*1000.0)
+        friend_triplets = sc.query(Triple(SIZZLE_PEOPLE_BASE + user_id,
+            'has_friend', None))
+        friend_ids = [str(triplet.object)[len(SIZZLE_PEOPLE_BASE):]
+            for triplet in friend_triplets]
 
     return friend_ids
 
@@ -129,64 +129,6 @@ def search(query):
     Arguments:
     query -- The search term. Every user whose name or user name contains the
              query string will be returned.
-
-    >>> from minimock import Mock
-    >>> pool.SIBConnection.__init__ = Mock('SIBConnection.__init__')
-    >>> pool.SIBConnection.open = Mock('SIBConnection.open')
-    >>> pool.SIBConnection.query = Mock('SIBConnection.query', returns_iter=[
-    ... [
-    ...     Triple(
-    ...         uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
-    ...         uri('http://cos.alpha.sizl.org/people#username'),
-    ...         literal('pangbo')),
-    ...     Triple(
-    ...         uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
-    ...         uri('http://cos.alpha.sizl.org/people#username'),
-    ...         literal('geeman')),
-    ...     Triple(
-    ...         uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
-    ...         uri('http://cos.alpha.sizl.org/people#username'),
-    ...         literal('pang')),
-    ...     Triple(
-    ...         uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
-    ...         uri('http://cos.alpha.sizl.org/people#username'),
-    ...         literal('kafka'))],
-    ...     [
-    ...     Triple(
-    ...         uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
-    ...         uri('http://cos.alpha.sizl.org/people#name'),
-    ...         literal('Pang Bo')),
-    ...     Triple(
-    ...         uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
-    ...         uri('http://cos.alpha.sizl.org/people#name'),
-    ...         literal('bo pang')),
-    ...     Triple(
-    ...         uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
-    ...         uri('http://cos.alpha.sizl.org/people#name'),
-    ...         literal('None')),
-    ...     Triple(
-    ...         uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
-    ...         uri('http://cos.alpha.sizl.org/people#name'),
-    ...         literal('Franz Kafka'))]
-    ... ])
-    >>> user_ids = search('Pang')
-    Called SIBConnection.__init__(method='preconfigured')
-    Called SIBConnection.open()
-    Called SIBConnection.query(
-        Triple(None, uri('http://cos.alpha.sizl.org/people#username'), None))
-    Called SIBConnection.query(
-        Triple(None, uri('http://cos.alpha.sizl.org/people#name'), None))
-    >>> len(user_ids)
-    3
-    >>> uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL') \
-        in user_ids
-    True
-    >>> uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL') \
-        in user_ids
-    True
-    >>> uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL') \
-        in user_ids
-    True
 
     """
     with pool.get_connection() as sc:
@@ -201,6 +143,7 @@ def search(query):
         for triple in chain(username_triples, realname_triples):
             name = str(triple.object)
             if query in name.lower():
-                user_ids.add(triple.subject)
+                namespace, uid = triple.subject.split('#')
+                user_ids.add(uid)
 
         return user_ids

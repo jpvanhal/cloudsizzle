@@ -1,10 +1,10 @@
 '''
 usage:
-    
+
     send any parameters to ASI by the dictionary format of 'do_request' function's parameters
     return a list, whose first item is the request_id and second item is lock
     acquire the lock, then get response by get_answer function. return a answerset dictionary.
-    
+
     handler = ResponseHandler.getInstance()
     token = handler.do_request(username = 'Pang1',password = '123456')
     request_id = token[0]
@@ -16,18 +16,17 @@ usage:
 @author: pb
 '''
 from cloudsizzle import pool
-from cloudsizzle.singletonmixin import Singleton
 from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 import collections,threading
 from cloudsizzle.utils import make_graph
 
-class ResponseHandler(threading.Thread,Singleton):
+class ResponseHandler(threading.Thread):
     QUERY_TRIPLE = Triple(None, 'rdf:type', 'Response')
-    
+
     def __init__(self):
         print('backends')
         threading.Thread.__init__(self)
-        self.locks = {}  
+        self.locks = {}
         self.answers = {}
         self.subscribe_tx = None
     def do_request(self,request_type = 'LoginRequest',**keywords):
@@ -41,20 +40,20 @@ class ResponseHandler(threading.Thread,Singleton):
         lock  = threading.Lock() # before inserting happen
         lock.acquire()
         self.sc.insert(triples)
-        request_id = self.sc.last_result[1]['id']  
+        request_id = self.sc.last_result[1]['id']
         self.locks[str(request_id)]=lock
-        
-        
-        
+
+
+
         return [request_id,self.locks[str(request_id)],]
 
     def callback(self, added, removed):
         for triple in added:
             response_triples = self.sc.query(Triple(triple.subject, None, None))
             g = make_graph(response_triples)
-            
+
             self.sc.remove(response_triples) #garbage collected
-            
+
             response_id = triple.subject
             request_id = str(g[response_id][uri('response_to')])
             if request_id in self.locks.keys():
@@ -75,7 +74,7 @@ class ResponseHandler(threading.Thread,Singleton):
 class LoginResponseHandler(ResponseHandler):
     def get_result(self,request_id):
         answer = self.get_answer(request_id)
-        if answer:   
+        if answer:
             return answer[uri('user_id')]
         return None
 class RegisterResponseHandler(ResponseHandler):
@@ -96,4 +95,3 @@ if __name__ == '__main__':
     lock.acquire()
     result = handler.get_result(request_id)
     print (str(result))
-        

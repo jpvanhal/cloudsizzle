@@ -1,8 +1,8 @@
 import time
-from cloudsizzle.kp import Triple, bnode, uri, literal
+from itertools import chain
+from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 from cloudsizzle.asi import sib_agent
 from cloudsizzle import pool
-from cloudsizzle.singletonmixin import Singleton
 import collections,threading
 from cloudsizzle.utils import make_graph
 from cloudsizzle.api.ResponseHandler import RegisterResponseHandler
@@ -130,22 +130,77 @@ def search(query):
     query -- The search term. Every user whose name or user name contains the
              query string will be returned.
 
+    >>> from minimock import Mock
+    >>> pool.SIBConnection.__init__ = Mock('SIBConnection.__init__')
+    >>> pool.SIBConnection.open = Mock('SIBConnection.open')
+    >>> pool.SIBConnection.query = Mock('SIBConnection.query', returns_iter=[
+    ... [
+    ...     Triple(
+    ...         uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
+    ...         uri('http://cos.alpha.sizl.org/people#username'),
+    ...         literal('pangbo')),
+    ...     Triple(
+    ...         uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
+    ...         uri('http://cos.alpha.sizl.org/people#username'),
+    ...         literal('geeman')),
+    ...     Triple(
+    ...         uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
+    ...         uri('http://cos.alpha.sizl.org/people#username'),
+    ...         literal('pang')),
+    ...     Triple(
+    ...         uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
+    ...         uri('http://cos.alpha.sizl.org/people#username'),
+    ...         literal('kafka'))],
+    ...     [
+    ...     Triple(
+    ...         uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
+    ...         uri('http://cos.alpha.sizl.org/people#name'),
+    ...         literal('Pang Bo')),
+    ...     Triple(
+    ...         uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
+    ...         uri('http://cos.alpha.sizl.org/people#name'),
+    ...         literal('bo pang')),
+    ...     Triple(
+    ...         uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
+    ...         uri('http://cos.alpha.sizl.org/people#name'),
+    ...         literal('None')),
+    ...     Triple(
+    ...         uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
+    ...         uri('http://cos.alpha.sizl.org/people#name'),
+    ...         literal('Franz Kafka'))]
+    ... ])
+    >>> user_ids = search('Pang')
+    Called SIBConnection.__init__(method='preconfigured')
+    Called SIBConnection.open()
+    Called SIBConnection.query(
+        Triple(None, uri('http://cos.alpha.sizl.org/people#username'), None))
+    Called SIBConnection.query(
+        Triple(None, uri('http://cos.alpha.sizl.org/people#name'), None))
+    >>> len(user_ids)
+    3
+    >>> uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL') \
+        in user_ids
+    True
+    >>> uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL') \
+        in user_ids
+    True
+    >>> uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL') \
+        in user_ids
+    True
+
     """
     with pool.get_connection() as sc:
         query = query.lower()
 
-      # This duplicates users (it looks both in name & username). FIXME
-        t1 = time.time()
-        usernames = sc.query(Triple(None,"http://cos.alpha.sizl.org/people#username",None))
-        usernames.extend(sc.query(Triple(None,"http://cos.alpha.sizl.org/people#name",None)))
-        t2 = time.time()
-        asi_ids = [ str(user.subject) for user in usernames if query in user.object.lower() ]
-        t3 = time.time()
+        username_triples = sc.query(
+            Triple(None, 'http://cos.alpha.sizl.org/people#username', None))
+        realname_triples = sc.query(
+            Triple(None, 'http://cos.alpha.sizl.org/people#name', None))
 
-    print 'SIB took %0.3f ms' % ((t2-t1)*1000.0)
-    print 'Python combine & search took %0.3f ms' % ((t3-t2)*1000.0)
+        user_ids = set()
+        for triple in chain(username_triples, realname_triples):
+            name = str(triple.object)
+            if query in name.lower():
+                user_ids.add(triple.subject)
 
-    return asi_ids
-if __name__ == '__main__':
-    # for test
-    print(create(username = 'Pang142',password = '1234567',email = "d2s@hot.com"))
+        return user_ids

@@ -1,5 +1,5 @@
 import time
-from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
+from cloudsizzle.kp import Triple, bnode, uri, literal
 from cloudsizzle.asi import sib_agent
 from cloudsizzle import pool
 from cloudsizzle.singletonmixin import Singleton
@@ -114,7 +114,7 @@ def get_friends(user_id):
     # This needs to go, but at least it is contained within API
     SIZZLE_PEOPLE_BASE = "http://cloudsizzle.cs.hut.fi/onto/people/"
 
-    with SIBConnection('People gatherer', method='preconfigured') as sc:
+    with pool.get_connection() as sc:
       t1 = time.time()
       friend_ids = [ str(triple.object)[len(SIZZLE_PEOPLE_BASE):] for triple in sc.query(Triple(SIZZLE_PEOPLE_BASE + user_id, "has_friend",None)) ]
       t2 = time.time()
@@ -131,7 +131,7 @@ def search(query):
              query string will be returned.
 
     """
-    with SIBConnection('People gatherer', method='preconfigured') as sc:
+    with pool.get_connection() as sc:
         query = query.lower()
 
       # This duplicates users (it looks both in name & username). FIXME

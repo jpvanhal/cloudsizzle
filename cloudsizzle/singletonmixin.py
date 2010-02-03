@@ -20,8 +20,7 @@ For example:
 class S(Singleton):
 
     def __init__(self, a, b=1):
-        pass
-        
+        pass      
 S1 = S.getInstance(1, b=3)
 
 

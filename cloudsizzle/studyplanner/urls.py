@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
+import socket
 import os
 
 # Uncomment the next two lines to enable the admin:
@@ -18,19 +19,22 @@ urlpatterns = patterns('',
     # (r'^admin/', include(admin.site.urls)),
 
     url(r'^$', 'studyplanner.frontpage.views.index', name='frontpage'),
+    
+    #user list
+    url(r'^users/$', 'studyplanner.userlist.views.list_users', name='list of users'),
 
     #courselist application for the first demonstration
     #url(r'^courses/', include('courselist.urls')),
     #url(r'^completed/', 'completedstudies.views.index'),
 
     #Login application, demo as well
-    #url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
-    #url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
 )
 
-if settings.DEBUG:
+if socket.gethostname() == 'cloudsizzle.cs.hut.fi': 
     urlpatterns += patterns('',
                             (r'^static/(?P<path>.*)$', 'django.views.static.serve',
-                             {'document_root': 'C:/Users/kristoffer/Documents/studier/T-76.4115/reposit-co/trunk/cloudsizzle/studyplanner/static'}),
+                             {'document_root': settings.MEDIA_ROOT}),
                             )
     

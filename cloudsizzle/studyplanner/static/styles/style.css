@@ -2,40 +2,60 @@
 center the content
 */
 #cont  {
-position: absolute;
 width: 1024px;
-left: 50%;
-margin-left: -512px;
+margin: 0 auto;
+border: 1px solid #000;
+overflow: hidden;
 }
 
 #logo {
-position: absolute;
 width: 70px;
 height: 70px;
-top: 20px;
 background-color: blue;
-}
-
-#sep {
-position: absolute;
-width: 95%;
-border: 1px solid gray;
-top: 100px;
+float: left;
+margin: 20 0 0 0;
 }
 
 #header #login {
-position: absolute;
-right: 70px;
-top: 20px;
+position: relative;
+float: right;
+
+}
+
+#header {
+float: left;
+}
+
+#header ul#nav {
+float: left;
+border: 1px solid #000;
+}
+
+#header ul#nav li {
+display: inline;
+margin-right: 10px;
+}
+
+#header #search {
+float: right;
+}
+
+#content {
+float: left;
 }
 
 #content #register {
-position: absolute;
-top: 200px;
+margin: 200px auto 0 auto;
+border: 1px solid #000;
+width: 50%;
 }
 
 #content #register  th {
 vertical-align: top;
+}
+
+#footer {
+float: left;
 }
 
 .bg-blue {

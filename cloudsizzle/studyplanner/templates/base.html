@@ -7,24 +7,34 @@
   <link rel="stylesheet" type="text/css" href="static/styles/style.css" />
 </head>
 <body>
-
-<div id="cont">
-
-<div id="header">
-<div id="logo"></div>
-{% block header %}
-{% endblock header %}
-</div>
-<div id="sep">
-</div>
-
-<div id="content">
-{% block content %}
-{% endblock content %}
-</div>
-
-
-</div> <!-- end of cont -->
-
+    <div id="cont">
+        <div id="header">
+           <h1 id="logo">CloudSizzle home</h1>
+           {% block header %}
+           
+           <ul id="nav">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Courses</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Logout</a></li>
+           </ul>
+           
+           <form id="search">
+            <input name="query" />
+            <input type="submit" name="search" value="Search" />
+           </form> <!-- /search -->
+           {% endblock header %}
+        </div> <!-- /header -->
+        
+        <div id="content">
+            {% block content %}
+            {% endblock content %}
+        </div> <!-- /content -->
+        
+        <div id="footer">
+            <p>&copy; CloudSizzle</p>
+        </div> <!-- /footer -->
+    </div> <!-- /wrapper -->
 </body>
 </html>

@@ -31,13 +31,13 @@ def create(username, password, email):
 
     """
     handler = RegisterResponseHandler.getInstance()
-    token = handler.do_request(request_type= 'RegisterRequest', username = username,password = password,email = email)
+    token = handler.do_request(username = username,password = password,email = email)
     request_id = token[0]
     lock = token[1]
     lock.acquire()
     result = handler.get_result(request_id)
     if result.startswith('messages'): # failed
-        raise ValueError(result)
+        raise ValueError(result)    
     return result                     # return UID
 
 def get(user_id):

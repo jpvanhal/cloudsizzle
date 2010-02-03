@@ -17,35 +17,35 @@ usage:
 '''
 from cloudsizzle import pool
 from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
-import collections,threading
+import collections, threading
 from cloudsizzle.utils import make_graph
-
-class ResponseHandler(threading.Thread):
+from cloudsizzle.singletonmixin import *
+class ResponseHandler(threading.Thread,Singleton):
+    "base class for all kinds of ResponseHandler, override the excute()"
     QUERY_TRIPLE = Triple(None, 'rdf:type', 'Response')
-
+    REQUEST_TYPE = 'LoginRequest'
     def __init__(self):
-        print('backends')
         threading.Thread.__init__(self)
         self.locks = {}
         self.answers = {}
         self.subscribe_tx = None
-    def do_request(self,request_type = 'LoginRequest',**keywords):
+    def do_request(self, **keywords):
         self.run()      # prevent developer forgeting run()
-        triples = [Triple(bnode('id'), 'rdf:type', request_type),]
+        triples = [Triple(bnode('id'), 'rdf:type', self.REQUEST_TYPE), ]
         keys = keywords.keys()
         keys.sort()
         for key in keys:
             triple = Triple(bnode('id'), key, keywords[key])
             triples.append(triple)
-        lock  = threading.Lock() # before inserting happen
+        lock = threading.Lock() # before inserting happen
         lock.acquire()
         self.sc.insert(triples)
         request_id = self.sc.last_result[1]['id']
-        self.locks[str(request_id)]=lock
+        self.locks[str(request_id)] = lock
 
 
 
-        return [request_id,self.locks[str(request_id)],]
+        return [request_id, self.locks[str(request_id)], ]
 
     def callback(self, added, removed):
         for triple in added:
@@ -60,7 +60,7 @@ class ResponseHandler(threading.Thread):
                 del g[response_id][uri('response_to')]
                 self.answers[request_id] = g[response_id]
                 self.locks[request_id].release()
-    def get_answer(self,request_id):
+    def get_answer(self, request_id):
         if request_id in self.answers.keys():
             answer = self.answers[request_id]
             del self.answers[request_id]
@@ -72,26 +72,34 @@ class ResponseHandler(threading.Thread):
             with pool.get_connection() as self.sc:
                 self.subscribe_tx = self.sc.subscribe(self.QUERY_TRIPLE, self)
 class LoginResponseHandler(ResponseHandler):
-    def get_result(self,request_id):
+    def get_result(self, request_id):
         answer = self.get_answer(request_id)
         if answer:
             return answer[uri('user_id')]
         return None
 class RegisterResponseHandler(ResponseHandler):
-    def get_result(self,request_id):
+    REQUEST_TYPE = 'RegisterRequest'
+    def get_result(self, request_id):
         answer = self.get_answer(request_id)
         if answer:
             if uri('user_id') in answer.keys():
                 return answer[uri('user_id')]
             if uri('messages') in answer.keys():
-                return 'messages: '+answer[uri('messages')]
+                messages = answer[uri('messages')]
+                if not isinstance(messages,list):
+                    messages = [messages,]
+                return_messages = 'messages: '
+                for message in messages:
+                    return_messages += message
+                return 'messages: ' + return_messages
         return None
 if __name__ == '__main__':
     # for test
     handler = RegisterResponseHandler.getInstance()
-    token = handler.do_request(request_type= 'RegisterRequest', username = 'Pang14',password = '1234567',email = "ds@hot.com")
+    token = handler.do_request(username='Pang12tt', password='1234567', email="12s@hot.com")
     request_id = token[0]
     lock = token[1]
     lock.acquire()
     result = handler.get_result(request_id)
     print (str(result))
+

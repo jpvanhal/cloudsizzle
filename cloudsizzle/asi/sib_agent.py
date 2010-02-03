@@ -30,7 +30,7 @@ __author__ = 'eemeli.kantola@iki.fi (Eemeli Kantola)'
 import collections
 import uuid
 from cloudsizzle import pool
-from kpwrapper import SIBConnection, Triple, uri, literal
+from kpwrapper import SIBConnection, Triple, uri, literal, bnode
 
 debug = True
 def debug_print(*strs):
@@ -107,13 +107,13 @@ def to_struct(triples, id_key='id'):
     struct = recursivedefaultdict()
     for triple in triples:
         print(str(triple.predicate))
-        if str(triple.predicate).count(':type')>0 or str(triple.predicate).count('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')>0 :
+        if ':type' in str(triple.predicate) or 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' in str(triple.predicate):
             if str(triple.object) is not SIBAgent.RDF_BASE_URI:
                 continue                                  # subid don't need care
             id = triple.subject.split('/ID#', 1)[1]
             struct[id_key]=id
             continue
-        if str(triple.object).count(SIBAgent.RDF_BASE_URI+'#')>0: # sub info
+        if SIBAgent.RDF_BASE_URI+'#' in str(triple.object): # sub info
             key = triple.predicate.split(SIBAgent.RDF_BASE_URI+'#')[1]
             QUERY_WITH_UID = Triple(triple.object,
                            None,
@@ -124,7 +124,10 @@ def to_struct(triples, id_key='id'):
             struct[key] = subdir
             continue
         key = triple.predicate.split(SIBAgent.RDF_BASE_URI+'#')[1]
-        struct[key] = str(triple.object)
+        if triple.object:
+            struct[key] = str(triple.object)
+        else:
+            struct[key] = None
     return struct
             
 
@@ -216,11 +219,12 @@ class SIBAgent:
         #    self.sc.remove(self.sc.query(Triple(s, None, None)))
         
         debug_print('Inserting ', new)
-        self.sc.insert(new)
+        with pool.get_connection() as self.sc:
+            self.sc.insert(new)
         
         self.callback_enabled = True
 if __name__ == '__main__':
     '''for test'''
     c = (Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('rdf:type'), uri('http://cos.alpha.sizl.org/people#Person')), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#address'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#avatar'), uri('http://cos.alpha.sizl.org/people#1fc4aabd-1a38-47fb-9030-47445e844e03')), Triple(uri('http://cos.alpha.sizl.org/people#1fc4aabd-1a38-47fb-9030-47445e844e03'), uri('rdf:type'), uri('http://cos.alpha.sizl.org/people#Avatar')), Triple(uri('http://cos.alpha.sizl.org/people#1fc4aabd-1a38-47fb-9030-47445e844e03'), uri('http://cos.alpha.sizl.org/people#link'), uri('http://cos.alpha.sizl.org/people#6bace093-d3e7-40b6-a29e-23da836c40bb')), Triple(uri('http://cos.alpha.sizl.org/people#6bace093-d3e7-40b6-a29e-23da836c40bb'), uri('rdf:type'), uri('http://cos.alpha.sizl.org/people#Link')), Triple(uri('http://cos.alpha.sizl.org/people#6bace093-d3e7-40b6-a29e-23da836c40bb'), uri('http://cos.alpha.sizl.org/people#href'), literal('/people/dRq9He3yWr3QUKaaWPEYjL/@avatar')), Triple(uri('http://cos.alpha.sizl.org/people#6bace093-d3e7-40b6-a29e-23da836c40bb'), uri('http://cos.alpha.sizl.org/people#rel'), literal('self')), Triple(uri('http://cos.alpha.sizl.org/people#1fc4aabd-1a38-47fb-9030-47445e844e03'), uri('http://cos.alpha.sizl.org/people#status'), literal('not_set')), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#birthdate'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#connection'), literal('you')), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#description'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#email'), literal('testman1@example.com')), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#gender'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#irc_nick'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#is_association'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#msn_nick'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#name'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#phone_number'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#role'), literal('user')), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#status'), uri('http://cos.alpha.sizl.org/people#cc0eff66-5b71-4e0c-8f77-93e5a6e8ada5')), Triple(uri('http://cos.alpha.sizl.org/people#cc0eff66-5b71-4e0c-8f77-93e5a6e8ada5'), uri('rdf:type'), uri('http://cos.alpha.sizl.org/people#Status')), Triple(uri('http://cos.alpha.sizl.org/people#cc0eff66-5b71-4e0c-8f77-93e5a6e8ada5'), uri('http://cos.alpha.sizl.org/people#changed'), None), Triple(uri('http://cos.alpha.sizl.org/people#cc0eff66-5b71-4e0c-8f77-93e5a6e8ada5'), uri('http://cos.alpha.sizl.org/people#message'), None), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#updated_at'), literal('2009-11-30T08:46:58Z')), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#username'), literal('pang1')), Triple(uri('http://cos.alpha.sizl.org/people/ID#dRq9He3yWr3QUKaaWPEYjL'), uri('http://cos.alpha.sizl.org/people#website'), None))
-    a = to_struct(c)
-    pass
+    print (to_struct(c))
+    

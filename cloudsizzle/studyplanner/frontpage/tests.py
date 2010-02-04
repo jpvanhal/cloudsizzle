@@ -1,4 +1,11 @@
 from cloudsizzle.studyplanner import testhelp
+import unittest
 
-testhelp.validate_html('/')
+class ValidationTest(unittest.TestCase):
+
+    def test_validity(self):
+
+        res = testhelp.validate_html('/')
+        
+        self.failIfEqual(False,res[0],res[1])
 

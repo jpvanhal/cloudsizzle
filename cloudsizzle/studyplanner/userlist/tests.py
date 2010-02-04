@@ -1,23 +1,10 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
+from cloudsizzle.studyplanner import testhelp
+import unittest
 
-Replace these with more appropriate tests for your application.
-"""
+class ValidationTest(unittest.TestCase):
 
-from django.test import TestCase
+    def test_validity(self):
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
-
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
-
->>> 1 + 1 == 2
-True
-"""}
-
+        res = testhelp.validate_html('/users/')
+        
+        self.failIfEqual(False,res[0],res[1])

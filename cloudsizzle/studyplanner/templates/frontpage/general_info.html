@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+
+	<title>CloudSizzle</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="imagetoolbar" content="no">
+	<meta name="description" content="CloudSizzle">
+	<meta name="keywords" content="">
+	<link rel="stylesheet" type="text/css" media="all" href="general_info_files/reset.css">
+	<link rel="stylesheet" type="text/css" media="all" href="general_info_files/styles.css">
+</head><body id="courses-page">
+	<div id="wrapper">
+		<div id="header">
+			<img src="general_info_files/logo_small.png" alt="" id="logo">
+			
+			<ul class="main-nav">
+				<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a></li>
+				<li><a href="http://lyrion.net/cloudsizzle/profile.php">Profile</a></li>
+				<li><a href="http://lyrion.net/cloudsizzle/courses.php">Courses</a></li>
+			</ul> <!-- /main-nav -->
+			
+			<ul class="main-nav" id="sub-nav">
+				<li><a href="http://lyrion.net/cloudsizzle/general_info.php">Settings</a></li>
+				<li><a href="#">Logout</a></li>
+			</ul> <!-- /sub-nav -->
+			
+			
+			<div id="search">
+				<form method="post" action="search.php">
+					<div>
+						<input name="query" type="text">
+						<input name="submit" type="hidden">
+						<input src="general_info_files/search_btn.png" name="submit_btn" value="Search" class="search-button" type="image">
+					</div>
+				</form>
+			</div> <!-- /search -->
+		</div> <!-- /header -->
+		
+		<div id="content">	<ul id="breadcrumb">
+		<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a> &gt;</li>
+		<li>Settings</li>
+	</ul>
+	
+	<div id="settings" class="rounded-corners-tab">
+		
+		<ul class="tabs">
+			<li class="selected">
+				<span class="tab-left"></span>
+				<span class="tab-right"></span>
+				<span class="left-border"></span>
+				<span class="right-border"></span>
+				<a href="http://lyrion.net/cloudsizzle/general_info.php">General info</a>
+			</li>
+			<li>
+				<span class="tab-left"></span>
+				<span class="tab-right"></span>
+				<span class="left-border"></span>
+				<span class="right-border"></span>
+				<span class="bottom-border"></span>
+				<a href="http://lyrion.net/cloudsizzle/privacy.php">Privacy</a>
+			</li>
+		</ul>
+		
+		<div class="tab-content">
+			<div class="top-right"></div>
+			<div class="bottom-left"></div>
+			<div class="bottom-right"></div>
+			<div class="bottom-border"></div>
+			<div class="right-border"></div>
+			<div class="left-border"></div>
+			
+			<h1>Your info</h1>
+			
+			<form method="post" action="#" enctype="multipart/form-data" id="info">
+				<div>
+					<label for="first-name">First name</label>
+					<input name="first_name" id="first-name" type="text">
+				</div>
+				<div>
+					<label for="last-name">Last name</label>
+					<input name="last_name" id="last-name" type="text">
+				</div>
+				<div>
+					<label for="email">Email address</label>
+					<input name="email" id="email" type="text">
+				</div>
+				<div>
+					<label for="major">Major</label>
+					<input name="major" id="major" type="text">
+				</div>
+				<div>
+					<label for="minor">Minor</label>
+					<input name="minor" id="minor" type="text">
+				</div>
+				<div>
+					<label for="picture">Profile picture</label>
+					<div>
+						<img src="general_info_files/profile_picture.jpg" alt="">
+						<input name="MAX_FILE_SIZE" value="100000" type="hidden">
+						<input name="picture" id="picture" value="Browse" type="file">
+					</div>
+				</div>
+				<div>
+					<input name="submit" value="Save" class="button" type="submit">
+				</div>
+			</form>
+		</div>
+	</div> <!-- /settings -->
+		</div> <!-- /content -->
+		
+	</div><!-- wrapper -->
+	
+	<div id="footer">
+		<p>© CloudSizzle 2010</p>
+	</div> <!-- /footer -->
+	
+</body></html>

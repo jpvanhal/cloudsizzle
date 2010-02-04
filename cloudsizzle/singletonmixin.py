@@ -190,8 +190,6 @@ class Singleton(object):
     __metaclass__ = MetaSingleton
     
     def getInstance(cls, *lstArgs, **dctKwArgs):
-        if
-        
         """
         Call this to instantiate an instance or retrieve the existing instance.
         If the singleton requires args to be instantiated, include them the first

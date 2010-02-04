@@ -178,7 +178,7 @@ def suite():
     import cloudsizzle.api.tests as api
 
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(UtilsTestCase, 'test'),
+    suite.addTest(unittest.makeSuite(UtilsTestCase, 'test'))
     suite.addTest(api.suite())
     suite.addTest(scrapers.suite())
     suite.addTest(

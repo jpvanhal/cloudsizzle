@@ -3,25 +3,26 @@ import doctest
 from cloudsizzle.api import course, people, session
 from minimock import Mock, restore, TraceTracker, mock
 from cloudsizzle import pool
-from cloudsizzle.kp import Triple, uri, literal
+from cloudsizzle.kp import Triple, uri, literal, MockSIBConnection
 
 class APITestCase(unittest.TestCase):
     def setUp(self):
         self.tt = TraceTracker()
-        self.sc = Mock('SIBConnection', tracker=self.tt)
+        self.sc = MockSIBConnection()
         mock('pool._pool')
         mock('pool._pool.acquire', tracker=self.tt, returns=self.sc)
         mock('pool._pool.release', tracker=self.tt)
 
     def tearDown(self):
+        self.sc.triple_store.clear()
         restore()
 
 class PeopleGetFriendsTestCase(APITestCase):
     BASE_URI = 'http://cloudsizzle.cs.hut.fi/onto/people/'
 
     def test_get_friends_of_user_with_friends(self):
-        self.sc.query = Mock('SIBConnection.query', tracker=self.tt, returns=[
-           Triple(
+        self.sc.insert([
+            Triple(
                uri(self.BASE_URI + 'd-cfIOQH0r3RjGaaWPEYjL'),
                uri('has_friend'),
                literal(self.BASE_URI + 'd8vrPqQH0r3QeEaaWPEYjL')),
@@ -35,75 +36,54 @@ class PeopleGetFriendsTestCase(APITestCase):
                literal(self.BASE_URI + 'd81F3WQH0r3OK1aaWPEYjL'))
         ])
         friends = sorted(people.get_friends('d-cfIOQH0r3RjGaaWPEYjL'))
-        self.tt.check("Called ConnectionPool.acquire()")
-        self.tt.check("Called SIBConnection.query(" \
-            "Triple(uri('" + self.BASE_URI + "d-cfIOQH0r3RjGaaWPEYjL'), " \
-            "uri('has_friend'), None))")
-        self.tt.check(
-            "Called ConnectionPool.release(<Mock 0x... SIBConnection>)")
         expected = ['d81F3WQH0r3OK1aaWPEYjL', 'd8vrPqQH0r3QeEaaWPEYjL',
             'd9JgtWQH0r3QBRaaWPEYjL']
         self.assertEqual(expected, friends)
 
     def test_get_friends_of_a_lonely_user(self):
-        self.sc.query = Mock('SIBConnection.query', tracker=self.tt, returns=[])
+        # triple store is empty
         friends = people.get_friends('aQ0zwc2Pur3PwyaaWPEYjL')
-        self.tt.check("Called ConnectionPool.acquire()")
-        self.tt.check("Called SIBConnection.query(" \
-            "Triple(uri('" + self.BASE_URI + "aQ0zwc2Pur3PwyaaWPEYjL'), "\
-            "uri('has_friend'), None))")
-        self.tt.check(
-            "Called ConnectionPool.release(<Mock 0x... SIBConnection>)")
         self.assertEqual(0, len(friends))
 
 class PeopleSearchTestCase(APITestCase):
     def test_search(self):
-        self.sc.query = Mock('SIBConnection.query', tracker=self.tt,
-            returns_iter=[[
-                Triple(
-                    uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
-                    uri('http://cos.alpha.sizl.org/people#username'),
-                    literal('pangbo')),
-                Triple(
-                    uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
-                    uri('http://cos.alpha.sizl.org/people#username'),
-                    literal('geeman')),
-                Triple(
-                    uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
-                    uri('http://cos.alpha.sizl.org/people#username'),
-                    literal('pang')),
-                Triple(
-                    uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
-                    uri('http://cos.alpha.sizl.org/people#username'),
-                    literal('kafka'))],
-                [
-                Triple(
-                    uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
-                    uri('http://cos.alpha.sizl.org/people#name'),
-                    literal('Pang Bo')),
-                Triple(
-                    uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
-                    uri('http://cos.alpha.sizl.org/people#name'),
-                    literal('bo pang')),
-                Triple(
-                    uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
-                    uri('http://cos.alpha.sizl.org/people#name'),
-                    literal('None')),
-                Triple(
-                    uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
-                    uri('http://cos.alpha.sizl.org/people#name'),
-                    literal('Franz Kafka'))]
+        self.sc.insert([
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#username'),
+                literal('pangbo')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#username'),
+                literal('geeman')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#username'),
+                literal('pang')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#username'),
+                literal('kafka')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#name'),
+                literal('Pang Bo')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#name'),
+                literal('bo pang')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#name'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#name'),
+                literal('Franz Kafka')),
         ])
         user_ids = sorted(people.search('Pang'))
         expected = ['aQ0zwc2Pur3PwyaaWPEYjL', 'bG1oHm3yWr3RiVaaWPEYjL',
             'bKBrQM27er3PeAaaWPEYjL']
-        self.tt.check('Called ConnectionPool.acquire()')
-        self.tt.check("Called SIBConnection.query("\
-            "Triple(None, uri('http://cos.alpha.sizl.org/people#username'),"\
-                "None))")
-        self.tt.check("Called SIBConnection.query("\
-            "Triple(None, uri('http://cos.alpha.sizl.org/people#name'), None))")
-        self.tt.check("Called ConnectionPool.release(<Mock 0x... SIBConnection>)")
         self.assertEqual(expected, user_ids)
 
 def suite():

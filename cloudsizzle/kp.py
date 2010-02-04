@@ -68,4 +68,40 @@ class WrappedTriple(Triple):
         tuple_ = (triple, ) + tuple_[1:]
         return tuple_
 
+class MockSIBConnection(object):
+
+    def __init__(self, node_name='Node', method='Manual'):
+        self.triple_store = set()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        pass
+
+    def insert(self, triples, **kwargs):
+        for triple in triples:
+            self.triple_store.add(triple)
+
+    def query(self, query):
+        result = []
+        for triple in self.triple_store:
+            if ((not query.subject or query.subject == triple.subject) and
+                (not query.predicate or query.predicate == triple.predicate) and
+                (not query.object or query.object == triple.object)):
+                result.append(triple)
+        return result
+
+    def update(self, r_triples, i_triples):
+        self.remove(r_triples)
+        self.insert(i_triples)
+
+    def remove(self, triples):
+        for triple in triples:
+            self.triple_store.remove(triple)
+        return True
+
+    def subscribe(self, triples, handler):
+        raise NotImplemented
+
 kpwrapper.Triple = WrappedTriple

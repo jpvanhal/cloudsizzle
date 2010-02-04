@@ -1,4 +1,4 @@
-from cloudsizzle.testhelp import validate_html
+from cloudsizzle.studyplanner import testhelp
 
-validate_html('/')
+testhelp.validate_html('/')
 

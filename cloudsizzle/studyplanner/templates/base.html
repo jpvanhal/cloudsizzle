@@ -1,40 +1,49 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>CloudSizzle</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
-  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.0r4/build/reset/reset-min.css">
-  <link rel="stylesheet" type="text/css" href="static/styles/style.css" />
+	<title>CloudSizzle</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta http-equiv="imagetoolbar" content="no" />
+	<meta name="description" content="SITE DESCRIPTION"/>
+	<meta name="keywords" content=""/>
+	<link rel="stylesheet" type="text/css" media="all" href="/static/styles/reset.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="/static/styles/styles.css" />
 </head>
-<body>
-    <div id="cont">
-        <div id="header">
-           <h1 id="logo">CloudSizzle home</h1>
-           {% block header %}
-           
-           <ul id="nav">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Courses</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Logout</a></li>
-           </ul>
-           
-           <form id="search">
-            <input name="query" />
-            <input type="submit" name="search" value="Search" />
-           </form> <!-- /search -->
-           {% endblock header %}
-        </div> <!-- /header -->
-        
-        <div id="content">
-            {% block content %}
-            {% endblock content %}
-        </div> <!-- /content -->
-        
-        <div id="footer">
-            <p>&copy; CloudSizzle</p>
-        </div> <!-- /footer -->
-    </div> <!-- /wrapper -->
+<body id="courses-page">
+	<div id="wrapper">
+		<div id="header">
+			<img src="/static/graphics/logo_small.png" alt="" id="logo" />
+			
+			<ul class="main-nav">
+				<li><a href="/">Home</a></li>
+				<li><a href="/profile/">Profile</a></li>
+				<li><a href="/courses/">Courses</a></li>
+			</ul>
+			
+			<ul class="main-nav" id="sub-nav">
+				<li><a href="/settings">Settings</a></li>
+				<li><a href="/session/logout">Logout</a></li>
+			</ul> <!-- /sub-nav -->
+			
+			
+			<div id="search">
+				<form method="post" action="#">
+					<div>
+						<input type="text" name="query" />
+						<input type="hidden" name="submit" />
+						<input type="image" src="/static/graphics/search_btn.png" name="submit_btn" value="Search" class="search-button" />
+					</div>
+				</form>
+			</div> <!-- /search -->
+		</div> <!-- /header -->
+	{% block content %}		
+	{% endblock content %}
+	</div><!-- wrapper -->
+	
+	<div id="footer">
+		<p>&copy; CloudSizzle 2010</p>
+	</div> <!-- /footer -->
+	
 </body>
 </html>

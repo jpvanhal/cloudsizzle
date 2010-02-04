@@ -5,39 +5,12 @@ RDF_SCHEMA_URI = 'http://www.w3.org/2000/01/rdf-schema#'
 RDF_SYNTAX_NS_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 
 def fetch_rdf_graph(subject):
-    """
-    Example usage:
-
-    >>> uri = 'http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'
-    >>> g = fetch_rdf_graph(uri)
-    >>> from pprint import pprint
-    >>> pprint(g)
-    {'address': 'None',
-     'avatar': {'link': {'href': '/people/dn3FNGIomr3OicaaWPEYjL/@avatar',
-                         'rel': 'self'},
-                'status': 'not_set'},
-     'birthdate': 'None',
-     'description': 'None',
-     'gender': 'None',
-     'irc_nick': 'None',
-     'is_association': 'None',
-     'msn_nick': 'None',
-     'name': {'family_name': 'Jannu15',
-              'given_name': 'Testi',
-              'unstructured': 'Testi Jannu15'},
-     'phone_number': 'None',
-     'role': 'None',
-     'status': {'changed': 'None', 'message': 'None'},
-     'updated_at': '2009-08-14T15:04:46Z',
-     'username': 'testijannu15',
-     'website': 'None'}
-
-    """
     with pool.get_connection() as sc:
         triplets = sc.query(Triple(subject, None, None))
 
     graph = {}
     for triplet in triplets:
+        print triplet
         # Skip triplets that define RDF ontology
         if triplet.predicate.startswith(RDF_SYNTAX_NS_URI):
             continue

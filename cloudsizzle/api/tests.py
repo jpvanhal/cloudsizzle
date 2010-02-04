@@ -1,23 +1,11 @@
 import unittest
 import doctest
 from cloudsizzle.api import course, people, session
-from minimock import Mock, restore, TraceTracker, mock
 from cloudsizzle import pool
-from cloudsizzle.kp import Triple, uri, literal, MockSIBConnection
+from cloudsizzle.kp import Triple, uri, literal
+from cloudsizzle.tests import SIBTestCase
 
-class APITestCase(unittest.TestCase):
-    def setUp(self):
-        self.tt = TraceTracker()
-        self.sc = MockSIBConnection()
-        mock('pool._pool')
-        mock('pool._pool.acquire', tracker=self.tt, returns=self.sc)
-        mock('pool._pool.release', tracker=self.tt)
-
-    def tearDown(self):
-        self.sc.triple_store.clear()
-        restore()
-
-class PeopleGetFriendsTestCase(APITestCase):
+class PeopleGetFriendsTestCase(SIBTestCase):
     BASE_URI = 'http://cloudsizzle.cs.hut.fi/onto/people/'
 
     def test_get_friends_of_user_with_friends(self):
@@ -45,7 +33,7 @@ class PeopleGetFriendsTestCase(APITestCase):
         friends = people.get_friends('aQ0zwc2Pur3PwyaaWPEYjL')
         self.assertEqual(0, len(friends))
 
-class PeopleSearchTestCase(APITestCase):
+class PeopleSearchTestCase(SIBTestCase):
     def test_search(self):
         self.sc.insert([
             Triple(

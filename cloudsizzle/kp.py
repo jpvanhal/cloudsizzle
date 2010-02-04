@@ -69,6 +69,15 @@ class WrappedTriple(Triple):
         return tuple_
 
 class MockSIBConnection(object):
+    NAMESPACES = {
+        'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+        'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+        'owl': 'http://www.w3.org/2002/07/owl#',
+        'xsd': 'http://www.w3.org/2001/XMLSchema#',
+        'dc': 'http://purl.org/dc/elements/1.1/',
+        'sib': 'http://www.nokia.com/NRC/M3/sib#',
+        'daml': 'http://www.daml.org/2000/12/daml+oil#',
+    }
 
     def __init__(self, node_name='Node', method='Manual'):
         self.triple_store = set()
@@ -89,12 +98,22 @@ class MockSIBConnection(object):
         for triple in triples:
             self.triple_store.add(triple)
 
+    def _expand_namespace(self, node):
+        if isinstance(node, uri) and ':' in node:
+            ns, value = node.split(':')
+            try:
+                return uri(self.NAMESPACES[ns] + value)
+            except KeyError:
+                return node
+        else:
+            return node
+
     def query(self, query):
         result = []
         for triple in self.triple_store:
-            if ((not query.subject or query.subject == triple.subject) and
-                (not query.predicate or query.predicate == triple.predicate) and
-                (not query.object or query.object == triple.object)):
+            if ((not query.subject or self._expand_namespace(query.subject) == triple.subject) and
+                (not query.predicate or self._expand_namespace(query.predicate) == triple.predicate) and
+                (not query.object or self._expand_namespace(query.object) == triple.object)):
                 result.append(triple)
         return result
 

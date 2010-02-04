@@ -9,8 +9,10 @@ def fetch_rdf_graph(subject):
         triplets = sc.query(Triple(subject, None, None))
 
     graph = {}
+    if not triplets:
+        return graph
+
     for triplet in triplets:
-        print triplet
         # Skip triplets that define RDF ontology
         if triplet.predicate.startswith(RDF_SYNTAX_NS_URI):
             continue
@@ -19,6 +21,7 @@ def fetch_rdf_graph(subject):
         p = str(triplet.predicate)
         o = str(triplet.object)
 
+        # Strip namespace uri from predicate
         if isinstance(triplet.predicate, uri):
             p = p.split('#')[-1]
 

@@ -5,7 +5,7 @@ from cloudsizzle import pool
 from cloudsizzle.kp import Triple, uri, literal
 from cloudsizzle.tests import SIBTestCase
 
-class PeopleGetFriendsTestCase(SIBTestCase):
+class PeopleAPITestCase(SIBTestCase):
     BASE_URI = 'http://cloudsizzle.cs.hut.fi/onto/people/'
 
     def test_get_friends_of_user_with_friends(self):
@@ -33,42 +33,53 @@ class PeopleGetFriendsTestCase(SIBTestCase):
         friends = people.get_friends('aQ0zwc2Pur3PwyaaWPEYjL')
         self.assertEqual(0, len(friends))
 
-class PeopleSearchTestCase(SIBTestCase):
+    def test_get_person(self):
+        expected = {
+            'address': 'None',
+            'avatar': {
+                'link': {
+                    'href': '/people/dn3FNGIomr3OicaaWPEYjL/@avatar',
+                    'rel': 'self'
+                },
+                'status': 'not_set'
+            },
+            'birthdate': 'None',
+            'description': 'None',
+            'gender': 'None',
+            'irc_nick': 'None',
+            'is_association': 'None',
+            'msn_nick': 'None',
+            'name': {
+                'family_name': 'Jannu15',
+                'given_name': 'Testi',
+                'unstructured': 'Testi Jannu15'
+            },
+            'phone_number': 'None',
+            'role': 'None',
+            'status': {
+                'changed': 'None',
+                'message': 'None'
+            },
+            'updated_at': '2009-08-14T15:04:46Z',
+            'username': 'testijannu15',
+            'website': 'None'
+        }
+
+        uid = 'dn3FNGIomr3OicaaWPEYjL'
+        actual = people.get(uid)
+
+        self.assertEqual(expected, actual)
+
+    def test_get_all_people(self):
+        expected = [
+            'aQ0zwc2Pur3PwyaaWPEYjL', 'bG1oHm3yWr3RiVaaWPEYjL',
+            'bKBrQM27er3PeAaaWPEYjL', 'cZIUMG870r3P1-aaWPEYjL',
+            'dn3FNGIomr3OicaaWPEYjL',
+        ]
+        user_ids = people.get_all()
+        self.assertEqual(expected, sorted(user_ids))
+
     def test_search(self):
-        self.sc.insert([
-            Triple(
-                uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
-                uri('http://cos.alpha.sizl.org/people#username'),
-                literal('pangbo')),
-            Triple(
-                uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
-                uri('http://cos.alpha.sizl.org/people#username'),
-                literal('geeman')),
-            Triple(
-                uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
-                uri('http://cos.alpha.sizl.org/people#username'),
-                literal('pang')),
-            Triple(
-                uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
-                uri('http://cos.alpha.sizl.org/people#username'),
-                literal('kafka')),
-            Triple(
-                uri('http://cos.alpha.sizl.org/people/ID#aQ0zwc2Pur3PwyaaWPEYjL'),
-                uri('http://cos.alpha.sizl.org/people#name'),
-                literal('Pang Bo')),
-            Triple(
-                uri('http://cos.alpha.sizl.org/people/ID#bKBrQM27er3PeAaaWPEYjL'),
-                uri('http://cos.alpha.sizl.org/people#name'),
-                literal('bo pang')),
-            Triple(
-                uri('http://cos.alpha.sizl.org/people/ID#bG1oHm3yWr3RiVaaWPEYjL'),
-                uri('http://cos.alpha.sizl.org/people#name'),
-                literal('None')),
-            Triple(
-                uri('http://cos.alpha.sizl.org/people/ID#cZIUMG870r3P1-aaWPEYjL'),
-                uri('http://cos.alpha.sizl.org/people#name'),
-                literal('Franz Kafka')),
-        ])
         user_ids = sorted(people.search('Pang'))
         expected = ['aQ0zwc2Pur3PwyaaWPEYjL', 'bG1oHm3yWr3RiVaaWPEYjL',
             'bKBrQM27er3PeAaaWPEYjL']
@@ -76,8 +87,7 @@ class PeopleSearchTestCase(SIBTestCase):
 
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(PeopleGetFriendsTestCase, 'test'))
-    suite.addTest(unittest.makeSuite(PeopleSearchTestCase, 'test'))
+    suite.addTest(unittest.makeSuite(PeopleAPITestCase, 'test'))
     for module in (course, people, session):
         suite.addTest(doctest.DocTestSuite(module,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS))

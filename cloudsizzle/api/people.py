@@ -7,9 +7,10 @@ from itertools import chain
 from cloudsizzle.kp import Triple, bnode, uri, literal
 from cloudsizzle.asi import sib_agent
 from cloudsizzle import pool
+from cloudsizzle.utils import fetch_rdf_graph
 from cloudsizzle.api.ResponseHandler import RegisterResponseHandler
 
-RDF_BASE_URI = 'http://cos.alpha.sizl.org/people/'
+PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people/'
 
 class UserAlreadyExists(Exception):
     pass
@@ -37,7 +38,7 @@ def create(username, password, email):
     lock.acquire()
     result = handler.get_result(request_id)
     if result.startswith('messages'): # failed
-        raise ValueError(result)    
+        raise ValueError(result)
     return result                     # return UID
 
 def get(user_id):
@@ -49,60 +50,26 @@ def get(user_id):
     Exceptions:
     UserDoesNotExist -- User with specified user_id does not exist.
 
-    Example:
-    >>> #get("azZ1LaRdCr3OiIaaWPfx7J")
-    {
-                'website': 'None',
-                'username': 'pang1',
-                'name': 'None',
-                'gender': 'None',
-                'is_association': 'None',
-                'updated_at': '2009-11-30T08:46:58Z',
-                'birthdate': 'None',
-                'msn_nick': 'None',
-                'status': {'message': 'None', 'changed': 'None'},
-                'irc_nick': 'None',
-                'connection': 'you',
-                'role': 'user',
-                'avatar': {'status': 'not_set', 'link': {'href': '/people/dRq9He3yWr3QUKaaWPEYjL/@avatar', 'rel': 'self'}},
-                'address': None,
-                'phone_number': 'None','bG1oHm3yWr3RiVaaWPEYjL'
-                'email': 'testman1@example.com',
-                'description': 'None'
-    }
-
-
     """
-    QUERY_WITH_UID = Triple(uri(RDF_BASE_URI+'ID#'+str(user_id)),
-                           None,
-                           None)
-    with pool.get_connection() as querySc:
-        all_information = querySc.query(QUERY_WITH_UID)
-    if not all_information:
-        raise UserDoesNotExist
-    informationDic = sib_agent.to_struct(all_information)
-    return informationDic
-    pass
+    user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
+    user = fetch_rdf_graph(user_uri)
+    if not user:
+        raise UserDoesNotExist(user_id)
+    return user
 
 def get_all():
-    """Return all the users' uid.
+    """Return a list of user_ids of all users.
 
-    Example:
-    >>> #get_all()
     """
-    QUERY_USERS = Triple(None,
-                           None,
-                           uri('http://cos.alpha.sizl.org/people#Person'))
-    with pool.get_connection() as querySc:
-        all_users = querySc.query(QUERY_USERS)
-    if all_users:
-        uids = []
-        for user in all_users:
-            uid = user.subject.split('http://cos.alpha.sizl.org/people/ID#')[1]
+    uids = []
+    with pool.get_connection() as sc:
+        triples = sc.query(Triple(None, 'rdf:type',
+            uri('http://cos.alpha.sizl.org/people#Person')))
+        for triple in triples:
+            uid = triple.subject.split('#')[-1]
             uids.append(uid)
-        return uids
-    return None
-    pass
+    return uids
+
 
 def get_friends(user_id):
     """Get a list of user's friends.

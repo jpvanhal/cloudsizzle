@@ -79,6 +79,12 @@ class MockSIBConnection(object):
     def __exit__(self, type, value, traceback):
         pass
 
+    def open(self):
+        pass
+
+    def close(self):
+        pass
+
     def insert(self, triples, **kwargs):
         for triple in triples:
             self.triple_store.add(triple)

@@ -178,12 +178,12 @@ def suite():
     import cloudsizzle.api.tests as api
 
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(UtilsTestCase, 'test')),
-    suite.addTest(api.suite()),
-    suite.addTest(scrapers.suite()),
+    suite.addTest(unittest.makeSuite(UtilsTestCase, 'test'),
+    suite.addTest(api.suite())
+    suite.addTest(scrapers.suite())
     suite.addTest(
-        doctest.DocTestSuite(utils, optionflags=doctest.NORMALIZE_WHITESPACE)),
-    suite.addTest(doctest.DocTestSuite(kp)),
+        doctest.DocTestSuite(utils, optionflags=doctest.NORMALIZE_WHITESPACE))
+    suite.addTest(doctest.DocTestSuite(kp))
     return suite
 
 if __name__ == '__main__':

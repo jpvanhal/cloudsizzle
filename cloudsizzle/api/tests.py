@@ -72,18 +72,23 @@ class PeopleAPITestCase(SIBTestCase):
 
     def test_get_all_people(self):
         expected = [
-            'aQ0zwc2Pur3PwyaaWPEYjL', 'bG1oHm3yWr3RiVaaWPEYjL',
-            'bKBrQM27er3PeAaaWPEYjL', 'cZIUMG870r3P1-aaWPEYjL',
+            'bbYJ_80fWr3Om4aaWPEYjL',
             'dn3FNGIomr3OicaaWPEYjL',
         ]
         user_ids = people.get_all()
         self.assertEqual(expected, sorted(user_ids))
 
-    def test_search(self):
-        user_ids = sorted(people.search('Pang'))
-        expected = ['aQ0zwc2Pur3PwyaaWPEYjL', 'bG1oHm3yWr3RiVaaWPEYjL',
-            'bKBrQM27er3PeAaaWPEYjL']
-        self.assertEqual(expected, user_ids)
+    def test_search_people_with_query_in_username_and_realname(self):
+        self.assertEqual(['dn3FNGIomr3OicaaWPEYjL'], people.search('Jannu'))
+
+    def test_search_people_with_query_only_in_username(self):
+        self.assertEqual(['bbYJ_80fWr3Om4aaWPEYjL'], people.search('test4'))
+
+    def test_search_people_with_query_only_in_realname(self):
+        self.assertEqual(['bbYJ_80fWr3Om4aaWPEYjL'], people.search('hemmo'))
+
+    def test_search_people_with_no_matches(self):
+        self.assertEqual([], people.search('ei ooo'))
 
 def suite():
     suite = unittest.TestSuite()

@@ -12,12 +12,43 @@ class SIBTestCase(unittest.TestCase):
         mock('pool._pool.acquire', tracker=self.tt, returns=self.sc)
         mock('pool._pool.release', tracker=self.tt)
 
-    def tearDown(self):
-        self.sc.triple_store.clear()
-        restore()
+        # Basic ontology
+        self.sc.insert([
+            Triple(
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#Property')),
+            Triple(
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://www.w3.org/2000/01/rdf-schema#Class')),
+            Triple(
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'),
+                uri('http://www.w3.org/2000/01/rdf-schema#subClassOf'),
+                uri('http://www.w3.org/2000/01/rdf-schema#Resource')),
+            Triple(
+                uri('http://www.w3.org/2000/01/rdf-schema#Resource'),
+                uri('http://www.w3.org/2000/01/rdf-schema#subClassOf'),
+                uri('http://www.w3.org/2000/01/rdf-schema#Resource')),
+            Triple(
+                uri('http://www.w3.org/2000/01/rdf-schema#Class'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://www.w3.org/2000/01/rdf-schema#Class')),
+            Triple(
+                uri('http://www.w3.org/2000/01/rdf-schema#Class'),
+                uri('http://www.w3.org/2000/01/rdf-schema#subClassOf'),
+                uri('http://www.w3.org/2000/01/rdf-schema#Resource')),
+            Triple(
+                uri('http://www.w3.org/2000/01/rdf-schema#subClassOf'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#Property')),
+            Triple(
+                uri('http://www.w3.org/2000/01/rdf-schema#label'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#Property')),
+        ])
 
-class UtilsTestCase(SIBTestCase):
-    def test_fetch_rdf_graph(self):
+        # People triples
         self.sc.insert([
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
@@ -137,6 +168,133 @@ class UtilsTestCase(SIBTestCase):
                 literal('None')),
         ])
 
+        self.sc.insert([
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://cos.alpha.sizl.org/people#Person')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#website'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#username'),
+                literal('aaatest4ivid')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#updated_at'),
+                literal('2009-11-13T13:55:53Z')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#status'),
+                uri('http://cos.alpha.sizl.org/people#fd3f5275-e946-4d4d-b46a-bd87af0f9c64')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#fd3f5275-e946-4d4d-b46a-bd87af0f9c64'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://cos.alpha.sizl.org/people#Status')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#fd3f5275-e946-4d4d-b46a-bd87af0f9c64'),
+                uri('http://cos.alpha.sizl.org/people#message'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#fd3f5275-e946-4d4d-b46a-bd87af0f9c64'),
+                uri('http://cos.alpha.sizl.org/people#changed'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#role'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#phone_number'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#name'),
+                uri('http://cos.alpha.sizl.org/people#e1a92c6a-9566-4385-800b-8e1f59155b56')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#e1a92c6a-9566-4385-800b-8e1f59155b56'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://cos.alpha.sizl.org/people#Name')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#e1a92c6a-9566-4385-800b-8e1f59155b56'),
+                uri('http://cos.alpha.sizl.org/people#unstructured'),
+                literal('testi hemmo')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#e1a92c6a-9566-4385-800b-8e1f59155b56'),
+                uri('http://cos.alpha.sizl.org/people#given_name'),
+                literal('testi')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#e1a92c6a-9566-4385-800b-8e1f59155b56'),
+                uri('http://cos.alpha.sizl.org/people#family_name'),
+                literal('hemmo')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#msn_nick'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#is_association'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#irc_nick'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#gender'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#description'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#birthdate'),
+                literal('None')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#avatar'),
+                uri('http://cos.alpha.sizl.org/people#c1939e3f-c9da-45b1-abc7-0a5536e199ac')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#c1939e3f-c9da-45b1-abc7-0a5536e199ac'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://cos.alpha.sizl.org/people#Avatar')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#c1939e3f-c9da-45b1-abc7-0a5536e199ac'),
+                uri('http://cos.alpha.sizl.org/people#status'),
+                literal('not_set')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#c1939e3f-c9da-45b1-abc7-0a5536e199ac'),
+                uri('http://cos.alpha.sizl.org/people#link'),
+                uri('http://cos.alpha.sizl.org/people#ee8cc93a-6c09-4b3a-b5ca-b2e200c7780f')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#ee8cc93a-6c09-4b3a-b5ca-b2e200c7780f'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://cos.alpha.sizl.org/people#Link')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#ee8cc93a-6c09-4b3a-b5ca-b2e200c7780f'),
+                uri('http://cos.alpha.sizl.org/people#rel'),
+                literal('self')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#ee8cc93a-6c09-4b3a-b5ca-b2e200c7780f'),
+                uri('http://cos.alpha.sizl.org/people#href'),
+                literal('/people/bbYJ_80fWr3Om4aaWPEYjL/@avatar')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#address'),
+                literal('None'))
+        ])
+
+
+
+    def tearDown(self):
+        self.sc.triple_store.clear()
+        restore()
+
+class UtilsTestCase(SIBTestCase):
+    def test_fetch_rdf_graph(self):
         expected = {
             'address': 'None',
             'avatar': {

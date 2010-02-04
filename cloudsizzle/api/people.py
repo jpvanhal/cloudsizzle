@@ -101,16 +101,25 @@ def search(query):
     with pool.get_connection() as sc:
         query = query.lower()
 
+        user_ids = set()
+
         username_triples = sc.query(
             Triple(None, 'http://cos.alpha.sizl.org/people#username', None))
-        realname_triples = sc.query(
-            Triple(None, 'http://cos.alpha.sizl.org/people#name', None))
+        unstructured_triples = sc.query(
+            Triple(None, 'http://cos.alpha.sizl.org/people#unstructured', None))
 
-        user_ids = set()
-        for triple in chain(username_triples, realname_triples):
+        for triple in chain(username_triples, unstructured_triples):
             name = str(triple.object)
             if query in name.lower():
-                namespace, uid = triple.subject.split('#')
+                if triple.predicate.endswith('unstructured'):
+                    name_triples = sc.query(Triple(None,
+                        'http://cos.alpha.sizl.org/people#name',
+                        triple.subject))
+                    user_uri = name_triples[0].subject
+                else:
+                    user_uri = triple.subject
+
+                namespace, uid = user_uri.split('#')
                 user_ids.add(uid)
 
-        return user_ids
+        return list(user_ids)

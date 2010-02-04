@@ -90,9 +90,59 @@ class PeopleAPITestCase(SIBTestCase):
     def test_search_people_with_no_matches(self):
         self.assertEqual([], people.search('ei ooo'))
 
+class FacultyTest(unittest.TestCase):
+    def test_faculties(self):
+        faculties = course.get_faculties()
+        self.assertNotEqual(0, len(faculties))
+        
+        duplicatelist = []
+                
+        for faculty in faculties:
+            self.assertNotEqual(0, len(faculty['slug']))
+            self.assertNotEqual(0, len(faculty['name']))
+            self.failIf((faculty['slug'] in duplicatelist), "duplicate of faculties found")
+            duplicatelist.append(faculty['slug'])
+
+class DepartmentTest(unittest.TestCase):
+    def test_departments(self):
+        faculties = course.get_faculties()
+        
+        duplicatelist = []
+        
+        for faculty in faculties:
+            departments = course.get_departments_by_faculty(faculty['slug'])
+            self.assertNotEqual(0,len(departments))
+            for department in departments:
+                self.assertNotEqual(0, len(department['code']))
+                self.assertNotEqual(0, len(department['slug']))
+                self.assertNotEqual(0, len(department['name']))
+                self.failIf((department['slug'] in duplicatelist), "duplicate of departments found")
+                duplicatelist.append(department['slug'])
+
+class CourseTest(unittest.TestCase):
+    def test_courses(self):
+        faculties = course.get_faculties()
+        
+        duplicatelist = []
+        
+        for faculty in faculties:
+            departments = course.get_departments_by_faculty(faculty['slug'])
+            for department in departments:
+                courses = course.get_courses_by_department(department['code'])
+                for c in courses:
+                    # some departments might not have courses but no duplicates between the deparments courses should be found
+                    self.failIf((c['slug'] in duplicatelist), "duplicate of courses found")
+                    self.assertNotEqual(0, len(c['slug']))
+                    self.assertNotEqual(0, len(c['code']))
+                    self.assertNotEqual(0, len(c['name']))
+                    duplicatelist.append(c['slug'])
+                    
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(PeopleAPITestCase, 'test'))
+    suite.addTest(unittest.makeSuite(FacultyTest, 'test'))
+    suite.addTest(unittest.makeSuite(DepartmentTest, 'test'))
+    suite.addTest(unittest.makeSuite(CourseTest, 'test'))
     for module in (course, people, session):
         suite.addTest(doctest.DocTestSuite(module,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS))

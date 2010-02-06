@@ -57,7 +57,7 @@ class SIBTestCase(unittest.TestCase):
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#website'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#username'),
@@ -77,19 +77,19 @@ class SIBTestCase(unittest.TestCase):
             Triple(
                 uri('http://cos.alpha.sizl.org/people#cb286efb-05ed-435a-87bf-3ac3263fd51d'),
                 uri('http://cos.alpha.sizl.org/people#message'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people#cb286efb-05ed-435a-87bf-3ac3263fd51d'),
                 uri('http://cos.alpha.sizl.org/people#changed'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#role'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#phone_number'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#name'),
@@ -113,27 +113,27 @@ class SIBTestCase(unittest.TestCase):
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#msn_nick'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#is_association'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#irc_nick'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#gender'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#description'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#birthdate'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#avatar'),
@@ -165,7 +165,7 @@ class SIBTestCase(unittest.TestCase):
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#address'),
-                literal('None')),
+                None),
         ])
 
         self.sc.insert([
@@ -176,7 +176,7 @@ class SIBTestCase(unittest.TestCase):
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#website'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#username'),
@@ -196,19 +196,19 @@ class SIBTestCase(unittest.TestCase):
             Triple(
                 uri('http://cos.alpha.sizl.org/people#fd3f5275-e946-4d4d-b46a-bd87af0f9c64'),
                 uri('http://cos.alpha.sizl.org/people#message'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people#fd3f5275-e946-4d4d-b46a-bd87af0f9c64'),
                 uri('http://cos.alpha.sizl.org/people#changed'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#role'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#phone_number'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#name'),
@@ -232,27 +232,27 @@ class SIBTestCase(unittest.TestCase):
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#msn_nick'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#is_association'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#irc_nick'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#gender'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#description'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#birthdate'),
-                literal('None')),
+                None),
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#avatar'),
@@ -284,9 +284,8 @@ class SIBTestCase(unittest.TestCase):
             Triple(
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#address'),
-                literal('None'))
+                None)
         ])
-
 
 
     def tearDown(self):
@@ -296,7 +295,7 @@ class SIBTestCase(unittest.TestCase):
 class UtilsTestCase(SIBTestCase):
     def test_fetch_rdf_graph(self):
         expected = {
-            'address': 'None',
+            'address': None,
             'avatar': {
                 'link': {
                     'href': '/people/dn3FNGIomr3OicaaWPEYjL/@avatar',
@@ -304,26 +303,26 @@ class UtilsTestCase(SIBTestCase):
                 },
                 'status': 'not_set'
             },
-            'birthdate': 'None',
-            'description': 'None',
-            'gender': 'None',
-            'irc_nick': 'None',
-            'is_association': 'None',
-            'msn_nick': 'None',
+            'birthdate': None,
+            'description': None,
+            'gender': None,
+            'irc_nick': None,
+            'is_association': None,
+            'msn_nick': None,
             'name': {
                 'family_name': 'Jannu15',
                 'given_name': 'Testi',
                 'unstructured': 'Testi Jannu15'
             },
-            'phone_number': 'None',
-            'role': 'None',
+            'phone_number': None,
+            'role': None,
             'status': {
-                'changed': 'None',
-                'message': 'None'
+                'changed': None,
+                'message': None
             },
             'updated_at': '2009-08-14T15:04:46Z',
             'username': 'testijannu15',
-            'website': 'None'
+            'website': None
         }
 
         subject = 'http://cos.alpha.sizl.org/people/ID#dn3FNGIomr3OicaaWPEYjL'

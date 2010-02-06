@@ -1,44 +1,45 @@
 from cloudsizzle import pool
-from cloudsizzle.kp import Triple, uri, literal
+from cloudsizzle.kp import Triple, uri, literal, wrap_if_not_none
 
 RDF_SCHEMA_URI = 'http://www.w3.org/2000/01/rdf-schema#'
 RDF_SYNTAX_NS_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 
 def fetch_rdf_graph(subject):
     with pool.get_connection() as sc:
-        triplets = sc.query(Triple(subject, None, None))
+        triples = sc.query(Triple(subject, None, None))
 
     graph = {}
-    if not triplets:
+    if not triples:
         return graph
 
-    for triplet in triplets:
-        # Skip triplets that define RDF ontology
-        if triplet.predicate.startswith(RDF_SYNTAX_NS_URI):
+    for triple in triples:
+        # Skip triples that define RDF ontology
+        if triple.predicate.startswith(RDF_SYNTAX_NS_URI):
             continue
 
-        s = str(triplet.subject)
-        p = str(triplet.predicate)
-        o = str(triplet.object)
+        subject = wrap_if_not_none(str, triple.subject)
+        predicate = wrap_if_not_none(str, triple.predicate)
+        object_ = wrap_if_not_none(str, triple.object)
 
         # Strip namespace uri from predicate
-        if isinstance(triplet.predicate, uri):
-            p = p.split('#')[-1]
+        if isinstance(triple.predicate, uri):
+            predicate = predicate.split('#')[-1]
 
         # The last condition is there to prevent wandering into RDF
         # ontology definitions
-        if isinstance(triplet.object, uri) and not o.startswith(RDF_SCHEMA_URI):
-            value = fetch_rdf_graph(o)
+        if isinstance(triple.object, uri) and not object_.startswith(RDF_SCHEMA_URI):
+            value = fetch_rdf_graph(object_)
         else:
-            value = o
-        if s not in graph:
-            graph[s] = {}
-        if p not in graph[s]:
-            graph[s][p] = value
-        elif isinstance(graph[s][p], list):
-            graph[s][p].append(value)
+            value = object_
+
+        if subject not in graph:
+            graph[subject] = {}
+        if predicate not in graph[subject]:
+            graph[subject][predicate] = value
+        elif isinstance(graph[subject][predicate], list):
+            graph[subject][predicate].append(value)
         else:
-            graph[s][p] = [graph[s][p], value]
+            graph[subject][predicate] = [graph[subject][predicate], value]
 
     return graph[subject]
 
@@ -82,13 +83,16 @@ def make_graph(triples):
     """
     graph = {}
     for triple in triples:
-        s, p, o = str(triple.subject), str(triple.predicate), str(triple.object)
-        if s not in graph:
-            graph[s] = {}
-        if p not in graph[s]:
-            graph[s][p] = o
-        elif isinstance(graph[s][p], list):
-            graph[s][p].append(o)
+        subject = wrap_if_not_none(str, triple.subject)
+        predicate = wrap_if_not_none(str, triple.predicate)
+        object_ = wrap_if_not_none(str, triple.object)
+
+        if subject not in graph:
+            graph[subject] = {}
+        if predicate not in graph[subject]:
+            graph[subject][predicate] = object_
+        elif isinstance(graph[subject][predicate], list):
+            graph[subject][predicate].append(object_)
         else:
-            graph[s][p] = [graph[s][p], o]
+            graph[subject][predicate] = [graph[subject][predicate], object_]
     return graph

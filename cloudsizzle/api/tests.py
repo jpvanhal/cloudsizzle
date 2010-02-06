@@ -35,7 +35,7 @@ class PeopleAPITestCase(SIBTestCase):
 
     def test_get_person(self):
         expected = {
-            'address': 'None',
+            'address': None,
             'avatar': {
                 'link': {
                     'href': '/people/dn3FNGIomr3OicaaWPEYjL/@avatar',
@@ -43,26 +43,26 @@ class PeopleAPITestCase(SIBTestCase):
                 },
                 'status': 'not_set'
             },
-            'birthdate': 'None',
-            'description': 'None',
-            'gender': 'None',
-            'irc_nick': 'None',
-            'is_association': 'None',
-            'msn_nick': 'None',
+            'birthdate': None,
+            'description': None,
+            'gender': None,
+            'irc_nick': None,
+            'is_association': None,
+            'msn_nick': None,
             'name': {
                 'family_name': 'Jannu15',
                 'given_name': 'Testi',
                 'unstructured': 'Testi Jannu15'
             },
-            'phone_number': 'None',
-            'role': 'None',
+            'phone_number': None,
+            'role': None,
             'status': {
-                'changed': 'None',
-                'message': 'None'
+                'changed': None,
+                'message': None
             },
             'updated_at': '2009-08-14T15:04:46Z',
             'username': 'testijannu15',
-            'website': 'None'
+            'website': None
         }
 
         uid = 'dn3FNGIomr3OicaaWPEYjL'
@@ -94,9 +94,9 @@ class FacultyTest(unittest.TestCase):
     def test_faculties(self):
         faculties = course.get_faculties()
         self.assertNotEqual(0, len(faculties))
-        
+
         duplicatelist = []
-                
+
         for faculty in faculties:
             self.assertNotEqual(0, len(faculty['slug']))
             self.assertNotEqual(0, len(faculty['name']))
@@ -106,9 +106,9 @@ class FacultyTest(unittest.TestCase):
 class DepartmentTest(unittest.TestCase):
     def test_departments(self):
         faculties = course.get_faculties()
-        
+
         duplicatelist = []
-        
+
         for faculty in faculties:
             departments = course.get_departments_by_faculty(faculty['slug'])
             self.assertNotEqual(0,len(departments))
@@ -122,9 +122,9 @@ class DepartmentTest(unittest.TestCase):
 class CourseTest(unittest.TestCase):
     def test_courses(self):
         faculties = course.get_faculties()
-        
+
         duplicatelist = []
-        
+
         for faculty in faculties:
             departments = course.get_departments_by_faculty(faculty['slug'])
             for department in departments:
@@ -136,7 +136,7 @@ class CourseTest(unittest.TestCase):
                     self.assertNotEqual(0, len(c['code']))
                     self.assertNotEqual(0, len(c['name']))
                     duplicatelist.append(c['slug'])
-                    
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(PeopleAPITestCase, 'test'))

@@ -48,9 +48,9 @@ class Session(object):
         direction.
 
         Example:
-        >>> with Session("pang1", "123456") as session:
-        ...     session.get_pending_friend_requests()
-        ...
+        #>>> with Session("pang1", "123456") as session:
+        #...     session.get_pending_friend_requests()
+        #...
         ["azAC7-RdCr3OiIaaWPfx7J", "azEe6yRdCr3OiIaaWPfx7J"]
 
         """

@@ -4,8 +4,9 @@ import logging
 from asilib import ASIConnection
 from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 from cloudsizzle import settings
+from cloudsizzle.asi import sib_agent
 from cloudsizzle.asi.service import AbstractService, ASIServiceKnowledgeProcessor
-
+from cloudsizzle.asi.asi_friends_connection import ASI_Friends_connection as new_ASIConnection
 log = logging.getLogger('cloudsizzle.asi.server')
 
 class SessionStore(object):
@@ -21,7 +22,7 @@ class SessionStore(object):
 
     def login(self, username, password):
         log.debug("Logging in to ASI with username '{0}' and password '{1}'.".format(username, password))
-        ac = ASIConnection(
+        ac = new_ASIConnection(                                   #use extended asiConnection to replace the old one
             base_url=settings.ASI_BASE_URL,
             app_name=settings.ASI_APP_NAME,
             app_password=settings.ASI_APP_PASSWORD,
@@ -97,13 +98,48 @@ class LogoutServer(AbstractServer):
 
     def process(self, id_, data):
         self.session_store.logout(data['user_id'])
+        
+class RegisterServer(AbstractServer):
+    def __init__(self, sc, session_store):
+        super(RegisterServer, self).__init__(sc)
+        self.session_store = session_store
 
+    @property
+    def name(self):
+        return 'Register'
+
+    def process(self, id_, data):
+        params = {                                   #use extended asiConnection to replace the old one
+                'base_url': settings.ASI_BASE_URL,
+                'app_name': settings.ASI_APP_NAME,
+                'app_password': settings.ASI_APP_PASSWORD,
+        }
+        username = str(data['username'])
+        password = str(data['password'])
+        email    = str(data['email'])
+        with ASIConnection(**params) as ac:
+            try:
+                user_info = ac.create_user(username = username,password=password,email=email)
+                if 'messages' not in user_info.keys():
+                    user_id = user_info['id']  #succeed
+                    user = ac.get_user(user_id)
+                    sib = sib_agent.SIBAgent()
+                    sib.receive(user)        # copy user info from asi to sib
+                    response = {'user_id':user_id}
+                else:
+                    messages = user_info['messages']
+                    response = {'messages':messages}
+            except KeyError:
+                user_id = None
+        self.respond(id_, response)
+    
 def main():
     session_store = SessionStore()
     with SIBConnection('ASI service server', method='preconfigured') as sc:
         services = (
             LoginServer(sc, session_store),
             LogoutServer(sc, session_store),
+            RegisterServer(sc, session_store),
         )
 
         asi_server_kp = ASIServiceKnowledgeProcessor(services)

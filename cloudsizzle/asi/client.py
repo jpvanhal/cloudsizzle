@@ -10,7 +10,7 @@ class TimeOutError(Exception):
     pass
 
 class AbstractClient(AbstractService):
-    def __init__(self, sc, timeout=10):
+    def __init__(self, sc, timeout=100):
         super(AbstractClient, self).__init__(sc)
         self.responses = {}
         self.condition = threading.Condition()
@@ -63,16 +63,23 @@ class LogoutClient(AbstractClient):
     def name(self):
         return 'Logout'
 
+class RegisterClient(AbstractClient):
+    @property
+    def name(self):
+        return 'Register'
+    
 if __name__ == '__main__':
     with SIBConnection('ASI service client', method='preconfigured') as sc:
         asi_client_kp = ASIServiceKnowledgeProcessor(services=(
             LoginClient(sc),
             LogoutClient(sc),
+            RegisterClient(sc),
         ))
         asi_client_kp.start()
+        register = asi_client_kp.services['Register']
         login = asi_client_kp.services['Login']
         try:
-            response = login.request(username='pang1', password='123456')
+            response = register.request(username='pang6', password='123456', email="Pang6@hot.com")
             print response
         except TimeOutError:
             print "Request timed out."

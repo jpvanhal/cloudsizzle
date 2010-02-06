@@ -1,3 +1,5 @@
+"""Provides information about courses and their structures
+"""
 import time
 from cloudsizzle import pool
 from cloudsizzle.kp import Triple, bnode, uri, literal
@@ -5,10 +7,15 @@ from cloudsizzle.kp import Triple, bnode, uri, literal
 # Also do these preserve unicode characters?
 
 def search(query):
-    """Search for courses whose course code or name contains the query string."""
+    """Search for courses whose course code or name contains the query
+    string.
+    Search is case insensitive
+    
+    """
+    
     with pool.get_connection() as sc:    
-        # This unfortunately must be done in Python. WQL could possibly help here
-        # Of course SIB (or Python-KP) is slow as molasses anyway.
+        # This unfortunately must be done in Python. WQL could possibly help
+        # here. Of course SIB (or Python-KP) is slow as molasses anyway.
         query = query.lower()
         t1 = time.time()
         course_names = sc.query(Triple(None, uri('name'), None))
@@ -22,7 +29,10 @@ def search(query):
         return course_codes
 
 def get_course(course_code):
-    """Returns all information for course identified by course code."""
+    """Returns all information for course identified by course code.
+    Search is case sensitive
+    """
+    
     # Need to find the course code with correct capitalization first
     course_code = search(course_code)[0]
     
@@ -41,15 +51,19 @@ def get_course(course_code):
 # This and the following are identical in structure. Probably a place for
 # some abstraction
 def get_courses_by_department(department_code):
-    """Returns courses arranged by given department as identified
-    by department code."""
+    """Returns courses by given department as identified by department code.
+    Department code is case sensitive
+    """
     with pool.get_connection() as sc:
         course_ids = [x.subject for x in sc.query(Triple(None, None, uri(department_code.upper())))] 
         course_names = [sc.query(Triple(x, uri('name'), None))[0] for x in course_ids]
 
-        return [{'code':str(x.subject), 'slug':str(x.subject).lower(), 'name':str(x.object)} for x in course_names]
+        return [{'code': str(x.subject), 'slug': str(x.subject).lower(), 'name': str(x.object)} for x in course_names]
 
 def get_departments_by_faculty(faculty_code):
+    """Returns departments by given faculty as identified by faculty code
+    Faculty code is case sensitive
+    """
     with pool.get_connection() as sc:
         department_ids = [x.subject for x in sc.query(Triple(None, None, uri(faculty_code)))]
         department_names = [sc.query(Triple(x, uri('name'), None))[0] for x in department_ids]
@@ -57,6 +71,9 @@ def get_departments_by_faculty(faculty_code):
         return ([{'slug': str(x.subject).lower(), 'code': str(x.subject), 'name': str(x.object)} for x in department_names])
 
 def get_faculties():
+    """Returns faculties listed in Noppa system
+    """
+    
     with pool.get_connection() as sc:
         # Get list of faculties with their ids
         faculties_ids = [x.subject for x in sc.query(Triple(None, "rdf:type", "Faculty"))]
@@ -66,6 +83,42 @@ def get_faculties():
             faculty = sc.query(Triple(id, 'name', None))
             faculties.append({'slug': str(id), 'name': str(faculty[0].object)})
         # Final form is id-name dictionary
-   
+
         return faculties
         
+def get_department_info(department_code):
+    """Returns department info given the department code
+    Department code is case sensitive
+
+    """
+    print "Getting department_info for code "
+    print department_code
+    with pool.get_connection() as sc:
+        department_triples = sc.query(
+            # 'name' is used as generic name predicate, so this assumes
+            # that there are no faculties, departments or courses
+            # sharing a name
+            Triple(str(department_code), uri('name'), None))
+        department = {'name': str(department_triples[0].object),
+            'code': str(department_triples[0].subject)}
+        print "Got:"
+        print department
+        return department
+
+def get_faculty_info(faculty_code):
+    """Returns faculty info given the faculty code
+    Faculty code is case sensitive
+
+    """
+    print "Getting faculty_info for code " + faculty_code
+    with pool.get_connection() as sc:
+        # 'name' is used as generic name predicate, so this assumes
+        # that there are no faculties, departments or courses
+        # sharing a name
+        faculty_triples = sc.query(
+             Triple(uri(faculty_code), uri('name'), None))
+        faculty = {'name': str(faculty_triples[0].object),
+            'code': str(faculty_triples[0].subject)}
+        print "Got:"
+        print faculty
+        return faculty

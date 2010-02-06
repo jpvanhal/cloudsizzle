@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+		<div id="content">	<ul id="breadcrumb">
+		<li><a href="/">Home</a> &gt;</li>
+		<li>Courses &gt;</li>
+		{% if faculty.code %}<li>{{ faculty.name }} &gt;</li>{% endif %}
+		{% if department.code %}<li>{{ department.name }} &gt;</li>{% endif %}
+	</ul>
+	
+	<div id="courses" class="rounded-corners">
+		<div class="top-left"></div>
+		<div class="top-right"></div>
+		<div class="bottom-left"></div>
+		<div class="bottom-right"></div>
+		<div class="bottom-border"></div>
+		<div class="left-border"></div>
+		<div class="right-border"></div>
+	{% block courselistings %}
+	{% endblock %}
+	</div> <!-- /courses -->
+	</div> <!-- /content -->
+{% endblock %}

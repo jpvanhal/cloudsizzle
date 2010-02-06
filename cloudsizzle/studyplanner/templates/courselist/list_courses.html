@@ -1,13 +1,11 @@
-{% extends "base.html" %}
+{% extends "courselist/course_base.html" %}
 
-{% block content %}
-
-<h2>{{ department.name }}</h2>
-
-<ul>
-{% for course in courses %}
-    <li><a href="{{ department.slug }}/{{course.slug }}">{{course.code}} {{ course.name }}</a></li>
-{% endfor %}
-</ul>
-
+{% block courselistings %}
+		<h1>Courses in {{ department.name }}</h1>
+		
+		<ul>
+		    {% for course in courses %}
+		    <li><a href="{{ department.code }}/{{ course.code }}">{{course.code}} {{ course.name }}</a></li>
+		    {% endfor %}
+		</ul>
 {% endblock %}

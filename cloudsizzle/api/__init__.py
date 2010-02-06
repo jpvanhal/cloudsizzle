@@ -1,3 +1,2 @@
-import course
-import people
-from session import Session
+from cloudsizzle.api import course, people
+from cloudsizzle.api.session import Session

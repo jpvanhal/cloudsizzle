@@ -2,10 +2,8 @@
 This module contains CloudSizzle API functions related to people.
 
 """
-import time
 from itertools import chain
-from cloudsizzle.kp import Triple, bnode, uri, literal
-from cloudsizzle.asi import sib_agent
+from cloudsizzle.kp import Triple, uri
 from cloudsizzle import pool
 from cloudsizzle.utils import fetch_rdf_graph
 from cloudsizzle.api.ResponseHandler import RegisterResponseHandler
@@ -32,7 +30,7 @@ def create(username, password, email):
 
     """
     handler = RegisterResponseHandler.getInstance()
-    token = handler.do_request(username = username,password = password,email = email)
+    token = handler.do_request(username=username, password=password, email=email)
     request_id = token[0]
     lock = token[1]
     lock.acquire()
@@ -78,7 +76,6 @@ def get_friends(user_id):
     user_id -- The user id of the user.
 
     """
-    COS_ALPHA_URI_BASE = "http://cos.alpha.sizl.org/people/"
     # This needs to go, but at least it is contained within API
     SIZZLE_PEOPLE_BASE = "http://cloudsizzle.cs.hut.fi/onto/people/"
 

@@ -19,51 +19,7 @@ class Session(object):
         """Close the current session and log out."""
         pass
 
-    """
-    Friends are stored in ASI and moved through SIB
-    """
 
-    def add_friend(self, friend_id):
-        """Adds a new friend connection to this user.
-
-        Arguments:
-        friend_id -- The user id of the friend being requested.
-
-        """
-        pass
-
-    def remove_friend(self, friend_id):
-        """Removes a friend connection.
-
-        Arguments:
-        friend_id -- The user id of the friend being broken up with.
-
-        """
-        pass
-
-    def get_pending_friend_requests(self):
-        """Returns a list of people who have requested to connect to this user.
-
-        A friend request is accepted by making the same request in the opposite
-        direction.
-
-        Example:
-        #>>> with Session("pang1", "123456") as session:
-        #...     session.get_pending_friend_requests()
-        #...
-        ["azAC7-RdCr3OiIaaWPfx7J", "azEe6yRdCr3OiIaaWPfx7J"]
-
-        """
-        pass
-
-    def reject_friend_request(self, friend_id):
-        """Rejects a friend request.
-
-        Arguments:
-        friend_id -- User id of the friend whose request this user is rejecting
-
-        """
-        pass
 
     """
     Everything from there downwards will probably be stored in Django Model

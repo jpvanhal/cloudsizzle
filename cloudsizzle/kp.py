@@ -1,7 +1,8 @@
 import kpwrapper
-from kpwrapper import Triple, SIBConnection, bnode, literal, uri
+from kpwrapper import Triple as _Triple, SIBConnection, bnode, literal, uri, \
+                      wrap_if_not_none
 
-__all__ = [Triple, SIBConnection, bnode, literal, uri]
+__all__ = ['Triple', SIBConnection, bnode, literal, uri]
 
 ESCAPE_CHARS = (
     ('%', '%25'), # must be escaped first, and unescaped last
@@ -44,27 +45,40 @@ def unescape(string):
         string = string.replace(escaped, char)
     return string
 
-class WrappedTriple(Triple):
+class Triple(_Triple):
     """
-    >>> triple = WrappedTriple('foo', 'bar', '<A & B>')
+    >>> triple = Triple('foo', 'bar', '<A & B>')
     >>> tuple = triple.to_tuple()
     >>> tuple
     (('foo', 'bar', '%3CA %26 B%3E'), 'uri', 'literal')
-    >>> triple == WrappedTriple.from_tuple(tuple)
+    >>> triple == Triple.from_tuple(tuple)
     True
+    >>> triple = Triple(None, None, None)
+    >>> triple.to_tuple()
+    ((None, None, None), 'uri', 'literal')
+    >>> Triple.from_tuple(_)
+    Triple(None, None, None)
 
     """
     @staticmethod
     def from_tuple(tuple_):
         subject, predicate, object_ = tuple_[0]
-        triple = unescape(subject), unescape(predicate), unescape(object_)
+        triple = (
+            wrap_if_not_none(unescape, subject),
+            wrap_if_not_none(unescape, predicate),
+            wrap_if_not_none(unescape, object_)
+        )
         tuple_ = (triple, ) + tuple_[1:]
-        return Triple.from_tuple(tuple_)
+        return _Triple.from_tuple(tuple_)
 
     def to_tuple(self, default_stype='uri', default_otype='literal'):
-        tuple_ = Triple.to_tuple(self, default_stype, default_otype)
+        tuple_ = _Triple.to_tuple(self, default_stype, default_otype)
         subject, predicate, object_ = tuple_[0]
-        triple = escape(subject), escape(predicate), escape(object_)
+        triple = (
+            wrap_if_not_none(escape, subject),
+            wrap_if_not_none(escape, predicate),
+            wrap_if_not_none(escape, object_)
+        )
         tuple_ = (triple, ) + tuple_[1:]
         return tuple_
 
@@ -129,4 +143,4 @@ class MockSIBConnection(object):
     def subscribe(self, triples, handler):
         raise NotImplemented
 
-kpwrapper.Triple = WrappedTriple
+kpwrapper.Triple = Triple

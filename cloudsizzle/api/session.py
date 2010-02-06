@@ -19,6 +19,10 @@ class Session(object):
         """Close the current session and log out."""
         pass
 
+    """
+    Friends are stored in ASI and moved through SIB
+    """
+
     def add_friend(self, friend_id):
         """Adds a new friend connection to this user.
 
@@ -60,6 +64,11 @@ class Session(object):
 
         """
         pass
+
+    """
+    Everything from there downwards will probably be stored in Django Model
+    """
+
 
     def add_to_planned_courses(self, course_code):
         """Add a course to this user's planned courses."""

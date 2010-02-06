@@ -1,11 +1,12 @@
+from abc import ABCMeta, abstractproperty, abstractmethod
 import logging
 
 from asilib import ASIConnection
 from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 from cloudsizzle import settings
-from cloudsizzle.utils import make_graph
+from cloudsizzle.asi.service import AbstractService, ASIServiceKnowledgeProcessor
 
-log = logging.getLogger('cloudsizzle.asi.kp')
+log = logging.getLogger('cloudsizzle.asi.server')
 
 class SessionStore(object):
     def __init__(self):
@@ -48,49 +49,16 @@ class SessionStore(object):
         except KeyError:
             raise Exception('User with the given user_id is not logged in.')
 
-class AbstractService(object):
+class AbstractServer(AbstractService):
     def __init__(self, sc):
-        self.sc = sc
-        self.subscription = None
+        super(AbstractServer, self).__init__(sc)
 
-    def get_request_type(self):
-        raise NotImplementedError
-
-    def get_response_type(self):
-        raise NotImplementedError
-
-    def process_request(self, request_id, request):
-        raise NotImplementedError
-
-    def subscribe(self):
-        query_triple = Triple(None, 'rdf:type', self.get_request_type())
-        log.debug('Subscribing to {0}.'.format(query_triple))
-        self.subscription = self.sc.subscribe(query_triple, self)
-        if not self.subscription:
-            log.warning('Subscribing to {0} failed!'.format(query_triple))
-        else:
-            log.info('Subscribed to {0}.'.format(query_triple))
-
-    def unsubscribe(self):
-        if self.subscription:
-            self.subscription.close()
-            self.subscription = None
-            log.debug('Unsubscribed from {0}.'.format(self.get_request_type()))
-
-    def callback(self, added, removed):
-        for triple in added:
-            request_id = str(triple.subject)
-            request_triples = self.sc.query(Triple(request_id, None, None))
-            self.sc.remove(request_triples)
-            request_dict = make_graph(request_triples)
-
-            log.debug('Received a request {0} containing {1}.'.format(
-                request_id, request_dict))
-
-            self.process_request(request_id, request_dict[request_id])
+    @property
+    def query_triple(self):
+        return Triple(None, 'rdf:type', self.request_type)
 
     def respond(self, request_id, response):
-        response['rdf:type'] = self.get_response_type()
+        response['rdf:type'] = self.response_type
         response['response_to'] = uri(request_id)
 
         log.debug(
@@ -102,55 +70,50 @@ class AbstractService(object):
 
         self.sc.insert(response_triples)
 
-class LoginService(AbstractService):
+class LoginServer(AbstractServer):
     def __init__(self, sc, session_store):
-        AbstractService.__init__(self, sc)
+        super(LoginServer, self).__init__(sc)
         self.session_store = session_store
 
-    def get_request_type(self):
-        return 'LoginRequest'
+    @property
+    def name(self):
+        return 'Login'
 
-    def get_response_type(self):
-        return 'LoginResponse'
-
-    def process_request(self, request_id, request):
+    def process(self, id_, data):
         try:
-            user_id = self.session_store.login(request['username'],
-                request['password'])
-            self.respond(request_id, {'user_id': user_id})
+            user_id = self.session_store.login(data['username'],
+                data['password'])
+            self.respond(id_, {'user_id': user_id})
         except Exception, e:
-            self.respond(request_id, {'messages': str(e.args)})
+            self.respond(id_, {'messages': str(e.args)})
 
-class LogoutService(AbstractService):
+class LogoutServer(AbstractServer):
     def __init__(self, sc, session_store):
-        AbstractService.__init__(self, sc)
+        super(LogoutServer, self).__init__(sc)
         self.session_store = session_store
 
-    def get_request_type(self):
-        return 'LogoutRequest'
+    @property
+    def name(self):
+        return 'Logout'
 
-    def process_request(self, request_id, request):
+    def process(self, id_, data):
         try:
-            self.session_store.logout(request['user_id'])
+            self.session_store.logout(data['user_id'])
         except Exception, e:
             pass
 
 def main():
     session_store = SessionStore()
-    with SIBConnection('ASI Services', method='preconfigured') as sc:
+    with SIBConnection('ASI service server', method='preconfigured') as sc:
         services = (
-            LoginService(sc, session_store),
-            LogoutService(sc, session_store),
+            LoginServer(sc, session_store),
+            LogoutServer(sc, session_store),
         )
 
-        for service in services:
-            service.subscribe()
+        asi_server_kp = ASIServiceKnowledgeProcessor(services)
+        asi_server_kp.start()
 
-        try:
-            raw_input('Press enter to stop.\n')
-        finally:
-            for service in services:
-                service.unsubscribe()
+        raw_input('Press enter to stop.\n')
 
 if __name__ == '__main__':
     main()

@@ -27,27 +27,26 @@ class SessionStore(object):
             app_password=settings.ASI_APP_PASSWORD,
             username=username,
             password=password)
-        ac.open()
+        response = ac.open()
 
         try:
-            user_id = ac.session['entry']['user_id']
+            user_id = response['entry']['user_id']
             self._sessions[user_id] = ac
             log.debug("Logged in with user_id {0}!".format(user_id))
-            return user_id
+            return ac.session['entry']
         except KeyError:
             ac.close()
-            log.debug("Logging in failed: {0}".format(ac.session['messages']))
-            raise Exception(' '.join(ac.session['messages']))
-            #except:
-            #    raise Exception('User login failed for an unknown reason.')
+            log.debug("Logging in failed: {0}".format(response['messages']))
+            return response
 
     def logout(self, user_id):
+        log.debug('Logging out user with user_id {0}.'.format(user_id))
         try:
             ac = self._sessions[user_id]
             ac.close()
             del self._sessions[user_id]
         except KeyError:
-            raise Exception('User with the given user_id is not logged in.')
+            log.warning('Logging out failed: user {0} was not logged in.'.format(user_id))
 
 class AbstractServer(AbstractService):
     def __init__(self, sc):
@@ -65,8 +64,11 @@ class AbstractServer(AbstractService):
             'Responding to request {0} with {1}.'.format(request_id, response))
 
         response_triples = []
-        for key, value in response.iteritems():
-            response_triples.append(Triple(bnode('id'), key, value))
+        for key, values in response.iteritems():
+            if not isinstance(values, list):
+                values = [values]
+            for value in values:
+                response_triples.append(Triple(bnode('id'), key, value))
 
         self.sc.insert(response_triples)
 
@@ -80,12 +82,9 @@ class LoginServer(AbstractServer):
         return 'Login'
 
     def process(self, id_, data):
-        try:
-            user_id = self.session_store.login(data['username'],
-                data['password'])
-            self.respond(id_, {'user_id': user_id})
-        except Exception, e:
-            self.respond(id_, {'messages': str(e.args)})
+        response = self.session_store.login(data['username'],
+            data['password'])
+        self.respond(id_, response)
 
 class LogoutServer(AbstractServer):
     def __init__(self, sc, session_store):
@@ -97,10 +96,7 @@ class LogoutServer(AbstractServer):
         return 'Logout'
 
     def process(self, id_, data):
-        try:
-            self.session_store.logout(data['user_id'])
-        except Exception, e:
-            pass
+        self.session_store.logout(data['user_id'])
 
 def main():
     session_store = SessionStore()
@@ -113,7 +109,10 @@ def main():
         asi_server_kp = ASIServiceKnowledgeProcessor(services)
         asi_server_kp.start()
 
-        raw_input('Press enter to stop.\n')
+        try:
+            raw_input('Press enter to stop.\n')
+        finally:
+            asi_server_kp.stop()
 
 if __name__ == '__main__':
     main()

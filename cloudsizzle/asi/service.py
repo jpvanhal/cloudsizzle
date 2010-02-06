@@ -40,7 +40,7 @@ class AbstractService(object):
             self.sc.remove(triples)
             data = make_graph(triples)
 
-            log.debug('Received a data with id {0} containing {1}.'.format(
+            log.debug('Received data with id {0} containing {1}.'.format(
                 id_, data))
 
             self.process(id_, data[id_])

@@ -2,7 +2,7 @@ import logging
 import threading
 import time
 from cloudsizzle.asi.service import AbstractService, ASIServiceKnowledgeProcessor
-from cloudsizzle.kp import Triple, bnode
+from cloudsizzle.kp import Triple, bnode, SIBConnection
 
 log = logging.getLogger('cloudsizzle.asi.client')
 
@@ -62,3 +62,18 @@ class LogoutClient(AbstractClient):
     @property
     def name(self):
         return 'Logout'
+
+if __name__ == '__main__':
+    with SIBConnection('ASI service client', method='preconfigured') as sc:
+        asi_client_kp = ASIServiceKnowledgeProcessor(services=(
+            LoginClient(sc),
+            LogoutClient(sc),
+        ))
+        asi_client_kp.start()
+        login = asi_client_kp.services['Login']
+        try:
+            response = login.request(username='pang1', password='123456')
+            print response
+        except TimeOutError:
+            print "Request timed out."
+        asi_client_kp.stop()

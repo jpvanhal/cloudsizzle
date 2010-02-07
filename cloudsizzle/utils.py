@@ -4,7 +4,10 @@ from cloudsizzle.kp import Triple, uri, literal, wrap_if_not_none
 RDF_SCHEMA_URI = 'http://www.w3.org/2000/01/rdf-schema#'
 RDF_SYNTAX_NS_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 
-def fetch_rdf_graph(subject, depth=2):
+def fetch_rdf_graph(subject, dont_follow=None):
+    if dont_follow is None:
+        dont_follow = []
+
     with pool.get_connection() as sc:
         triples = sc.query(Triple(subject, None, None))
 
@@ -27,9 +30,10 @@ def fetch_rdf_graph(subject, depth=2):
 
         # The last condition is there to prevent wandering into RDF
         # ontology definitions
-        if isinstance(triple.object, uri) and depth > 0 and \
+        if isinstance(triple.object, uri) and \
+                str(triple.predicate) not in dont_follow and \
                 not object_.startswith(RDF_SCHEMA_URI):
-            value = fetch_rdf_graph(object_, depth - 1)
+            value = fetch_rdf_graph(object_, dont_follow)
         else:
             value = object_
 

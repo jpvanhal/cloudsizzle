@@ -50,7 +50,8 @@ def get(user_id):
 
     """
     user_uri = '{0}/ID#{1}'.format(PEOPLE_BASE_URI, user_id)
-    user = fetch_rdf_graph(user_uri)
+    user = fetch_rdf_graph(user_uri, dont_follow=[
+        '{0}#Friend'.format(PEOPLE_BASE_URI)])
     if not user:
         raise UserDoesNotExist(user_id)
     return user

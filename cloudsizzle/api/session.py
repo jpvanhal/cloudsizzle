@@ -1,4 +1,9 @@
 from cloudsizzle.api.asi_client import get_service
+from cloudsizzle.kp import Triple, uri
+from cloudsizzle import pool
+
+PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
+
 
 class LoginFailed(Exception):
     pass
@@ -57,7 +62,17 @@ class Session(object):
         #["azAC7-RdCr3OiIaaWPfx7J", "azEe6yRdCr3OiIaaWPfx7J"]
 
         """
-        pass
+        pending_friend_ids = []
+        with pool.get_connection() as sc:
+            friend_triples = sc.query(Triple(
+                '{0}/ID#{1}'.format(PEOPLE_BASE_URI, self.user_id),
+                '{0}#PendingFriend'.format(PEOPLE_BASE_URI), None))
+            for triple in friend_triples:
+                friend_id = triple.object.split('#')[-1]
+                pending_friend_ids.append(friend_id)
+    
+        return pending_friend_ids
+
 
     def reject_friend_request(self, friend_id):
         """Rejects a friend request.
@@ -93,3 +108,11 @@ class Session(object):
 
     def is_completed_course(self, course_code):
         pass
+if __name__ == '__main__':
+    '''
+    test
+    '''
+    session = Session(username='pang4', password='123456')
+    session.user_id = 'bl3S3oeZSr35qmaaWPEYjL'
+    print session.get_pending_friend_requests()
+    

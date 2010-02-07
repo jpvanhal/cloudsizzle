@@ -235,9 +235,9 @@ class AddFriendsRequestServer(AbstractServer):
             else:
                 user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
                 friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)                
-                insert_triple = Triple(user_uri,                                         #add from my view
+                insert_triple = Triple(friend_uri,                                        #add from friend's view
                                 uri('http://cos.alpha.sizl.org/people#PendingFriend'),
-                                   friend_uri)
+                                   user_uri)
                 self.sc.insert(insert_triple)                
   
 

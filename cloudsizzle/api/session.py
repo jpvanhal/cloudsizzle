@@ -16,7 +16,10 @@ class Session(object):
         try:
             self.user_id = response['user_id']
         except KeyError:
-            raise LoginFailed(*response['messages'])
+            messages = response['messages']
+            if not isinstance(messages, list):
+                messages = [messages]
+            raise LoginFailed(*messages)
 
     def close(self):
         """Close the current session and log out."""

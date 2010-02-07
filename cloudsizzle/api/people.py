@@ -8,7 +8,7 @@ from cloudsizzle import pool
 from cloudsizzle.utils import fetch_rdf_graph
 from cloudsizzle.api.ResponseHandler import RegisterResponseHandler
 
-PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people/'
+PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
 
 class UserAlreadyExists(Exception):
     pass
@@ -49,7 +49,7 @@ def get(user_id):
     UserDoesNotExist -- User with specified user_id does not exist.
 
     """
-    user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
+    user_uri = '{0}/ID#{1}'.format(PEOPLE_BASE_URI, user_id)
     user = fetch_rdf_graph(user_uri)
     if not user:
         raise UserDoesNotExist(user_id)
@@ -62,7 +62,7 @@ def get_all():
     uids = []
     with pool.get_connection() as sc:
         triples = sc.query(Triple(None, 'rdf:type',
-            uri('http://cos.alpha.sizl.org/people#Person')))
+            uri('{0}#Person'.format(PEOPLE_BASE_URI))))
         for triple in triples:
             uid = triple.subject.split('#')[-1]
             uids.append(uid)
@@ -76,14 +76,14 @@ def get_friends(user_id):
     user_id -- The user id of the user.
 
     """
-    # This needs to go, but at least it is contained within API
-    SIZZLE_PEOPLE_BASE = "http://cloudsizzle.cs.hut.fi/onto/people/"
-
+    friend_ids = []
     with pool.get_connection() as sc:
-        friend_triplets = sc.query(Triple(SIZZLE_PEOPLE_BASE + user_id,
-            'has_friend', None))
-        friend_ids = [str(triplet.object)[len(SIZZLE_PEOPLE_BASE):]
-            for triplet in friend_triplets]
+        friend_triples = sc.query(Triple(
+            '{0}/ID#{1}'.format(PEOPLE_BASE_URI, user_id),
+            '{0}#Friend'.format(PEOPLE_BASE_URI), None))
+        for triple in friend_triples:
+            friend_id = triple.object.split('#')[-1]
+            friend_ids.append(friend_id)
 
     return friend_ids
 
@@ -101,16 +101,16 @@ def search(query):
         user_ids = set()
 
         username_triples = sc.query(
-            Triple(None, 'http://cos.alpha.sizl.org/people#username', None))
+            Triple(None, '{0}#username'.format(PEOPLE_BASE_URI), None))
         unstructured_triples = sc.query(
-            Triple(None, 'http://cos.alpha.sizl.org/people#unstructured', None))
+            Triple(None, '{0}#unstructured'.format(PEOPLE_BASE_URI), None))
 
         for triple in chain(username_triples, unstructured_triples):
             name = str(triple.object)
             if query in name.lower():
                 if triple.predicate.endswith('unstructured'):
                     name_triples = sc.query(Triple(None,
-                        'http://cos.alpha.sizl.org/people#name',
+                        '{0}#name'.format(PEOPLE_BASE_URI),
                         triple.subject))
                     user_uri = name_triples[0].subject
                 else:

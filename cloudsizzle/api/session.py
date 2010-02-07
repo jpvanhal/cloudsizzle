@@ -11,7 +11,7 @@ class Session(object):
 
     def open(self):
         """Open a new session and log in with given username and password."""
-        response = ASI_CLIENT.services['Login'].request(
+        response = ASI_CLIENT['Login'].request(
             username=self.username, password=self.password)
         try:
             self.user_id = response['user_id']
@@ -20,7 +20,7 @@ class Session(object):
 
     def close(self):
         """Close the current session and log out."""
-        ASI_CLIENT.services['Logout'].request(user_id=self.user_id)
+        ASI_CLIENT['Logout'].request(user_id=self.user_id)
         self.user_id = None
 
     def add_friend(self, friend_id):
@@ -48,10 +48,10 @@ class Session(object):
         direction.
 
         Example:
-        >>> with Session("pang1", "123456") as session:
-        ...     session.get_pending_friend_requests()
-        ...
-        ["azAC7-RdCr3OiIaaWPfx7J", "azEe6yRdCr3OiIaaWPfx7J"]
+        #>>> with Session("pang1", "123456") as session:
+        #...     session.get_pending_friend_requests()
+        #...
+        #["azAC7-RdCr3OiIaaWPfx7J", "azEe6yRdCr3OiIaaWPfx7J"]
 
         """
         pass

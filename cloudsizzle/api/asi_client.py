@@ -4,7 +4,7 @@ from cloudsizzle.kp import SIBConnection
 
 ASI_CLIENT = None
 
-def start():
+def init():
     global ASI_CLIENT
 
     sc = SIBConnection('ASI service client', method='preconfigured')
@@ -14,9 +14,5 @@ def start():
        LoginClient(sc),
        LogoutClient(sc),
     ))
-    ASI_CLIENT.start()
 
-def stop():
-    ASI_CLIENT.stop()
-
-start()
+init()

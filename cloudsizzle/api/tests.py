@@ -6,22 +6,21 @@ from cloudsizzle.kp import Triple, uri, literal
 from cloudsizzle.tests import SIBTestCase
 
 class PeopleAPITestCase(SIBTestCase):
-    BASE_URI = 'http://cloudsizzle.cs.hut.fi/onto/people/'
 
     def test_get_friends_of_user_with_friends(self):
         self.sc.insert([
             Triple(
-               uri(self.BASE_URI + 'd-cfIOQH0r3RjGaaWPEYjL'),
-               uri('has_friend'),
-               literal(self.BASE_URI + 'd8vrPqQH0r3QeEaaWPEYjL')),
+               uri('http://cos.alpha.sizl.org/people/ID#d-cfIOQH0r3RjGaaWPEYjL'),
+               uri('http://cos.alpha.sizl.org/people#Friend'),
+               uri('http://cos.alpha.sizl.org/people/ID#d8vrPqQH0r3QeEaaWPEYjL')),
            Triple(
-               uri(self.BASE_URI + 'd-cfIOQH0r3RjGaaWPEYjL'),
-               uri('has_friend'),
-               literal(self.BASE_URI + 'd9JgtWQH0r3QBRaaWPEYjL')),
+               uri('http://cos.alpha.sizl.org/people/ID#d-cfIOQH0r3RjGaaWPEYjL'),
+               uri('http://cos.alpha.sizl.org/people#Friend'),
+               uri('http://cos.alpha.sizl.org/people/ID#d9JgtWQH0r3QBRaaWPEYjL')),
             Triple(
-               uri(self.BASE_URI + 'd-cfIOQH0r3RjGaaWPEYjL'),
-               uri('has_friend'),
-               literal(self.BASE_URI + 'd81F3WQH0r3OK1aaWPEYjL'))
+               uri('http://cos.alpha.sizl.org/people/ID#d-cfIOQH0r3RjGaaWPEYjL'),
+               uri('http://cos.alpha.sizl.org/people#Friend'),
+               uri('http://cos.alpha.sizl.org/people/ID#d81F3WQH0r3OK1aaWPEYjL'))
         ])
         friends = sorted(people.get_friends('d-cfIOQH0r3RjGaaWPEYjL'))
         expected = ['d81F3WQH0r3OK1aaWPEYjL', 'd8vrPqQH0r3QeEaaWPEYjL',

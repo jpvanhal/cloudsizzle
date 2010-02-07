@@ -78,19 +78,59 @@ class RegisterClient(AbstractClient):
     def name(self):
         return 'Register'
 
+class AddFriendsRequestClient(AbstractClient):
+    @property
+    def name(self):
+        return 'AddFriendsRequest'
+    
+    def request(self, user_id, friend_id):
+        AbstractClient.request(self, user_id=user_id, friend_id=friend_id)
+
+class RemoveFriendsRequestClient(AbstractClient):
+    @property
+    def name(self):
+        return 'RemoveFriendsRequest'
+    
+    def request(self, user_id, friend_id):
+        AbstractClient.request(self, user_id=user_id, friend_id=friend_id)
+
+class RejectFriendsRequestClient(AbstractClient):
+    @property
+    def name(self):
+        return 'RejectFriendsRequest'
+        
+    def request(self, user_id, friend_id):
+        AbstractClient.request(self, user_id=user_id, friend_id=friend_id)
+
 if __name__ == '__main__':
-    with SIBConnection('ASI service client', method='preconfigured') as sc:
+    try:
+        sc = SIBConnection('ASI service client', method='preconfigured')
+        sc.open()
+        sc.close()
         asi_client_kp = ASIServiceKnowledgeProcessor(services=(
             LoginClient(sc),
             LogoutClient(sc),
             RegisterClient(sc),
+            RejectFriendsRequestClient(sc),
+            RemoveFriendsRequestClient(sc),
+            AddFriendsRequestClient(sc),
         ))
         asi_client_kp.start()
-        register = asi_client_kp.services['Register']
-        login = asi_client_kp.services['Login']
+        
+        register = asi_client_kp._services['Register']
+        login = asi_client_kp._services['Login']
+        logout = asi_client_kp._services['Logout']
+        addfriends = asi_client_kp._services['AddFriendsRequest']
+        
         try:
-            response = register.request(username='pang6', password='123456', email="Pang6@hot.com")
-            print response
+            uid = (login.request(username='pang1', password='123456'))['user_id']
+            print uid
+            #response = addfriends.request(user_id='dRq9He3yWr3QUKaaWPEYjL', friend_id='bl3S3oeZSr35qmaaWPEYjL')
+            #response = register.request(username='pang6', password='123456', email="Pang6@hot.com")
+            logout.request(user_id=uid)
+            #print response
         except TimeOutError:
             print "Request timed out."
         asi_client_kp.stop()
+    except Exception, e:
+        print e

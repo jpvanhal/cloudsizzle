@@ -1,4 +1,4 @@
-from cloudsizzle.api.asi_client import ASI_CLIENT
+from cloudsizzle.api.asi_client import get_service
 
 class LoginFailed(Exception):
     pass
@@ -11,7 +11,7 @@ class Session(object):
 
     def open(self):
         """Open a new session and log in with given username and password."""
-        response = ASI_CLIENT['Login'].request(
+        response = get_service('Login').request(
             username=self.username, password=self.password)
         try:
             self.user_id = response['user_id']
@@ -23,7 +23,7 @@ class Session(object):
 
     def close(self):
         """Close the current session and log out."""
-        ASI_CLIENT['Logout'].request(user_id=self.user_id)
+        get_service('Logout').request(user_id=self.user_id)
         self.user_id = None
 
     def add_friend(self, friend_id):

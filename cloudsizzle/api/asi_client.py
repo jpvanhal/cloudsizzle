@@ -15,4 +15,7 @@ def init():
        LogoutClient(sc),
     ))
 
-init()
+def get_service(name):
+    if not ASI_CLIENT:
+        init()
+    return ASI_CLIENT[name]

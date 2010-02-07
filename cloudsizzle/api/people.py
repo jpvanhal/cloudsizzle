@@ -6,15 +6,18 @@ from itertools import chain
 from cloudsizzle.kp import Triple, uri
 from cloudsizzle import pool
 from cloudsizzle.utils import fetch_rdf_graph
-from cloudsizzle.api.ResponseHandler import RegisterResponseHandler
+from cloudsizzle.api.asi_client import get_service
 
 PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
+
 
 class UserAlreadyExists(Exception):
     pass
 
+
 class UserDoesNotExist(Exception):
     pass
+
 
 def create(username, password, email):
     """Create a new user.
@@ -29,15 +32,15 @@ def create(username, password, email):
     ValueError -- Given parameters were invalid.
 
     """
-    handler = RegisterResponseHandler.getInstance()
-    token = handler.do_request(username=username, password=password, email=email)
-    request_id = token[0]
-    lock = token[1]
-    lock.acquire()
-    result = handler.get_result(request_id)
+    register_service = get_service('Register')
+    response = register_service.request(
+        username=username, password=password, email=email)
+
+    # TODO: test what this response contains
     if result.startswith('messages'): # failed
         raise ValueError(result)
     return result                     # return UID
+
 
 def get(user_id):
     """Get the information of the user specified by user_id.
@@ -55,6 +58,7 @@ def get(user_id):
     if not user:
         raise UserDoesNotExist(user_id)
     return user
+
 
 def get_all():
     """Return a list of user_ids of all users.
@@ -87,6 +91,7 @@ def get_friends(user_id):
             friend_ids.append(friend_id)
 
     return friend_ids
+
 
 def search(query):
     """Return users based on their real names and usernames.

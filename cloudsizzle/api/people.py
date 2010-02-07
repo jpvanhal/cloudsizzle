@@ -37,9 +37,9 @@ def create(username, password, email):
         username=username, password=password, email=email)
 
     # TODO: test what this response contains
-    if result.startswith('messages'): # failed
-        raise ValueError(result)
-    return result                     # return UID
+    if response.startswith('messages'): # failed
+        raise ValueError(response)
+    return response                     # return UID
 
 
 def get(user_id):

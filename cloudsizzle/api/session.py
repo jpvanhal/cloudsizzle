@@ -1,30 +1,69 @@
+from cloudsizzle.api.asi_client import ASI_CLIENT
+
+class LoginFailed(Exception):
+    pass
+
 class Session(object):
     def __init__(self, username, password):
         self.username = username
         self.password = password
         self.user_id = None
 
-    def __enter__(self):
-        self.open()
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.close()
-
     def open(self):
         """Open a new session and log in with given username and password."""
-        pass
+        response = ASI_CLIENT.services['Login'].request(
+            username=self.username, password=self.password)
+        try:
+            self.user_id = response['user_id']
+        except KeyError:
+            raise LoginFailed(*response['messages'])
 
     def close(self):
         """Close the current session and log out."""
+        ASI_CLIENT.services['Logout'].request(user_id=self.user_id)
+        self.user_id = None
+
+    def add_friend(self, friend_id):
+        """Adds a new friend connection to this user.
+
+        Arguments:
+        friend_id -- The user id of the friend being requested.
+
+        """
         pass
 
+    def remove_friend(self, friend_id):
+        """Removes a friend connection.
 
+        Arguments:
+        friend_id -- The user id of the friend being broken up with.
 
-    """
-    Everything from there downwards will probably be stored in Django Model
-    """
+        """
+        pass
 
+    def get_pending_friend_requests(self):
+        """Returns a list of people who have requested to connect to this user.
+
+        A friend request is accepted by making the same request in the opposite
+        direction.
+
+        Example:
+        >>> with Session("pang1", "123456") as session:
+        ...     session.get_pending_friend_requests()
+        ...
+        ["azAC7-RdCr3OiIaaWPfx7J", "azEe6yRdCr3OiIaaWPfx7J"]
+
+        """
+        pass
+
+    def reject_friend_request(self, friend_id):
+        """Rejects a friend request.
+
+        Arguments:
+        friend_id -- User id of the friend whose request this user is rejecting
+
+        """
+        pass
 
     def add_to_planned_courses(self, course_code):
         """Add a course to this user's planned courses."""

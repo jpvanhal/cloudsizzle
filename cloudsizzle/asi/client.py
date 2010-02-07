@@ -20,6 +20,10 @@ class AbstractClient(AbstractService):
     def query_triple(self):
         return Triple(None, 'rdf:type', self.response_type)
 
+    @property
+    def needs_response(self):
+        return True
+
     def process(self, id_, data):
         with self.condition:
             self.responses[data['response_to']] = data
@@ -39,7 +43,8 @@ class AbstractClient(AbstractService):
         self.sc.insert(triples)
 
         request_id = self.sc.last_result[1]['id']
-        return self.get_response(request_id)
+        if self.needs_response:
+            return self.get_response(request_id)
 
     def get_response(self, request_id):
         wait_start_time = time.time()
@@ -63,11 +68,16 @@ class LogoutClient(AbstractClient):
     def name(self):
         return 'Logout'
 
+    @property
+    def needs_response(self):
+        return False
+
+
 class RegisterClient(AbstractClient):
     @property
     def name(self):
         return 'Register'
-    
+
 if __name__ == '__main__':
     with SIBConnection('ASI service client', method='preconfigured') as sc:
         asi_client_kp = ASIServiceKnowledgeProcessor(services=(

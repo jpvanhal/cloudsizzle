@@ -61,17 +61,23 @@ class AbstractService(object):
 
 class ASIServiceKnowledgeProcessor(object):
     def __init__(self, services):
-        self.services = {}
+        self.__services = {}
         for service in services:
-            self.services[service.name] = service
+            self.__services[service.name] = service
+        self.__is_running = False
+
+    def __getitem__(self, key):
+        self.start()
+        return self.__service[key]
 
     def start(self):
-        for service in self.services.itervalues():
-            service.subscribe()
+        if not self.__is_running:
+            for service in self.__services.itervalues():
+                service.subscribe()
+            self.__is_running = True
 
     def stop(self):
-        for service in self.services.itervalues():
-            service.unsubscribe()
-
-    def __del__(self):
-        self.stop()
+        if self.__is_running:
+            for service in self.__services.itervalues():
+                service.unsubscribe()
+            self.__is_running = False

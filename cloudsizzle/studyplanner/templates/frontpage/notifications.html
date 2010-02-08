@@ -1,41 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
+{% extends "base.html" %}
 
-
-	<title>CloudSizzle</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="imagetoolbar" content="no">
-	<meta name="description" content="CloudSizzle">
-	<meta name="keywords" content="">
-	<link rel="stylesheet" type="text/css" media="all" href="notifications_files/reset.css">
-	<link rel="stylesheet" type="text/css" media="all" href="notifications_files/styles.css">
-</head><body id="courses-page">
-	<div id="wrapper">
-		<div id="header">
-			<img src="notifications_files/logo_small.png" alt="" id="logo">
-			
-			<ul class="main-nav">
-				<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a></li>
-				<li><a href="http://lyrion.net/cloudsizzle/profile.php">Profile</a></li>
-				<li><a href="http://lyrion.net/cloudsizzle/courses.php">Courses</a></li>
-			</ul> <!-- /main-nav -->
-			
-			<ul class="main-nav" id="sub-nav">
-				<li><a href="http://lyrion.net/cloudsizzle/general_info.php">Settings</a></li>
-				<li><a href="#">Logout</a></li>
-			</ul> <!-- /sub-nav -->
-			
-			
-			<div id="search">
-				<form method="post" action="search.php">
-					<div>
-						<input name="query" type="text">
-						<input name="submit" type="hidden">
-						<input src="notifications_files/search_btn.png" name="submit_btn" value="Search" class="search-button" type="image">
-					</div>
-				</form>
-			</div> <!-- /search -->
-		</div> <!-- /header -->
+{% block content %}
 		
 		<div id="content">	<ul id="breadcrumb">
 		<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a> &gt;</li>
@@ -136,10 +101,4 @@
 	</div>
 		</div> <!-- /content -->
 		
-	</div><!-- wrapper -->
-	
-	<div id="footer">
-		<p>© CloudSizzle 2010</p>
-	</div> <!-- /footer -->
-	
-</body></html>
+{% endblock content %}

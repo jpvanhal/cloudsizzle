@@ -30,7 +30,7 @@ urlpatterns = patterns('',
     url(r'^registrations/$', 'studyplanner.frontpage.views.registrations', name='registrations'),
     url(r'^completedstudies/$', 'studyplanner.frontpage.views.completedstudies', name='completedstudies'),
     url(r'^friendscourses/$', 'studyplanner.frontpage.views.friendscourses', name='friendscourses'),
-    url(r'^courses/$', 'studyplanner.frontpage.views.courses', name='courses'),
+    #url(r'^courses/$', 'studyplanner.frontpage.views.courses', name='courses'),
     url(r'^coursesfaculty/$', 'studyplanner.frontpage.views.coursesfaculty', name='coursesfaculty'),
     url(r'^coursesdepartment/$', 'studyplanner.frontpage.views.coursesdepartment', name='coursesdepartment'),
     url(r'^course/$', 'studyplanner.frontpage.views.course', name='course'),
@@ -41,7 +41,7 @@ urlpatterns = patterns('',
     url(r'^notifications/$', 'studyplanner.frontpage.views.notifications', name='notifications'),
 
     #courselist application for the first demonstration
-    #url(r'^courses/', include('courselist.urls')),
+    url(r'^courses/', include('courselist.urls')),
     #url(r'^completed/', 'completedstudies.views.index'),
 
     #Login application, demo as well

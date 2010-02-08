@@ -1,173 +1,177 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
-
-
-	<title>CloudSizzle</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="imagetoolbar" content="no">
-	<meta name="description" content="CloudSizzle">
-	<meta name="keywords" content="">
-	<link rel="stylesheet" type="text/css" media="all" href="planned_courses_files/reset.css">
-	<link rel="stylesheet" type="text/css" media="all" href="planned_courses_files/styles.css">
-</head><body id="courses-page">
-	<div id="wrapper">
-		<div id="header">
-			<img src="planned_courses_files/logo_small.png" alt="" id="logo">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>CloudSizzle</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="imagetoolbar" content="no">
+		<meta name="description" content="CloudSizzle">
+		<meta name="keywords" content="">
+		<link rel="stylesheet" type="text/css" media="all" href="planned_courses_files/reset.css">
+		<link rel="stylesheet" type="text/css" media="all" href="planned_courses_files/styles.css">
+	</head>
+	<body id="courses-page">
+		<div id="wrapper">
+			<div id="header">
+				<img src="planned_courses_files/logo_small.png" alt="" id="logo">
+				
+				<ul class="main-nav">
+					<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a></li>
+					<li><a href="http://lyrion.net/cloudsizzle/profile.php">Profile</a></li>
+					<li><a href="http://lyrion.net/cloudsizzle/courses.php">Courses</a></li>
+				</ul> <!-- /main-nav -->
+				
+				<ul class="main-nav" id="sub-nav">
+					<li><a href="http://lyrion.net/cloudsizzle/general_info.php">Settings</a></li>
+					<li><a href="#">Logout</a></li>
+				</ul> <!-- /sub-nav -->
+				
+				
+				<div id="search">
+					<form method="post" action="search.php">
+						<div>
+							<input name="query" type="text">
+							<input name="submit" type="hidden">
+							<input src="planned_courses_files/search_btn.png" name="submit_btn" value="Search" class="search-button" type="image">
+						</div>
+					</form>
+				</div> <!-- /search -->
+			</div> <!-- /header -->
 			
-			<ul class="main-nav">
-				<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a></li>
-				<li><a href="http://lyrion.net/cloudsizzle/profile.php">Profile</a></li>
-				<li><a href="http://lyrion.net/cloudsizzle/courses.php">Courses</a></li>
-			</ul> <!-- /main-nav -->
-			
-			<ul class="main-nav" id="sub-nav">
-				<li><a href="http://lyrion.net/cloudsizzle/general_info.php">Settings</a></li>
-				<li><a href="#">Logout</a></li>
-			</ul> <!-- /sub-nav -->
-			
-			
-			<div id="search">
-				<form method="post" action="search.php">
-					<div>
-						<input name="query" type="text">
-						<input name="submit" type="hidden">
-						<input src="planned_courses_files/search_btn.png" name="submit_btn" value="Search" class="search-button" type="image">
-					</div>
-				</form>
-			</div> <!-- /search -->
-		</div> <!-- /header -->
-		
-		<div id="content">	<ul id="breadcrumb">
-		<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a> &gt;</li>
-		<li><a href="http://lyrion.net/cloudsizzle/profile.php">Profile</a> &gt;</li>
-		<li>Planned courses</li>
-	</ul>
-	
-	<div id="profile" class="rounded-corners-tab">
-		
-		<ul class="tabs">
-			<li>
-				<span class="tab-left"></span>
-				<span class="tab-right"></span>
-				<span class="left-border"></span>
-				<span class="right-border"></span>
-				<span class="bottom-border"></span>
-				<a href="http://lyrion.net/cloudsizzle/profile.php">Profile</a>
-			</li>
-			<li>
-				<span class="tab-left"></span>
-				<span class="tab-right"></span>
-				<span class="left-border"></span>
-				<span class="right-border"></span>
-				<span class="bottom-border"></span>
-				<a href="http://lyrion.net/cloudsizzle/friends.php">Friends</a>
-			</li>
-			<li class="selected">
-				<span class="tab-left"></span>
-				<span class="tab-right"></span>
-				<span class="left-border"></span>
-				<span class="right-border"></span>
-				<a href="http://lyrion.net/cloudsizzle/planned_courses.php">Courses</a>
-			</li>
-		</ul>
-		
-		<div class="tab-content">
-			<div class="top-right"></div>
-			<div class="bottom-left"></div>
-			<div class="bottom-right"></div>
-			<div class="bottom-border"></div>
-			<div class="right-border"></div>
-			<div class="left-border"></div>
-			
-			<h1>Username's courses</h1>
-			
-			<div class="left-col">
-				<ul id="courses-sub-menu">
-					<li class="selected"><a href="http://lyrion.net/cloudsizzle/planned_courses.php">Planned courses</a></li>
-					<li><a href="http://lyrion.net/cloudsizzle/registrations.php">Registrations</a></li>
-					<li><a href="http://lyrion.net/cloudsizzle/completed_studies.php">Completed studies</a></li>
-					<li><a href="http://lyrion.net/cloudsizzle/friends_courses.php">Friends' courses</a></li>
+			<div id="content">
+				<ul id="breadcrumb">
+					<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a> &gt;</li>
+					<li><a href="http://lyrion.net/cloudsizzle/profile.php">Profile</a> &gt;</li>
+					<li>Planned courses</li>
 				</ul>
-			</div>
-			
-			<div class="right-col">
-				<h2>Planned courses</h2>
-				
-				<table>
-					<tbody><tr>
-						<th>Course code</th>
-						<th>Course name</th>
-						<th>Credits</th>
-						<th>Timing</th>
-						<th>Friends</th>
-					</tr>
-					<tr>
-						<td>T-106.5250</td>
-						<td>Distributed Systems</td>
-						<td>5cr</td>
-						<td>
-							<select name="id_1">
-								<option>Spring 2010</option>
-								<option>Autumn 2010</option>
-								<option>Spring 2011</option>
-								<option>Autumn 2011</option>
-							</select>
-						</td>
-						<td>3</td>
-					</tr>
-					<tr class="even">
-						<td>T-106.5250</td>
-						<td>Distributed Systems</td>
-						<td>5cr</td>
-						<td>
-							<select name="id_1">
-								<option>Spring 2010</option>
-								<option>Autumn 2010</option>
-								<option>Spring 2011</option>
-								<option>Autumn 2011</option>
-							</select>
-						</td>
-						<td>3</td>
-					</tr>
-					<tr>
-						<td>T-106.5250</td>
-						<td>Distributed Systems</td>
-						<td>5cr</td>
-						<td>
-							<select name="id_1">
-								<option>Spring 2010</option>
-								<option>Autumn 2010</option>
-								<option>Spring 2011</option>
-								<option>Autumn 2011</option>
-							</select>
-						</td>
-						<td>3</td>
-					</tr>
-					<tr class="even">
-						<td>T-106.5250</td>
-						<td>Distributed Systems</td>
-						<td>5cr</td>
-						<td>
-							<select name="id_1">
-								<option>Spring 2010</option>
-								<option>Autumn 2010</option>
-								<option>Spring 2011</option>
-								<option>Autumn 2011</option>
-							</select>
-						</td>
-						<td>3</td>
-					</tr>
-				</tbody></table>
-				
-			</div>
-		</div>
-	</div> <!-- /profile -->
-		</div> <!-- /content -->
 		
-	</div><!-- wrapper -->
-	
-	<div id="footer">
-		<p>© CloudSizzle 2010</p>
-	</div> <!-- /footer -->
-	
-</body></html>
+				<div id="profile" class="rounded-corners-tab">
+					
+					<ul class="tabs">
+						<li>
+							<span class="tab-left"></span>
+							<span class="tab-right"></span>
+							<span class="left-border"></span>
+							<span class="right-border"></span>
+							<span class="bottom-border"></span>
+							<a href="http://lyrion.net/cloudsizzle/profile.php">Profile</a>
+						</li>
+						<li>
+							<span class="tab-left"></span>
+							<span class="tab-right"></span>
+							<span class="left-border"></span>
+							<span class="right-border"></span>
+							<span class="bottom-border"></span>
+							<a href="http://lyrion.net/cloudsizzle/friends.php">Friends</a>
+						</li>
+						<li class="selected">
+							<span class="tab-left"></span>
+							<span class="tab-right"></span>
+							<span class="left-border"></span>
+							<span class="right-border"></span>
+							<a href="http://lyrion.net/cloudsizzle/planned_courses.php">Courses</a>
+						</li>
+					</ul>
+					
+					<div class="tab-content">
+						<div class="top-right"></div>
+						<div class="bottom-left"></div>
+						<div class="bottom-right"></div>
+						<div class="bottom-border"></div>
+						<div class="right-border"></div>
+						<div class="left-border"></div>
+						
+						<h1>Username's courses</h1>
+						
+						<div class="left-col">
+							<ul id="courses-sub-menu">
+								<li class="selected"><a href="http://lyrion.net/cloudsizzle/planned_courses.php">Planned courses</a></li>
+								<li><a href="http://lyrion.net/cloudsizzle/registrations.php">Registrations</a></li>
+								<li><a href="http://lyrion.net/cloudsizzle/completed_studies.php">Completed studies</a></li>
+								<li><a href="http://lyrion.net/cloudsizzle/friends_courses.php">Friends' courses</a></li>
+							</ul>
+						</div>
+						
+						<div class="right-col">
+							<h2>Planned courses</h2>
+							
+							<table>
+								<thead>
+									<tr>
+										<th>Course code</th>
+										<th>Course name</th>
+										<th>Credits</th>
+										<th>Timing</th>
+										<th>Friends</th>
+									</tr>
+								<tbody>
+									<tr>
+										<td><a href="#">T-106.5250</a></td>
+										<td><a href="#">Distributed Systems</a></td>
+										<td>5cr</td>
+										<td>
+											<select name="id_1">
+												<option>Spring 2010</option>
+												<option>Autumn 2010</option>
+												<option>Spring 2011</option>
+												<option>Autumn 2011</option>
+											</select>
+										</td>
+										<td>3</td>
+									</tr>
+									<tr class="even">
+										<td><a href="#">T-106.5250</a></td>
+										<td><a href="#">Distributed Systems</a></td>
+										<td>5cr</td>
+										<td>
+											<select name="id_1">
+												<option>Spring 2010</option>
+												<option>Autumn 2010</option>
+												<option>Spring 2011</option>
+												<option>Autumn 2011</option>
+											</select>
+										</td>
+										<td>3</td>
+									</tr>
+									<tr>
+										<td><a href="#">T-106.5250</a></td>
+										<td><a href="#">Distributed Systems</a></td>
+										<td>5cr</td>
+										<td>
+											<select name="id_1">
+												<option>Spring 2010</option>
+												<option>Autumn 2010</option>
+												<option>Spring 2011</option>
+												<option>Autumn 2011</option>
+											</select>
+										</td>
+										<td>3</td>
+									</tr>
+									<tr class="even">
+										<td><a href="#">T-106.5250</a></td>
+										<td><a href="#">Distributed Systems</a></td>
+										<td>5cr</td>
+										<td>
+											<select name="id_1">
+												<option>Spring 2010</option>
+												<option>Autumn 2010</option>
+												<option>Spring 2011</option>
+												<option>Autumn 2011</option>
+											</select>
+										</td>
+										<td>3</td>
+									</tr>
+								</tbody>
+							</table>
+							
+						</div>
+					</div>
+				</div> <!-- /profile -->
+			</div> <!-- /content -->
+			
+		</div><!-- wrapper -->
+		
+		<div id="footer">
+			<p>© CloudSizzle 2010</p>
+		</div> <!-- /footer -->
+	</body>
+</html>

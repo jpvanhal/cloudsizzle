@@ -189,10 +189,13 @@ class RemoveFriendsRequestServer(AbstractServer):
             ac.remove_friend(friend_id)
             user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
             friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)
-            remove_triple = Triple(user_uri, 
-                uri('http://cos.alpha.sizl.org/people#Friend'),
+            remove_triple1 = Triple(user_uri, 
+                uri('http://cos.alpha.sizl.org/people#Friend'), #remove from my view
                                    friend_uri)
-            result = self.sc.remove(remove_triple)
+            remove_triple2 = Triple(friend_uri, 
+                uri('http://cos.alpha.sizl.org/people#Friend'), #remove from my friend's view
+                                   user_uri)
+            result = self.sc.remove([remove_triple1, remove_triple2])
             response = {'result': str(result)}    
 
         self.respond(id_, response)

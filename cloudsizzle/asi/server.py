@@ -228,10 +228,17 @@ class AddFriendsRequestServer(AbstractServer):
             if friend_id in my_pending_friend_list:
                 user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
                 friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)                
-                remove_triple = Triple(friend_uri,                                        #remove from friend's view
+                remove_triple = Triple(friend_uri,                  #remove from friend's view
                                 uri('http://cos.alpha.sizl.org/people#PendingFriend'),
                                    user_uri)
                 self.sc.remove(remove_triple)
+                insert_triple1 = Triple(friend_uri,                  #add from friend's view
+                                uri('http://cos.alpha.sizl.org/people#Friend'),
+                                   user_uri)
+                insert_triple2 = Triple(user_uri,                  #add from my view
+                                uri('http://cos.alpha.sizl.org/people#Friend'),
+                                   friend_uri)
+                self.sc.insert([insert_triple1, insert_triple2])
             else:
                 user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
                 friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)                

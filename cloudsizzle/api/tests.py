@@ -89,7 +89,7 @@ class PeopleAPITestCase(SIBTestCase):
     def test_search_people_with_no_matches(self):
         self.assertEqual([], people.search('ei ooo'))
 
-class FacultyTest(unittest.TestCase):
+class FacultyTest(SIBTestCase):
     def test_faculties(self):
         faculties = course.get_faculties()
         self.assertNotEqual(0, len(faculties))
@@ -101,8 +101,11 @@ class FacultyTest(unittest.TestCase):
             self.assertNotEqual(0, len(faculty['name']))
             self.failIf((faculty['slug'] in duplicatelist), "duplicate of faculties found")
             duplicatelist.append(faculty['slug'])
+        
+        name = course.get_faculty_info('eta')['name']
+        self.assertEquals(name, 'Faculty of Electronics, Communications and Automation')
 
-class DepartmentTest(unittest.TestCase):
+class DepartmentTest(SIBTestCase):
     def test_departments(self):
         faculties = course.get_faculties()
 
@@ -117,8 +120,11 @@ class DepartmentTest(unittest.TestCase):
                 self.assertNotEqual(0, len(department['name']))
                 self.failIf((department['slug'] in duplicatelist), "duplicate of departments found")
                 duplicatelist.append(department['slug'])
+        
+        name = course.get_department_info('T4010')['name']
+        self.assertEquals(name, 'Department of Automation and Systems Technology')
 
-class CourseTest(unittest.TestCase):
+class CourseTest(SIBTestCase):
     def test_courses(self):
         faculties = course.get_faculties()
 
@@ -135,6 +141,9 @@ class CourseTest(unittest.TestCase):
                     self.assertNotEqual(0, len(c['code']))
                     self.assertNotEqual(0, len(c['name']))
                     duplicatelist.append(c['slug'])
+        
+        name = course.get_course('T-76.4115')['name']
+        self.assertEquals(name, 'Programming')
 
 def suite():
     suite = unittest.TestSuite()

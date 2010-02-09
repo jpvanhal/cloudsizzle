@@ -1,124 +1,166 @@
-"""Provides information about courses and their structures
-"""
-import time
-from cloudsizzle import pool
-from cloudsizzle.kp import Triple, bnode, uri, literal
+"""Provides an API for fetching information about courses and their structures.
 
-# Also do these preserve unicode characters?
+"""
+from cloudsizzle import pool
+from cloudsizzle.kp import Triple, uri
+from cloudsizzle.utils import fetch_rdf_graph
+
 
 def search(query):
     """Search for courses whose course code or name contains the query
-    string.
-    Search is case insensitive
-    
+    string. Search is case insensitive
+
+    Arguments:
+    query -- The query string. Please use unicode query string, if you want to
+             have a case insensitive search for unicode characters also.
+
     """
-    
-    with pool.get_connection() as sc:    
+    query = query.lower()
+    if isinstance(query, unicode):
+        query = query.encode('utf8')
+
+    with pool.get_connection() as sc:
         # This unfortunately must be done in Python. WQL could possibly help
         # here. Of course SIB (or Python-KP) is slow as molasses anyway.
-        query = query.lower()
-        t1 = time.time()
-        course_names = sc.query(Triple(None, uri('name'), None))
-        t2 = time.time()
-        course_codes = [str(course.subject) for course in course_names if query in course.subject.lower() or query in course.object.lower()] 
-        t3 = time.time()
-    
-        print 'SIB took %0.3f ms' % ((t2-t1)*1000.0)
-        print 'Python search took %0.3f ms' % ((t3-t2)*1000.0)
-    
-        return course_codes
 
-def get_course(course_code):
-    """Returns all information for course identified by course code.
-    Search is case sensitive
+        # Get a list of valid course codes as also Faculties and Departments
+        # have 'name' predicate.
+        course_triples = sc.query(Triple(None, 'rdf:type', 'Course'))
+        valid_courses = set(str(triple.subject) for triple in course_triples)
+
+        name_triples = sc.query(Triple(None, 'name', None))
+
+        course_codes = []
+        for triple in name_triples:
+            course_code = str(triple.subject)
+            course_name = str(triple.object)
+            if course_code not in valid_courses:
+                continue
+            if query in course_code.lower() or query in course_name.lower():
+                course_codes.append(course_code)
+
+        return sorted(course_codes)
+
+
+def get_course(code):
+    """Returns all information for course identified by course code. Search is
+    case sensitive
+
     """
-    
-    # Need to find the course code with correct capitalization first
-    course_code = search(course_code)[0]
-    
-    with pool.get_connection() as sc:    
-        course_triples = sc.query(Triple(uri(course_code), None, None))
-    
-        courseinfo = {}
-        for triple in course_triples:
-            p, o = str(triple.predicate), str(triple.object)
-            # filters out RDF meta information
-            if "www.w3.org" not in p:
-                courseinfo[p] = o
-    
-        return courseinfo
+    with pool.get_connection() as sc:
+        # Make sure there is a course with the given code
+        triples = sc.query(Triple(code, "rdf:type", "Course"))
+        if not triples:
+            msg = 'There is no course with code "{0}".'.format(code)
+            raise Exception(msg)
+
+        course = fetch_rdf_graph(code, dont_follow=['department'])
+        course['code'] = code
+
+        return course
+
 
 # This and the following are identical in structure. Probably a place for
 # some abstraction
-def get_courses_by_department(department_code):
+
+
+def get_courses_by_department(code):
     """Returns courses by given department as identified by department code.
     Department code is case sensitive
+
     """
     with pool.get_connection() as sc:
-        course_ids = [x.subject for x in sc.query(Triple(None, None, uri(department_code.upper())))] 
-        course_names = [sc.query(Triple(x, uri('name'), None))[0] for x in course_ids]
+        triples = sc.query(Triple(None, 'department', uri(code)))
+        course_codes = [str(triple.subject) for triple in triples]
 
-        return [{'code': str(x.subject), 'slug': str(x.subject).lower(), 'name': str(x.object)} for x in course_names]
+        courses = []
+        for course_code in course_codes:
+            course = get_course(course_code)
+            courses.append(course)
+
+        # Sort the list of courses by their code
+        return sorted(courses, key=lambda course: course['code'])
+
 
 def get_departments_by_faculty(faculty_code):
-    """Returns departments by given faculty as identified by faculty code
-    Faculty code is case sensitive
+    """Returns departments by a faculty.
+
+    Arguments:
+    faculty_code -- The code of the faculty whose departments are returned.
+                    Faculty code is case sensitive.
+
     """
     with pool.get_connection() as sc:
-        department_ids = [x.subject for x in sc.query(Triple(None, None, uri(faculty_code)))]
-        department_names = [sc.query(Triple(x, uri('name'), None))[0] for x in department_ids]
-        
-        return ([{'slug': str(x.subject).lower(), 'code': str(x.subject), 'name': str(x.object)} for x in department_names])
+        triples = sc.query(Triple(None, 'faculty', uri(faculty_code)))
+        department_ids = [str(triple.subject) for triple in triples]
+
+        departments = []
+        for department_id in department_ids:
+            department = get_department_info(department_id)
+            departments.append(department)
+
+        # Sort the list of departments by their code
+        return sorted(departments, key=lambda department: department['code'])
+
 
 def get_faculties():
-    """Returns faculties listed in Noppa system
-    """
-    
+    """Returns faculties listed in Noppa system ordered by their id."""
     with pool.get_connection() as sc:
         # Get list of faculties with their ids
-        faculties_ids = [x.subject for x in sc.query(Triple(None, "rdf:type", "Faculty"))]
+        triples = sc.query(Triple(None, "rdf:type", "Faculty"))
+        faculties_ids = [str(triple.subject) for triple in triples]
+
         # Get id-name triplets by ids
         faculties = []
-        for id in faculties_ids:
-            faculty = sc.query(Triple(id, 'name', None))
-            faculties.append({'slug': str(id), 'name': str(faculty[0].object)})
-        # Final form is id-name dictionary
+        for faculty_id in faculties_ids:
+            faculty = get_faculty_info(faculty_id)
+            faculties.append(faculty)
 
-        return faculties
-        
-def get_department_info(department_code):
-    """Returns department info given the department code
-    Department code is case sensitive
+        # Sort the list of faculties by their slug
+        return sorted(faculties, key=lambda faculty: faculty['slug'])
+
+
+def get_department_info(code):
+    """Returns department info by the given department code.
+
+    Arguments:
+    code -- Case sensitive department code
 
     """
-    print "Getting department_info for code "
-    print department_code
     with pool.get_connection() as sc:
-        department_triples = sc.query(
-            # 'name' is used as generic name predicate, so this assumes
-            # that there are no faculties, departments or courses
-            # sharing a name
-            Triple(str(department_code), uri('name'), None))
-        department = {'name': str(department_triples[0].object),
-            'code': str(department_triples[0].subject)}
-        print "Got:"
-        print department
+        # Make sure there is a department with the given code
+        triples = sc.query(Triple(code, "rdf:type", "Department"))
+        if not triples:
+            msg = 'There is no department with code "{0}".'.format(code)
+            raise Exception(msg)
+
+        name_triple = sc.query(Triple(code, 'name', None))
+        department = {
+            'code': code,
+            'name': str(name_triple[0].object)
+        }
+
         return department
 
-def get_faculty_info(faculty_code):
-    """Returns faculty info given the faculty code
-    Faculty code is case sensitive
+
+def get_faculty_info(code):
+    """Returns faculty info by the given faculty code.
+
+    Arguments:
+    code -- Faculty code as seen in Noppa's URL when viewing courses by
+            faculty. This is case sensitive.
 
     """
-    print "Getting faculty_info for code " + faculty_code
     with pool.get_connection() as sc:
-        # 'name' is used as generic name predicate, so this assumes
-        # that there are no faculties, departments or courses
-        # sharing a name
-        faculty_triples = sc.query(
-             Triple(uri(faculty_code), uri('name'), None))
-        faculty = {'name': str(faculty_triples[0].object),
-            'code': str(faculty_triples[0].subject)}
-        print "Got:"
-        print faculty
+        # Make sure there is a faculty with the given code
+        triples = sc.query(Triple(code, "rdf:type", "Faculty"))
+        if not triples:
+            msg = 'There is no faculty with code "{0}".'.format(code)
+            raise Exception(msg)
+
+        name_triple = sc.query(Triple(code, 'name', None))
+        faculty = {
+            'slug': code,
+            'name': str(name_triple[0].object)
+        }
         return faculty

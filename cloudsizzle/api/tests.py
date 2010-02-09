@@ -1,3 +1,5 @@
+# encoding: utf8
+
 import unittest
 import doctest
 from cloudsizzle.api import course, people, session
@@ -89,68 +91,180 @@ class PeopleAPITestCase(SIBTestCase):
     def test_search_people_with_no_matches(self):
         self.assertEqual([], people.search('ei ooo'))
 
-class FacultyTest(SIBTestCase):
-    def test_faculties(self):
-        faculties = course.get_faculties()
-        self.assertNotEqual(0, len(faculties))
 
-        duplicatelist = []
+class CourseAPITestCase(SIBTestCase):
 
-        for faculty in faculties:
-            self.assertNotEqual(0, len(faculty['slug']))
-            self.assertNotEqual(0, len(faculty['name']))
-            self.failIf((faculty['slug'] in duplicatelist), "duplicate of faculties found")
-            duplicatelist.append(faculty['slug'])
-        
-        name = course.get_faculty_info('eta')['name']
-        self.assertEquals(name, 'Faculty of Electronics, Communications and Automation')
+    def test_search_exact_course_code(self):
+        result = course.search(u'T-106.1003')
+        self.assertEqual(['T-106.1003'], result)
 
-class DepartmentTest(SIBTestCase):
-    def test_departments(self):
-        faculties = course.get_faculties()
 
-        duplicatelist = []
+    def test_search_case_insensitive_course_code(self):
+        result = course.search(u't-106.1003')
+        self.assertEqual(['T-106.1003'], result)
 
-        for faculty in faculties:
-            departments = course.get_departments_by_faculty(faculty['slug'])
-            self.assertNotEqual(0,len(departments))
-            for department in departments:
-                self.assertNotEqual(0, len(department['code']))
-                self.assertNotEqual(0, len(department['slug']))
-                self.assertNotEqual(0, len(department['name']))
-                self.failIf((department['slug'] in duplicatelist), "duplicate of departments found")
-                duplicatelist.append(department['slug'])
-        
-        name = course.get_department_info('T4010')['name']
-        self.assertEquals(name, 'Department of Automation and Systems Technology')
 
-class CourseTest(SIBTestCase):
-    def test_courses(self):
-        faculties = course.get_faculties()
+    def test_search_partial_course_code(self):
+        result = course.search(u'T-106')
+        expected = ['T-106.1003', 'T-106.1041', 'T-106.1043', 'T-106.1061']
+        self.assertEqual(expected, result)
 
-        duplicatelist = []
 
-        for faculty in faculties:
-            departments = course.get_departments_by_faculty(faculty['slug'])
-            for department in departments:
-                courses = course.get_courses_by_department(department['code'])
-                for c in courses:
-                    # some departments might not have courses but no duplicates between the deparments courses should be found
-                    self.failIf((c['slug'] in duplicatelist), "duplicate of courses found")
-                    self.assertNotEqual(0, len(c['slug']))
-                    self.assertNotEqual(0, len(c['code']))
-                    self.assertNotEqual(0, len(c['name']))
-                    duplicatelist.append(c['slug'])
-        
-        name = course.get_course('T-76.4115')['name']
-        self.assertEquals(name, 'Programming')
+    def test_search_exact_course_name(self):
+        result = course.search(u'Tietotekniikan työkurssi')
+        self.assertEqual(['T-106.1061'], result)
+
+
+    def test_search_partial_course_name(self):
+        result = course.search(u'työkurssi')
+        self.assertEqual(['T-106.1061'], result)
+
+
+    def test_search_case_insensitive_and_partial_course_name(self):
+        result = course.search(u'TYÖkUrssi')
+        self.assertEqual(['T-106.1061'], result)
+
+
+    def test_search_does_not_find_departments_or_faculties(self):
+        result = course.search(u'Deparment')
+        self.assertEqual(0, len(result))
+        result = course.search(u'Faculty')
+        self.assertEqual(0, len(result))
+
+
+    def test_get_course(self):
+        expected = {
+            'code': 'T-106.1003',
+            'name': 'IT Services at TKK',
+            'department': 'T3050',
+            'study_materials': 'Lecture notes, manuals.',
+            'content': 'Basic computer terminology. Use of common ' \
+                'applications in Unix, WWW and MS Windows environments.',
+            'teaching_period': 'I (Autumn)',
+            'extent': '2',
+            'learning_outcomes': 'Having completed this course you are ' \
+                'familiar with the use of information systems at Helsinki ' \
+                'University of Technology.',
+            'prerequisites': 'None.',
+        }
+        actual = course.get_course('T-106.1003')
+        self.assertEqual(expected, actual)
+
+
+    def test_get_course_raises_exception_with_invalid_code(self):
+        self.assertRaises(Exception, course.get_course, 'foobar')
+
+
+    def test_get_courses_by_department(self):
+        courses = course.get_courses_by_department('T3050')
+        self.assertEqual(5, len(courses))
+        self.assertEqual('T-0.7050', courses[0]['code'])
+        self.assertEqual('T-106.1061', courses[4]['code'])
+
+
+    def test_get_departments_by_faculty(self):
+        expected = [
+            {
+                'code': 'IL-0',
+                'name': 'Common courses for the faculty',
+            },
+            {
+                'code': 'T3010',
+                'name': 'Department of Biomedical Engineering and Computational Science',
+            },
+            {
+                'code': 'T3020',
+                'name': 'Department of Mathematics and Systems Analysis',
+            },
+            {
+                'code': 'T3030',
+                'name': 'Department of Media Technology',
+            },
+            {
+                'code': 'T3040',
+                'name': 'Department of Engineering Physics',
+            },
+            {
+                'code': 'T3050',
+                'name': 'Department of Computer Science and Engineering',
+            },
+            {
+                'code': 'T3060',
+                'name': 'Department of Information and Computer Science',
+            },
+            {
+                'code': 'T3070',
+                'name': 'Department of Industrial Engineering and Management',
+            },
+            {
+                'code': 'T3080',
+                'name': 'BIT Research Centre',
+            },
+            {
+                'code': 'T3090',
+                'name': 'Language Centre',
+            },
+        ]
+        actual = course.get_departments_by_faculty('il')
+        self.assertEqual(expected, actual)
+
+
+    def test_get_faculties(self):
+        expected = [
+            {
+                'slug': 'eri',
+                'name': 'Other separate courses',
+            },
+            {
+                'slug': 'eta',
+                'name': 'Faculty of Electronics, Communications and Automation',
+            },
+            {
+                'slug': 'ia',
+                'name': 'Faculty of Engineering and Architecture',
+            },
+            {
+                'slug': 'il',
+                'name': 'Faculty of Information and Natural Sciences',
+            },
+            {
+                'slug': 'km',
+                'name': 'Faculty of Chemistry and Materials Sciences',
+            },
+        ]
+        actual = course.get_faculties()
+        self.assertEqual(expected, actual)
+
+
+    def test_get_department_info(self):
+        expected = {
+            'code': 'T3050',
+            'name': 'Department of Computer Science and Engineering',
+        }
+        actual = course.get_department_info('T3050')
+        self.assertEqual(expected, actual)
+
+
+    def test_get_department_info_raises_exception_with_invalid_code(self):
+        self.assertRaises(Exception, course.get_department_info, 'foobar')
+
+
+    def test_get_faculty_info(self):
+        expected = {
+            'slug': 'il',
+            'name': 'Faculty of Information and Natural Sciences',
+        }
+        actual = course.get_faculty_info('il')
+        self.assertEqual(expected, actual)
+
+
+    def test_get_faculty_info_raises_exception_with_invalid_code(self):
+        self.assertRaises(Exception, course.get_faculty_info, 'foobar')
 
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(PeopleAPITestCase, 'test'))
-    suite.addTest(unittest.makeSuite(FacultyTest, 'test'))
-    suite.addTest(unittest.makeSuite(DepartmentTest, 'test'))
-    suite.addTest(unittest.makeSuite(CourseTest, 'test'))
+    suite.addTest(unittest.makeSuite(CourseAPITestCase, 'test'))
     for module in (course, people, session):
         suite.addTest(doctest.DocTestSuite(module,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS))

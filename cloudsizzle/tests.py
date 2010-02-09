@@ -1,3 +1,5 @@
+# encoding: utf8
+
 import doctest
 import unittest
 from minimock import Mock, restore, TraceTracker, mock
@@ -285,6 +287,344 @@ class SIBTestCase(unittest.TestCase):
                 uri('http://cos.alpha.sizl.org/people/ID#bbYJ_80fWr3Om4aaWPEYjL'),
                 uri('http://cos.alpha.sizl.org/people#address'),
                 None)
+        ])
+
+        # Course information
+        self.sc.insert([
+            Triple(
+                uri('eri'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Faculty')),
+            Triple(
+                uri('eri'),
+                uri('name'),
+                literal('Other separate courses')),
+            Triple(
+                uri('eta'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Faculty')),
+            Triple(
+                uri('eta'),
+                uri('name'),
+                literal('Faculty of Electronics, Communications and Automation')),
+            Triple(
+                uri('ia'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Faculty')),
+            Triple(
+                uri('ia'),
+                uri('name'),
+                literal('Faculty of Engineering and Architecture')),
+            Triple(
+                uri('il'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Faculty')),
+            Triple(
+                uri('il'),
+                uri('name'),
+                literal('Faculty of Information and Natural Sciences')),
+            Triple(
+                uri('km'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Faculty')),
+            Triple(
+                uri('km'),
+                uri('name'),
+                literal('Faculty of Chemistry and Materials Sciences')),
+
+            Triple(
+                uri('IL-0'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('IL-0'),
+                uri('name'),
+                literal('Common courses for the faculty')),
+            Triple(
+                uri('IL-0'),
+                uri('faculty'),
+                uri('il')),
+            Triple(
+                uri('T3010'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('T3010'),
+                uri('name'),
+                literal('Department of Biomedical Engineering and Computational Science')),
+            Triple(
+                uri('T3010'),
+                uri('faculty'),
+                uri('il')),
+            Triple(
+                uri('T3020'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('T3020'),
+                uri('name'),
+                literal('Department of Mathematics and Systems Analysis')),
+            Triple(
+                uri('T3020'),
+                uri('faculty'),
+                uri('il')),
+            Triple(
+                uri('T3030'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('T3030'),
+                uri('name'),
+                literal('Department of Media Technology')),
+            Triple(
+                uri('T3030'),
+                uri('faculty'),
+                uri('il')),
+            Triple(
+                uri('T3040'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('T3040'),
+                uri('name'),
+                literal('Department of Engineering Physics')),
+            Triple(
+                uri('T3040'),
+                uri('faculty'),
+                uri('il')),
+            Triple(
+                uri('T3050'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('T3050'),
+                uri('name'),
+                literal('Department of Computer Science and Engineering')),
+            Triple(
+                uri('T3050'),
+                uri('faculty'),
+                uri('il')),
+            Triple(
+                uri('T3060'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('T3060'),
+                uri('name'),
+                literal('Department of Information and Computer Science')),
+            Triple(
+                uri('T3060'),
+                uri('faculty'),
+                uri('il')),
+            Triple(
+                uri('T3070'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('T3070'),
+                uri('name'),
+                literal('Department of Industrial Engineering and Management')),
+            Triple(
+                uri('T3070'),
+                uri('faculty'),
+                uri('il')),
+            Triple(
+                uri('T3080'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('T3080'),
+                uri('name'),
+                literal('BIT Research Centre')),
+            Triple(
+                uri('T3080'),
+                uri('faculty'),
+                uri('il')),
+            Triple(
+                uri('T3090'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Department')),
+            Triple(
+                uri('T3090'),
+                uri('name'),
+                literal('Language Centre')),
+            Triple(
+                uri('T3090'),
+                uri('faculty'),
+                uri('il')),
+
+            Triple(
+                uri('T-0.7050'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Course')),
+            Triple(
+                uri('T-0.7050'),
+                uri('name'),
+                literal('Introduction to Postgraduate Studies in Computer Science P')),
+            Triple(
+                uri('T-0.7050'),
+                uri('department'),
+                uri('T3050')),
+            Triple(
+                uri('T-0.7050'),
+                uri('content'),
+                literal('Basic research skills. The publishing process. Scientific presentations. Research areas in computer science.')),
+            Triple(
+                uri('T-0.7050'),
+                uri('teaching_period'),
+                literal('III-IV')),
+            Triple(
+                uri('T-0.7050'),
+                uri('extent'),
+                literal('2')),
+            Triple(
+                uri('T-0.7050'),
+                uri('learning_outcomes'),
+                literal('PProvide a basic understanding of the scientific process and of the research paradigms relevant to research. Provide guidelines and support for planning the Ph.D. work. Provide an understanding and experience of the publishing and peer-review process in the field.')),
+            Triple(
+                uri('T-106.1003'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Course')),
+            Triple(
+                uri('T-106.1003'),
+                uri('name'),
+                literal('IT Services at TKK')),
+            Triple(
+                uri('T-106.1003'),
+                uri('department'),
+                uri('T3050')),
+            Triple(
+                uri('T-106.1003'),
+                uri('study_materials'),
+                literal('Lecture notes, manuals.')),
+            Triple(
+                uri('T-106.1003'),
+                uri('content'),
+                literal('Basic computer terminology. Use of common applications in Unix, WWW and MS Windows environments.')),
+            Triple(
+                uri('T-106.1003'),
+                uri('teaching_period'),
+                literal('I (Autumn)')),
+            Triple(
+                uri('T-106.1003'),
+                uri('extent'),
+                literal('2')),
+            Triple(
+                uri('T-106.1003'),
+                uri('learning_outcomes'),
+                literal('Having completed this course you are familiar with the use of information systems at Helsinki University of Technology.')),
+            Triple(
+                uri('T-106.1003'),
+                uri('prerequisites'),
+                literal('None.')),
+            Triple(
+                uri('T-106.1041'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Course')),
+            Triple(
+                uri('T-106.1041'),
+                uri('name'),
+                literal('Tietotekniikan peruskurssi')),
+            Triple(
+                uri('T-106.1041'),
+                uri('department'),
+                uri('T3050')),
+            Triple(
+                uri('T-106.1041'),
+                uri('study_materials'),
+                literal('Luentomateriaali, nopassa jaettava materiaali')),
+            Triple(
+                uri('T-106.1041'),
+                uri('content'),
+                literal('Yleissivistävä katsaus tietotekniikan eri aihealueisiin.')),
+            Triple(
+                uri('T-106.1041'),
+                uri('teaching_period'),
+                literal('I - II')),
+            Triple(
+                uri('T-106.1041'),
+                uri('extent'),
+                literal('3')),
+            Triple(
+                uri('T-106.1041'),
+                uri('learning_outcomes'),
+                literal('Tietotekniikan keskeisten osa-alueiden tuntemus.')),
+            Triple(
+                uri('T-106.1041'),
+                uri('prerequisites'),
+                literal('Ei vaadita.')),
+            Triple(
+                uri('T-106.1043'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Course')),
+            Triple(
+                uri('T-106.1043'),
+                uri('name'),
+                literal('Information Technology - Basic Course')),
+            Triple(
+                uri('T-106.1043'),
+                uri('department'),
+                uri('T3050')),
+            Triple(
+                uri('T-106.1043'),
+                uri('study_materials'),
+                literal('Reed, David: "A Balanced Introduction to Computer Science" (2nd edition). Pearson Education, Upper Saddle River (NJ), Pearson Prentice Hall, ISBN 0-13-601722-3')),
+            Triple(
+                uri('T-106.1043'),
+                uri('content'),
+                literal('Computer science basics.')),
+            Triple(
+                uri('T-106.1043'),
+                uri('teaching_period'),
+                literal('I - II (Autumn)')),
+            Triple(
+                uri('T-106.1043'),
+                uri('extent'),
+                literal('3')),
+            Triple(
+                uri('T-106.1043'),
+                uri('learning_outcomes'),
+                literal('Having completed this course you are familiar with essential fields of computer science.')),
+            Triple(
+                uri('T-106.1043'),
+                uri('prerequisites'),
+                None),
+            Triple(
+                uri('T-106.1061'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('Course')),
+            Triple(
+                uri('T-106.1061'),
+                uri('name'),
+                literal('Tietotekniikan työkurssi')),
+            Triple(
+                uri('T-106.1061'),
+                uri('department'),
+                uri('T3050')),
+            Triple(
+                uri('T-106.1061'),
+                uri('study_materials'),
+                literal('Ilmoitetaan kurssin Noppa-sivulla: https://noppa.tkk.fi/noppa/kurssi/t-1... .')),
+            Triple(
+                uri('T-106.1061'),
+                uri('content'),
+                literal('Opiskelussa ja työelämässä yleisesti käytetyt toimistotyökalut, WWW-sivujen laatiminen ja ohjelmoinnin alkeet.')),
+            Triple(
+                uri('T-106.1061'),
+                uri('teaching_period'),
+                literal('III - IV')),
+            Triple(
+                uri('T-106.1061'),
+                uri('extent'),
+                literal('3')),
+            Triple(
+                uri('T-106.1061'),
+                uri('learning_outcomes'),
+                literal('Osaat käyttää monipuolisesti ja tehokkaasti opiskelu- ja työelämässä yleisesti käytettyjä toimistotyökaluja. Hallitset WWW-sivujen laatimisen sekä ohjelmoinnin alkeet.')),
+            Triple(
+                uri('T-106.1061'),
+                uri('prerequisites'),
+                literal('Ei vaadita.')),
         ])
 
 

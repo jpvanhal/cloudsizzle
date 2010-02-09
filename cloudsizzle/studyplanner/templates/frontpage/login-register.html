@@ -16,7 +16,7 @@
 			<img src="/static/graphics/logo.png" alt="" id="logo" />
 			
 			<div id="login">
-				<form method="post" action="{% url frontpage.views.index %}">
+				<form method="post" action="{% url frontpage %}">
 					<div>
 					{% for field in loginform %}
 						{{ field }}

@@ -94,8 +94,8 @@ def friendscourses(request):
     c = Context({})
     return HttpResponse(t.render(c))
 
-def courses(request):
-    t = loader.get_template("frontpage/courses.html")
+def planned_courses(request):
+    t = loader.get_template("frontpage/planned_courses.html")
     c = Context({})
     return HttpResponse(t.render(c))
 

@@ -16,15 +16,15 @@
 			<img src="/static/graphics/logo_small.png" alt="" id="logo" />
 			
 			<ul class="main-nav">
-				<li><a href="/">Home</a></li>
-				<li><a href="/profile/">Profile</a></li>
-				<li><a href="/courses/">Courses</a></li>
+				<li><a href="{% url home %}">Home</a></li>
+				<li><a href="{% url profile %}">Profile</a></li>
+				<li><a href="{% url courses %}">Courses</a></li>
 			</ul>
 			
 			<ul class="main-nav" id="sub-nav">
 				<li>Hello, {{ asi_session.username }}</li>
 				<li><a href="/settings">Settings</a></li>
-				<li><a href="/session/logout">Logout</a></li>
+				<li><a href="{% url logout_user %}">Logout</a></li>
 			</ul> <!-- /sub-nav -->
 			
 			

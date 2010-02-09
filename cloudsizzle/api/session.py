@@ -70,7 +70,7 @@ class Session(object):
             for triple in friend_triples:
                 friend_id = triple.object.split('#')[-1]
                 pending_friend_ids.append(friend_id)
-    
+
         return pending_friend_ids
 
 
@@ -115,4 +115,3 @@ if __name__ == '__main__':
     session = Session(username='pang4', password='123456')
     session.user_id = 'bl3S3oeZSr35qmaaWPEYjL'
     print session.get_pending_friend_requests()
-    

@@ -2,10 +2,10 @@
 
 {% block content %}
 	<ul id="breadcrumb">
-		<li><a href="home.php">Home</a> ></li>
-		<li><a href="courses.php">Courses</a> ></li>
-		<li><a href="courses_faculty.php">Faculty of Information and Natural Sciences</a> ></li>
-		<li><a href="{{ department.slug }}">{{ department.name }}</a> &gt;</li>
+		<li><a href="{% url frontpage.views.index %}">Home</a> &gt;</li>
+		<li><a href="{% url courselist.views.list_faculties %}">Courses</a> &gt;</li>
+		<li><a href="{% url courselist.views.list_departments faculty.code %}">{{ faculty.name }}</a> &gt;</li>
+		<li><a href="{% url courselist.views.list_courses faculty.code department.code %}">{{ department.name }}</a> &gt;</li>
 		<li>{{ course.code }} {{ course.name }}</li>
 	</ul>
 

@@ -2,9 +2,9 @@
 {% block content %}
 		<div id="content">	<ul id="breadcrumb">
 		<li><a href="/">Home</a> &gt;</li>
-		<li>Courses &gt;</li>
-		{% if faculty.code %}<li>{{ faculty.name }} &gt;</li>{% endif %}
-		{% if department.code %}<li>{{ department.name }} &gt;</li>{% endif %}
+		<li><a href="{% url courselist.views.list_faculties %}">Courses</a> &gt;</li>
+		{% if faculty.code %}<li><a href="{% url courselist.views.list_departments faculty.code %}">{{ faculty.name }}</a> &gt;</li>{% endif %}
+		{% if department.code %}<li><a href="{% url courselist.views.list_courses faculty.code department.code %}">{{ department.name }}</a> &gt;</li>{% endif %}
 	</ul>
 	
 	<div id="courses" class="rounded-corners">

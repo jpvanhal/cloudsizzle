@@ -5,6 +5,9 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+# Unauthenticated users will always be redirected to this URL
+LOGIN_PAGE = '/'
+
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )

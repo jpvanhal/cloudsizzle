@@ -38,8 +38,9 @@ class Session(object):
         friend_id -- The user id of the friend being requested.
 
         """
-        pass
-
+        result = get_service('AddFriendsRequest').request(user_id=self.user_id, friend_id=friend_id)
+        return result
+        
     def remove_friend(self, friend_id):
         """Removes a friend connection.
 
@@ -47,7 +48,11 @@ class Session(object):
         friend_id -- The user id of the friend being broken up with.
 
         """
-        pass
+        result = get_service('RemoveFriendsRequest').request(user_id=self.user_id, friend_id=friend_id)
+        try:
+            return result['result']
+        except KeyError:
+            return None
 
     def get_pending_friend_requests(self):
         """Returns a list of people who have requested to connect to this user.
@@ -81,7 +86,8 @@ class Session(object):
         friend_id -- User id of the friend whose request this user is rejecting
 
         """
-        pass
+        result = get_service('RejectFriendsRequest').request(user_id=self.user_id, friend_id=friend_id)
+        return result
 
     def add_to_planned_courses(self, course_code):
         """Add a course to this user's planned courses."""
@@ -112,6 +118,10 @@ if __name__ == '__main__':
     '''
     test
     '''
-    session = Session(username='pang4', password='123456')
-    session.user_id = 'bl3S3oeZSr35qmaaWPEYjL'
-    print session.get_pending_friend_requests()
+    session = Session(username='pang3', password='123456')
+    session.open()
+    #session.user_id = 'aJVepae1Or35tGaaWPEYjL' #''
+    # print session.add_friend(friend_id='aJVepae1Or35tGaaWPEYjL')
+    print session.remove_friend('aJVepae1Or35tGaaWPEYjL')
+    session.close()
+    

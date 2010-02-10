@@ -1,5 +1,5 @@
 from cloudsizzle.asi.service import ASIServiceKnowledgeProcessor
-from cloudsizzle.asi.client import LoginClient, LogoutClient
+from cloudsizzle.asi.client import *
 from cloudsizzle.kp import SIBConnection
 
 ASI_CLIENT = None
@@ -13,6 +13,9 @@ def init():
     ASI_CLIENT = ASIServiceKnowledgeProcessor(services=(
        LoginClient(sc),
        LogoutClient(sc),
+       RejectFriendsRequestClient(sc),
+       RemoveFriendsRequestClient(sc),
+       AddFriendsRequestClient(sc),
     ))
 
 def get_service(name):

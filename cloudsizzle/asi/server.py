@@ -155,7 +155,7 @@ class RejectFriendsRequestServer(AbstractServer):
             print e
             response = {'messages': 'did not login ASi'} 
         else:
-            result = ac.reject_friend_request(user_id, friend_id)
+            result = ac.reject_friend_request(friend_id)
             user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
             friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)                
             remove_triple = Triple(user_uri,                                        #remove from my view
@@ -231,9 +231,9 @@ class AddFriendsRequestServer(AbstractServer):
             if friend_id in my_pending_friend_list:
                 user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
                 friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)                
-                remove_triple = Triple(friend_uri,                  #remove from friend's view
+                remove_triple = Triple(user_uri,                  #remove from my view
                                 uri('http://cos.alpha.sizl.org/people#PendingFriend'),
-                                   user_uri)
+                                   friend_uri)
                 self.sc.remove(remove_triple)
                 insert_triple1 = Triple(friend_uri,                  #add from friend's view
                                 uri('http://cos.alpha.sizl.org/people#Friend'),

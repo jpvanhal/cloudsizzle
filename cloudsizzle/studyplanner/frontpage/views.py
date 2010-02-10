@@ -1,9 +1,9 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader
 from django.shortcuts import render_to_response
-from common.forms import LoginForm, RegisterForm
-from common.planner_session import is_authenticated, authenticate
-from cloudsizzle.api.session import LoginFailed
+from studyplanner.common.forms import LoginForm, RegisterForm
+from studyplanner.common.planner_session import is_authenticated, authenticate
+from api.session import LoginFailed
 from studyplanner.events.models import Event
 
 def index(request):

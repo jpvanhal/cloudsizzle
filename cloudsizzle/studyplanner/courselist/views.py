@@ -4,7 +4,7 @@ from studyplanner.common.planner_session import check_authentication
 from studyplanner.courselist.models import Course
 from studyplanner.courselist.models import Faculty
 from studyplanner.courselist.models import Department
-from cloudsizzle import api
+import api
 
 @check_authentication
 def list_faculties(request):

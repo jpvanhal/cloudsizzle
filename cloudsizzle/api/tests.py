@@ -212,23 +212,23 @@ class CourseAPITestCase(SIBTestCase):
     def test_get_faculties(self):
         expected = [
             {
-                'slug': 'eri',
+                'code': 'eri',
                 'name': 'Other separate courses',
             },
             {
-                'slug': 'eta',
+                'code': 'eta',
                 'name': 'Faculty of Electronics, Communications and Automation',
             },
             {
-                'slug': 'ia',
+                'code': 'ia',
                 'name': 'Faculty of Engineering and Architecture',
             },
             {
-                'slug': 'il',
+                'code': 'il',
                 'name': 'Faculty of Information and Natural Sciences',
             },
             {
-                'slug': 'km',
+                'code': 'km',
                 'name': 'Faculty of Chemistry and Materials Sciences',
             },
         ]
@@ -251,7 +251,7 @@ class CourseAPITestCase(SIBTestCase):
 
     def test_get_faculty_info(self):
         expected = {
-            'slug': 'il',
+            'code': 'il',
             'name': 'Faculty of Information and Natural Sciences',
         }
         actual = course.get_faculty_info('il')

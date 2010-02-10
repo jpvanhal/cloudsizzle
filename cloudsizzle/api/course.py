@@ -116,8 +116,8 @@ def get_faculties():
             faculty = get_faculty_info(faculty_id)
             faculties.append(faculty)
 
-        # Sort the list of faculties by their slug
-        return sorted(faculties, key=lambda faculty: faculty['slug'])
+        # Sort the list of faculties by their code
+        return sorted(faculties, key=lambda faculty: faculty['code'])
 
 
 def get_department_info(code):
@@ -160,7 +160,7 @@ def get_faculty_info(code):
 
         name_triple = sc.query(Triple(code, 'name', None))
         faculty = {
-            'slug': code,
+            'code': code,
             'name': str(name_triple[0].object)
         }
         return faculty

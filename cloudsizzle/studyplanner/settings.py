@@ -84,6 +84,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'studyplanner.courselist',
     'studyplanner.completedstudies',
+    'studyplanner.events',
 )
 
 AUTHENTICATION_BACKENDS = ('studyplanner.auth.backends.SIBBackend',)

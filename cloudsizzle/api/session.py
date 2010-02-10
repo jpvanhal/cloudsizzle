@@ -1,6 +1,10 @@
 from cloudsizzle.api.asi_client import get_service
 from cloudsizzle.kp import Triple, uri
 from cloudsizzle import pool
+from cloudsizzle.api import people
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'cloudsizzle.studyplanner.settings'
+from cloudsizzle.studyplanner.events.models import Event
 
 PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
 
@@ -99,7 +103,12 @@ class Session(object):
 
     def get_events(self):
         """Returns the events of this user."""
-        pass
+        friends = people.get_friends(self.user_id)
+        events = []
+        for friend in friends:
+            events.extend(Event.objects.get(user_id=friend))
+            
+        return events 
 
     def get_planned_courses(self):
         """Returns the planned courses of this user."""

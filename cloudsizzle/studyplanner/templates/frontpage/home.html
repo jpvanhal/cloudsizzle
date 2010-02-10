@@ -18,12 +18,13 @@
 		
 		<h2>News feed</h2>
 		
+		{% for e in events %}
 		<div class="feed-item">
 			<a href="#"><img src="../static/graphics/profile_picture_small.jpg" alt=""></a>
 			<p><a href="#">Jari</a> enrolled to <a href="#">T-76.5115 Software Development Project II</a></p>
 			<p class="date">2 hours ago</p>
 		</div> <!-- /feed-item -->
-		
+		{% endfor %}
 		<div class="feed-item">
 			<a href="#"><img src="../static/graphics/profile_picture_small.jpg" alt=""></a>
 			<p><a href="#">Jari</a> enrolled to <a href="#">T-76.5115 Software Development Project II</a></p>

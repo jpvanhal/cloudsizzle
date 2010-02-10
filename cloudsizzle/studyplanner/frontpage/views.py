@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from common.forms import LoginForm, RegisterForm
 from common.planner_session import is_authenticated, authenticate
 from cloudsizzle.api.session import LoginFailed
+from studyplanner.events.models import Event
 
 def index(request):
     print "Index view requested"
@@ -64,9 +65,11 @@ def logout(request):
 # appropriate file and application.
 
 def home(request):
-    print "Home requested"
+    events = request.session.get_events()
+    
     t = loader.get_template("frontpage/home.html")
-    c = Context({ 'asi_session': request.session['asi_session'] })
+    c = Context({ 'asi_session': request.session['asi_session'],
+                  'events': events})
     return HttpResponse(t.render(c))
 
 def profile(request):

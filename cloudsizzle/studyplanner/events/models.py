@@ -1,5 +1,4 @@
 from django.db import models
-from cloudsizzle import api
 
 # Create your models here.
 

@@ -124,8 +124,6 @@ class RegisterServer(AbstractServer):
                 email=data['email'])
 
             if 'messages' not in user_info.keys():
-                #user = ac.get_user(user_id)
-
                 # Copy user info from ASI to SIB.
                 triples = user_to_rdf(user_info)
                 self.sc.insert(triples)

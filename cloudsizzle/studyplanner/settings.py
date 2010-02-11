@@ -1,4 +1,8 @@
 import os
+import sys
+
+## Include the directory for API in path
+sys.path.insert(0, os.path.dirname(__file__) + "/..")
 
 # Django settings for cloudsizzle project.
 

@@ -1,10 +1,13 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader
 from django.shortcuts import render_to_response
+from django import forms
 from studyplanner.common.forms import LoginForm, RegisterForm
 from studyplanner.common.planner_session import is_authenticated, authenticate
-from api.session import LoginFailed
+from studyplanner.common.planner_session import check_authentication
+import api
 from studyplanner.events.models import Event
+
 
 def index(request):
     print "Index view requested"
@@ -30,7 +33,7 @@ def login_register(request):
             password = login_form.cleaned_data['password']
             try:
                 authenticate(request, username, password)
-            except LoginFailed:
+            except api.session.LoginFailed:
                 # There is probably a smarter way for this, perhaps
                 # a separate view?
                 return HttpResponseRedirect('/?loginfailed')
@@ -65,7 +68,7 @@ def logout(request):
 # appropriate file and application.
 
 def home(request):
-    events = request.session.get_events()
+    events = request.session['asi_session'].get_events()
     
     t = loader.get_template("frontpage/home.html")
     c = Context({ 'asi_session': request.session['asi_session'],
@@ -117,9 +120,41 @@ def privacy(request):
     c = Context({})
     return HttpResponse(t.render(c))
 
+class SearchForm(forms.Form):
+    # Required fields have * at the end of label
+    query = forms.CharField(min_length=4, max_length=40, label="Keywords")
+    scope = forms.ChoiceField([('all', 'All content'), ('courses', 'Courses'), ('users', 'Users')], label="Search option")
+
+@check_authentication
 def search(request):
     t = loader.get_template("frontpage/search.html")
-    c = Context({})
+    searchform = SearchForm(request.GET)
+    if searchform.is_valid():
+        query = searchform.cleaned_data['query']
+        scope = searchform.cleaned_data['scope']
+        results = []
+        
+        if scope == 'all' or scope == 'people':
+            for userid in api.people.search(query):
+                details = api.people.get(userid)
+                results.append(
+                    {'type':'user', 'userid':userid,
+                    'username':details['username'],}
+                )
+        if scope == 'all' or scope == 'courses':
+            for coursecode in api.course.search(query):
+                details = api.course.get_course(coursecode)
+                results.append(
+                    {'type':'course', 'code': coursecode,
+                    'name':details['name']}
+                )
+        
+        
+        c = Context({'searchform': searchform, 'results': results,
+                    'query': query
+            })
+    else:
+        c = Context({'searchform': searchform})
     return HttpResponse(t.render(c))
 
 def notifications(request):

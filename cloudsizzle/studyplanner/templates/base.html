@@ -19,7 +19,7 @@
 			
 			<ul class="main-nav">
 				<li><a href="{% url home %}">Home</a></li>
-				<li><a href="{% url profile %}">Profile</a></li>
+				<li><a href="{% url profileown %}">Profile</a></li>
 				<li><a href="{% url courses %}">Courses</a></li>
 			</ul>
 			
@@ -30,16 +30,16 @@
 			
 			
 			<div id="search">
-				<form method="post" action="#">
+				<form method="get" action="{% url search %}">
 					<div>
 						<input type="text" name="query" />
-						<input type="hidden" name="submit" />
+						<input type="hidden" name="scope"  value="all"/>
 						<input type="image" src="/static/graphics/search_btn.png" name="submit_btn" value="Search" class="search-button" />
 					</div>
 				</form>
 			</div> <!-- /search -->
 		</div> <!-- /header -->
-	{% block content %}		
+	{% block content %}
 	{% endblock content %}
 	</div><!-- wrapper -->
 	

@@ -25,7 +25,8 @@ urlpatterns = patterns('',
     
     #TODO
     url(r'^home/$', 'studyplanner.frontpage.views.home', name='home'),
-    url(r'^profile/$', 'studyplanner.frontpage.views.profile', name='profile'),
+    url(r'^profile$', 'studyplanner.frontpage.views.profile', name='profileown'),
+    url(r'^profile/([a-zA-Z0-9-_]+)$', 'studyplanner.frontpage.views.profile', name='profile'),
     url(r'^friends/$', 'studyplanner.frontpage.views.friends', name='friends'),
     url(r'^registrations/$', 'studyplanner.frontpage.views.registrations', name='registrations'),
     url(r'^completedstudies/$', 'studyplanner.frontpage.views.completedstudies', name='completedstudies'),
@@ -37,7 +38,7 @@ urlpatterns = patterns('',
     #url(r'^recommendedcourse/$', 'studyplanner.frontpage.views.recommendedcourse', name='recommendedcourse'),
     #url(r'^generalinfo/$', 'studyplanner.frontpage.views.generalinfo', name='generalinfo'),
     #url(r'^privacy/$', 'studyplanner.frontpage.views.privacy', name='privacy'),
-    #url(r'^search/$', 'studyplanner.frontpage.views.search', name='search'),
+    url(r'^search$', 'studyplanner.frontpage.views.search', name='search'),
     #url(r'^notifications/$', 'studyplanner.frontpage.views.notifications', name='notifications'),
 
     url(r'^courses/', include('courselist.urls')),

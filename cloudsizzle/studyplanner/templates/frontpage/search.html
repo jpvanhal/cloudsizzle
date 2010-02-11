@@ -2,9 +2,9 @@
 
 {% block content %}
 		
-		<div id="content">	
+	<div id="content">	
 	<ul id="breadcrumb">
-		<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a> &gt;</li>
+		<li><a href="{% url frontpage %}">Home</a> &gt;</li>
 		<li>Search</li>
 	</ul>
 	
@@ -19,19 +19,13 @@
 		
 		<h1>Search</h1>
 		
-		<form method="post" action="#">
-			<div>
-				<label for="query">Keywords</label>
-				<input name="query" id="query" type="text">
-			</div>
-			<div>
-				<label for="search-option">Search option</label>
-				<select name="search_option" id="search-option">
-					<option value="">All content</option>
-					<option value="">Courses</option>
-					<option value="">Users</option>
-				</select>
-			</div>
+		<form method="get" action="{% url search %}">
+			{% for field in searchform %}<div>
+				{{ field.errors }}
+				{{ field.label_tag }}
+                                {{ field }}
+                        </div>
+                        {% endfor %}
 			<div>
 				<input name="search" value="Search" class="button" type="submit">
 			</div>
@@ -39,12 +33,12 @@
 		
 		<h2>Search results</h2>
 		
-		<p>Results 0-10 of 153 hits for the keyword "T-76.5115"</p>
+		<p>Results 0-10 of {{ results|length }} hits for the keyword "{{ query }}"</p>
 		
 		<ul class="pagination">
 			<li><a href="#">&lt; Previous</a></li>
 			<li><a href="#">1</a></li>
-			<li>…</li>
+			<li></li>
 			<li><a href="#">4</a></li>
 			<li><a href="#">5</a></li>
 			<li><a href="#">6</a></li>
@@ -58,57 +52,23 @@
 		</ul>
 		
 		<div id="search-results">
+			{% for result in results %}
+			{% ifequal result.type 'course' %}
 			<div class="search-result course">
 				<p class="type">Course</p>
-				<h3><a href="#">T-76.5115 Software Development Project II</a></h3>
+				<h3><a href="#">{{ result.code }} {{ result.name }}</a></h3>
 			</div>
-			
+			{% endifequal %}
+			{% ifequal result.type 'user' %}
 			<div class="search-result user">
 				<p class="type">User</p>
-				<img src="search_files/profile_picture_small.jpg" alt="">
-				<h3><a href="#">mmeikalaine</a></h3>
+				<img src="/static/graphics/profile_picture_small.jpg" alt="">
+				<h3><a href="{% url profile result.userid %}">{{ result.username }}</a></h3>
 				<p>2 mutual friends</p>
 				<p>3 mutual courses</p>
 			</div>
-			
-			<div class="search-result course">
-				<p class="type">Course</p>
-				<h3><a href="#">T-76.5115 Software Development Project II</a></h3>
-			</div>
-			
-			<div class="search-result user">
-				<p class="type">User</p>
-				<img src="search_files/profile_picture_small.jpg" alt="">
-				<h3><a href="#">mmeikalaine</a></h3>
-				<p>2 mutual friends</p>
-				<p>3 mutual courses</p>
-			</div>
-			
-			<div class="search-result course">
-				<p class="type">Course</p>
-				<h3><a href="#">T-76.5115 Software Development Project II</a></h3>
-			</div>
-			
-			<div class="search-result user">
-				<p class="type">User</p>
-				<img src="search_files/profile_picture_small.jpg" alt="">
-				<h3><a href="#">mmeikalaine</a></h3>
-				<p>2 mutual friends</p>
-				<p>3 mutual courses</p>
-			</div>
-			
-			<div class="search-result course">
-				<p class="type">Course</p>
-				<h3><a href="#">T-76.5115 Software Development Project II</a></h3>
-			</div>
-			
-			<div class="search-result user last">
-				<p class="type">User</p>
-				<img src="search_files/profile_picture_small.jpg" alt="">
-				<h3><a href="#">mmeikalaine</a></h3>
-				<p>2 mutual friends</p>
-				<p>3 mutual courses</p>
-			</div>
+			{% endifequal %}
+			{% endfor %}
 		</div> <!-- /search-results -->
 		
 		<ul class="pagination">

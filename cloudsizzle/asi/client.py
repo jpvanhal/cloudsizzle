@@ -10,7 +10,7 @@ class TimeOutError(Exception):
     pass
 
 class AbstractClient(AbstractService):
-    def __init__(self, sc, timeout=100):
+    def __init__(self, sc, timeout=30):
         super(AbstractClient, self).__init__(sc)
         self.responses = {}
         self.condition = threading.Condition()
@@ -78,27 +78,27 @@ class RegisterClient(AbstractClient):
     def name(self):
         return 'Register'
 
-class AddFriendsRequestClient(AbstractClient):
+class AddFriendsClient(AbstractClient):
     @property
     def name(self):
-        return 'AddFriendsRequest'
-    
+        return 'AddFriends'
+
     def request(self, user_id, friend_id):
         AbstractClient.request(self, user_id=user_id, friend_id=friend_id)
 
-class RemoveFriendsRequestClient(AbstractClient):
+class RemoveFriendsClient(AbstractClient):
     @property
     def name(self):
-        return 'RemoveFriendsRequest'
-    
+        return 'RemoveFriends'
+
     def request(self, user_id, friend_id):
         AbstractClient.request(self, user_id=user_id, friend_id=friend_id)
 
-class RejectFriendsRequestClient(AbstractClient):
+class RejectFriendsClient(AbstractClient):
     @property
     def name(self):
-        return 'RejectFriendsRequest'
-        
+        return 'RejectFriends'
+
     def request(self, user_id, friend_id):
         AbstractClient.request(self, user_id=user_id, friend_id=friend_id)
 
@@ -111,17 +111,17 @@ if __name__ == '__main__':
             LoginClient(sc),
             LogoutClient(sc),
             RegisterClient(sc),
-            RejectFriendsRequestClient(sc),
-            RemoveFriendsRequestClient(sc),
-            AddFriendsRequestClient(sc),
+            RejectFriendsClient(sc),
+            RemoveFriendsClient(sc),
+            AddFriendsClient(sc),
         ))
         asi_client_kp.start()
-        
+
         register = asi_client_kp._services['Register']
         login = asi_client_kp._services['Login']
         logout = asi_client_kp._services['Logout']
-        addfriends = asi_client_kp._services['AddFriendsRequest']
-        
+        addfriends = asi_client_kp._services['AddFriends']
+
         try:
             uid = (login.request(username='pang1', password='123456'))['user_id']
             print uid

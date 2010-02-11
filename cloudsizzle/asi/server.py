@@ -2,13 +2,14 @@ from abc import ABCMeta, abstractproperty, abstractmethod
 import logging
 
 from cloudsizzle import pool
-from asibsync.sib_agent import to_rdf_instance
-from asilib import ASIConnection
 from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
 from cloudsizzle import settings
-from cloudsizzle.asi import sib_agent
-from cloudsizzle.asi.service import AbstractService, ASIServiceKnowledgeProcessor
-from cloudsizzle.asi.asi_friends_connection import ASIFriendsConnection as new_ASIConnection
+from cloudsizzle.asi.importer import user_to_rdf
+from cloudsizzle.asi.service import AbstractService, \
+    ASIServiceKnowledgeProcessor
+from cloudsizzle.asi.asi_friends_connection import ASIFriendsConnection as ASIConnection
+
+
 log = logging.getLogger('cloudsizzle.asi.server')
 
 PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people/'
@@ -26,7 +27,7 @@ class SessionStore(object):
 
     def login(self, username, password):
         log.debug("Logging in to ASI with username '{0}' and password '{1}'.".format(username, password))
-        ac = new_ASIConnection(                                   #use extended asiConnection to replace the old one
+        ac = ASIConnection(
             base_url=settings.ASI_BASE_URL,
             app_name=settings.ASI_APP_NAME,
             app_password=settings.ASI_APP_PASSWORD,
@@ -102,7 +103,7 @@ class LogoutServer(AbstractServer):
 
     def process(self, id_, data):
         self.session_store.logout(data['user_id'])
-        
+
 class RegisterServer(AbstractServer):
     def __init__(self, sc):
         super(RegisterServer, self).__init__(sc)
@@ -112,111 +113,110 @@ class RegisterServer(AbstractServer):
         return 'Register'
 
     def process(self, id_, data):
-        params = {                                   #use extended asiConnection to replace the old one
-                'base_url': settings.ASI_BASE_URL,
-                'app_name': settings.ASI_APP_NAME,
-                'app_password': settings.ASI_APP_PASSWORD,
-        }
-        username = str(data['username'])
-        password = str(data['password'])
-        email    = str(data['email'])
-        with ASIConnection(**params) as ac:
-            try:
-                user_info = ac.create_user(username=username, password=password, email=email)
-                if 'messages' not in user_info.keys():
-                    user_id = user_info['id']  #succeed
-                    user = ac.get_user(user_id)
-                    new = to_rdf_instance(user)
-                    with pool.get_connection() as self.sc:
-                        self.sc.insert(new)        # copy user info from asi to sib
-                    response = {'user_id':user_id}
-                else:
-                    messages = user_info['messages']
-                    response = {'messages':messages}
-            except KeyError:
-                user_id = None
-        self.respond(id_, response)
+        with ASIConnection(
+            base_url=settings.ASI_BASE_URL,
+            app_name=settings.ASI_APP_NAME,
+            app_password=settings.ASI_APP_PASSWORD) as ac:
 
-class RejectFriendsRequestServer(AbstractServer):
+            user_info = ac.create_user(
+                username=data['username'],
+                password=data['password'],
+                email=data['email'])
+
+            if 'messages' not in user_info.keys():
+                #user = ac.get_user(user_id)
+
+                # Copy user info from ASI to SIB.
+                triples = user_to_rdf(user_info)
+                self.sc.insert(triples)
+
+                user_id = user_info['id']
+                response = {'user_id': user_id}
+            else:
+                messages = user_info['messages']
+                response = {'messages': messages}
+            self.respond(id_, response)
+
+class RejectFriendsServer(AbstractServer):
     def __init__(self, sc, session_store):
-        super(RejectFriendsRequestServer, self).__init__(sc)
+        super(RejectFriendsServer, self).__init__(sc)
         self.session_store = session_store
 
     @property
     def name(self):
-        return 'RejectFriendsRequest'
+        return 'RejectFriends'
 
     def process(self, id_, data):
         user_id = str(data['user_id'])
         friend_id = str(data['friend_id'])
         try:
-            ac = self.session_store._sessions[user_id]    
+            ac = self.session_store._sessions[user_id]
         except KeyError, e:
             print e
-            response = {'messages': 'did not login ASi'} 
+            response = {'messages': 'did not login ASi'}
         else:
             result = ac.reject_friend_request(friend_id)
             user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
-            friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)                
+            friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)
             remove_triple = Triple(user_uri,                                        #remove from my view
                             uri('http://cos.alpha.sizl.org/people#PendingFriend'),
                                friend_uri)
-            self.sc.remove(remove_triple)           
-            response = {'result': str(result)}   
+            self.sc.remove(remove_triple)
+            response = {'result': str(result)}
 
 
         self.respond(id_, response)
 
-class RemoveFriendsRequestServer(AbstractServer):
+class RemoveFriendsServer(AbstractServer):
     def __init__(self, sc, session_store):
-        super(RemoveFriendsRequestServer, self).__init__(sc)
+        super(RemoveFriendsServer, self).__init__(sc)
         self.session_store = session_store
 
     @property
     def name(self):
-        return 'RemoveFriendsRequest'
+        return 'RemoveFriends'
 
     def process(self, id_, data):
         user_id = str(data['user_id'])
         friend_id = str(data['friend_id'])
 
         try:
-            ac = self.session_store._sessions[user_id]    
+            ac = self.session_store._sessions[user_id]
         except KeyError, e:
             print e
-            response = {'messages': 'did not login ASi'} 
+            response = {'messages': 'did not login ASi'}
         else:
             ac.remove_friend(friend_id)
             user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
             friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)
-            remove_triple1 = Triple(user_uri, 
+            remove_triple1 = Triple(user_uri,
                 uri('http://cos.alpha.sizl.org/people#Friend'), #remove from my view
                                    friend_uri)
-            remove_triple2 = Triple(friend_uri, 
+            remove_triple2 = Triple(friend_uri,
                 uri('http://cos.alpha.sizl.org/people#Friend'), #remove from my friend's view
                                    user_uri)
             result = self.sc.remove([remove_triple1, remove_triple2])
-            response = {'result': str(result)}    
+            response = {'result': str(result)}
 
         self.respond(id_, response)
 
-class AddFriendsRequestServer(AbstractServer):
+class AddFriendsServer(AbstractServer):
     def __init__(self, sc, session_store):
-        super(AddFriendsRequestServer, self).__init__(sc)
+        super(AddFriendsServer, self).__init__(sc)
         self.session_store = session_store
 
     @property
     def name(self):
-        return 'AddFriendsRequest'
+        return 'AddFriends'
 
     def process(self, id_, data):
         user_id = str(data['user_id'])
         friend_id = str(data['friend_id'])
         try:
-            ac = self.session_store._sessions[user_id]    
+            ac = self.session_store._sessions[user_id]
         except KeyError, e:
             print e
-            response = {'messages': 'did not login ASi'} 
+            response = {'messages': 'did not login ASi'}
         else:
             pending_friends = ac.get_pending_friend_requests()
             my_pending_friend_list = []
@@ -226,11 +226,11 @@ class AddFriendsRequestServer(AbstractServer):
             except KeyError, e:
                 print e
             result = ac.add_friend(friend_id)
-            response = {'result': str(result)}  
-            
+            response = {'result': str(result)}
+
             if friend_id in my_pending_friend_list:
                 user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
-                friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)                
+                friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)
                 remove_triple = Triple(user_uri,                  #remove from my view
                                 uri('http://cos.alpha.sizl.org/people#PendingFriend'),
                                    friend_uri)
@@ -244,16 +244,16 @@ class AddFriendsRequestServer(AbstractServer):
                 self.sc.insert([insert_triple1, insert_triple2])
             else:
                 user_uri = '%sID#%s' % (PEOPLE_BASE_URI, user_id)
-                friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)                
+                friend_uri = '%sID#%s' % (PEOPLE_BASE_URI, friend_id)
                 insert_triple = Triple(friend_uri,                                        #add from friend's view
                                 uri('http://cos.alpha.sizl.org/people#PendingFriend'),
                                    user_uri)
-                self.sc.insert(insert_triple)                
-  
+                self.sc.insert(insert_triple)
+
 
 
         self.respond(id_, response)
-    
+
 def main():
     session_store = SessionStore()
     with SIBConnection('ASI service server', method='preconfigured') as sc:
@@ -261,9 +261,9 @@ def main():
             LoginServer(sc, session_store),
             LogoutServer(sc, session_store),
             RegisterServer(sc),
-            AddFriendsRequestServer(sc, session_store),
-            RemoveFriendsRequestServer(sc, session_store),
-            RejectFriendsRequestServer(sc, session_store),
+            AddFriendsServer(sc, session_store),
+            RemoveFriendsServer(sc, session_store),
+            RejectFriendsServer(sc, session_store),
         )
 
         asi_server_kp = ASIServiceKnowledgeProcessor(services)

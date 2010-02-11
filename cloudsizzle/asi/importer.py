@@ -11,6 +11,10 @@ RDF_BASE_URI = 'http://cos.alpha.sizl.org/people'
 RDF_BASE_TYPE = 'Person'
 
 
+def user_to_rdf(user):
+    return to_rdf_instance(user, RDF_BASE_URI, RDF_BASE_TYPE, 'id')
+
+
 def friends_to_rdf(user, friends):
     triples = []
     for friend in friends:
@@ -40,8 +44,7 @@ def import_asi():
             for index, user in enumerate(users):
                 print index, len(users), "\r"
                 try:
-                    triples = to_rdf_instance(
-                        user, RDF_BASE_URI, RDF_BASE_TYPE, 'id')
+                    triples = user_to_rdf(user)
                     friends = ac.get_friends(user['id'])
                     triples.extend(friends_to_rdf(user, friends))
                 except KeyError:
@@ -51,6 +54,7 @@ def import_asi():
                     print "Inserting the following triples:"
                     print triples
                     sc.insert(triples)
+
 
 if __name__ == '__main__':
     import_asi()

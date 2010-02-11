@@ -1,9 +1,11 @@
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'cloudsizzle.studyplanner.settings'
+
 from cloudsizzle.api.asi_client import get_service
 from cloudsizzle.kp import Triple, uri
 from cloudsizzle import pool
+from cloudsizzle.utils import listify
 from cloudsizzle.api import people
-import os
-os.environ['DJANGO_SETTINGS_MODULE'] = 'cloudsizzle.studyplanner.settings'
 from cloudsizzle.studyplanner.events.models import Event
 
 PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
@@ -25,9 +27,7 @@ class Session(object):
         try:
             self.user_id = response['user_id']
         except KeyError:
-            messages = response['messages']
-            if not isinstance(messages, list):
-                messages = [messages]
+            messages = listify(response['messages'])
             raise LoginFailed(*messages)
 
     def close(self):
@@ -44,7 +44,7 @@ class Session(object):
         """
         result = get_service('AddFriendsRequest').request(user_id=self.user_id, friend_id=friend_id)
         return result
-        
+
     def remove_friend(self, friend_id):
         """Removes a friend connection.
 
@@ -107,8 +107,8 @@ class Session(object):
         events = []
         for friend in friends:
             events.extend(Event.objects.get(user_id=friend))
-            
-        return events 
+
+        return events
 
     def get_planned_courses(self):
         """Returns the planned courses of this user."""
@@ -133,4 +133,3 @@ if __name__ == '__main__':
     # print session.add_friend(friend_id='aJVepae1Or35tGaaWPEYjL')
     print session.remove_friend('aJVepae1Or35tGaaWPEYjL')
     session.close()
-    

@@ -5,7 +5,7 @@ This module contains CloudSizzle API functions related to people.
 from itertools import chain
 from cloudsizzle.kp import Triple, uri
 from cloudsizzle import pool
-from cloudsizzle.utils import fetch_rdf_graph
+from cloudsizzle.utils import fetch_rdf_graph, listify
 from cloudsizzle.api.asi_client import get_service
 
 PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
@@ -22,6 +22,8 @@ class UserDoesNotExist(Exception):
 def create(username, password, email):
     """Create a new user.
 
+    Returns the user id of the new user, if everything goes well.
+
     Arguments:
     username -- The desired username. Must be unique in the system. Length
                 4-20 characters.
@@ -36,10 +38,11 @@ def create(username, password, email):
     response = register_service.request(
         username=username, password=password, email=email)
 
-    # TODO: test what this response contains
-    if response.startswith('messages'): # failed
-        raise ValueError(response)
-    return response                     # return UID
+    if 'messages' in response:
+        messages = listify(response['messages'])
+        raise ValueError(*messages)
+
+    return response['user_id']
 
 
 def get(user_id):

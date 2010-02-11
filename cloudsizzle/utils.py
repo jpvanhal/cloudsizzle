@@ -4,6 +4,14 @@ from cloudsizzle.kp import Triple, uri, literal, wrap_if_not_none
 RDF_SCHEMA_URI = 'http://www.w3.org/2000/01/rdf-schema#'
 RDF_SYNTAX_NS_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 
+
+def listify(object_):
+    if isinstance(object_, list):
+        return object_
+    else:
+        return [object_]
+
+
 def fetch_rdf_graph(subject, dont_follow=None):
     if dont_follow is None:
         dont_follow = []

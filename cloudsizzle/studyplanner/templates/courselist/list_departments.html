@@ -3,9 +3,21 @@
 {% block courselistings %}
 		<h1>Departments in {{ faculty.name }}</h1>
 		
-		<ul>
-			{% for department in departments %}
-			<li><a href="{% url courselist.views.list_courses faculty.code, department.code %}">{{department.code}} {{ department.name }}</a></li>
-			{% endfor %}
-		</ul>
+		<table>
+			<thead>
+				<tr>
+					<th>Code</th>
+					<th>Departments and other units of the faculties</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for department in departments %}
+				<tr>
+					<td><a href="{% url courselist.views.list_courses faculty.code, department.code %}">{{department.code}}</a></td>
+					<td><a href="{% url courselist.views.list_courses faculty.code, department.code %}">{{ department.name }}</a></td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		
 {% endblock %}

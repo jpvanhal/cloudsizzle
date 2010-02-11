@@ -3,9 +3,23 @@
 {% block courselistings %}
 		<h1>Courses in {{ department.name }}</h1>
 		
-		<ul>
-		    {% for course in courses %}
-		    <li><a href="{{ department.code }}/{{ course.code }}">{{course.code}} {{ course.name }}</a></li>
-		    {% endfor %}
-		</ul>
+		<table>
+			<thead>
+				<tr>
+					<th>Course code</th>
+					<th>Course name</th>
+					<th>Friends</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for course in courses %}
+				<tr>
+					<td><a href="{{ department.code }}/{{ course.code }}">{{course.code}}</a></td>
+					<td><a href="{{ department.code }}/{{ course.code }}">{{ course.name }}</a></td>
+					<td>&nbps;</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		
 {% endblock %}

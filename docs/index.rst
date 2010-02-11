@@ -11,7 +11,10 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   installation
    deployment
+   scraping
+   smart-m3
 
 Indices and tables
 ==================

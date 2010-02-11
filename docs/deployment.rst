@@ -1,78 +1,68 @@
-=================
-Deployment manual
-=================
+================
+Deployment guide
+================
 
-This document describes how to install Cloudsizzle, and how it can be deployed for development and production.
-
-Requirements
-============
-
-Required software
------------------
-
-* `Python`_ 2.6 (other versions are not supported)
-
-* `Smart-M3`_ 0.9.2 beta
-
-* `setuptools`_
-
-* `virtualenv`_ (optional, but recommended)
-
-Required Python libraries
--------------------------
-
-Below is a list of Python libraries that Cloudsizzle uses. You do not need to install these manually (with the exception of kpwrapper). They will be automatically installed with the provided setuptools script.
-
-* `Django`_ 1.1
-
-* `Scrapy`_ 0.8
-
-* `kpwrapper`_ 1.0.2
-
-  * Please do not use the official version. It will not work. You will need to apply `this patch`_ that fixes a bug in node type handling, or install the `patched egg`_.
-
-* `asilib`_ 1.0.2
-
-* `asibsync`_ 1.0.2
-
-.. _Python: http://www.python.org/
-.. _Smart-M3: http://sourceforge.net/projects/smart-m3/
-.. _setuptools: http://pypi.python.org/pypi/setuptools
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
-.. _Django: http://www.djangoproject.com/
-.. _Scrapy: http://www.scrapy.org/
-.. _kpwrapper: http://pypi.python.org/pypi/kpwrapper
-.. _this patch: http://cloudsizzle.cs.hut.fi/trac/raw-attachment/ticket/276/fix_tuple_to_triple_node_type_handling.diff
-.. _patched egg: http://cloudsizzle.cs.hut.fi/trac/raw-attachment/ticket/276/kpwrapper-1.0.2-py2.6.egg
-.. _asilib: http://pypi.python.org/pypi/asilib
-.. _asibsync: http://pypi.python.org/pypi/asibsync
+This document describes how CloudSizzle system can be deployed for development and production.
 
 
-Step 1. Install required software
-=================================
+Starting the required daemons
+=============================
 
-Step 2. Set up virtualenv (optional)
-====================================
+It might be a good idea to start these processes in a ``screen``.
 
-Step 3. Install CloudSizzle
-===========================
+Smart-M3
+--------
 
-Installing an official release
-------------------------------
+You can run Smart-M3 by executing the following commands::
 
-Installing development version
-------------------------------
+    export PIGLET_HOME=<path to piglet>
+    sibd &
+    sib-tcp &
 
-Running the unit tests
-----------------------
+ASI service knowledge processor
+-------------------------------
 
+ASI service knowledge processor handles all service request related to ASI like logging in and out, registering new user, managing user's friends, etc. You can start it by running::
 
-Step 4. Deploy the system
-=========================
+    python -m cloudsizzle.asi.server
+
 
 Deploying for development
--------------------------
+=========================
+
+1. Go to ``cloudsizzle/studyplanner`` directory inside project root.
+
+2. Execute the command below in order to start development server::
+
+    python manage.py runserver.
+
+3. Go to http://localhost:8000 with your web browser.
 
 
 Deploying for production
-------------------------
+=========================
+
+``django.wsgi``::
+
+    import site
+    import os
+    import sys
+
+    os.environ['HOME'] = '/srv/cloudsizzle/demo/etc'
+
+    # Map stdout to stderr. WSGI applications can not write to stdout.
+    sys.stdout = sys.stderr
+
+    site.addsitedir('/srv/cloudsizzle/demoenv/lib/python2.6/site-packages')
+
+    sys.path.append('/srv/cloudsizzle/demo/cloudsizzle')
+    sys.path.append('/srv/cloudsizzle/demo/cloudsizzle/studyplanner')
+
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'cloudsizzle.studyplanner.settings'
+
+    import django.core.handlers.wsgi
+    application = django.core.handlers.wsgi.WSGIHandler()
+
+Apache's site configuration::
+
+    WSGIScriptAlias /demo /srv/cloudsizzle/demo/apache/django.wsgi

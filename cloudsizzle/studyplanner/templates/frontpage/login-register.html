@@ -18,10 +18,10 @@
 			<div id="login">
 				<form method="post" action="{% url frontpage %}">
 					<div>
-					{% for field in loginform %}
-						{{ field }}
-                                        {% endfor %}
-						<input type="submit" name="submit" value="Login" class="button" />
+						{% for field in loginform %}
+							{{ field }}
+                        {% endfor %}
+						<input type="submit" name="login" value="Login" class="button" />
 					</div>
 				</form>
 			</div> <!-- /login -->
@@ -40,15 +40,27 @@
 				<h2>Sign up</h2>
 				<span>Fields marked with * are mandatory</span>
 				
+				{% if registerform.errors %}
+					<p class="errors">
+					{% for field in registerform %}
+						{% if field.errors %}
+							{% for error in field.errors %}
+								{{ error|escape }}<br />
+							{% endfor %}
+						{% endif %}
+					{% endfor %}
+					</p>
+				{% endif %}
+				
 				<form method="post" action="/">
-					{% for field in registerform %}<div>
-						{{ field.errors }}
+					{% for field in registerform %}
+					<div>
 						{{ field.label_tag }}
 						{{ field }}
-                                        </div>
-                                        {% endfor %}
+					</div>
+					{% endfor %}
 					<div>
-						<input type="submit" name="submit" value="Sign up" class="button" />
+						<input type="submit" name="register" value="Sign up" class="button" />
 					</div>
 				</form>
 			</div>

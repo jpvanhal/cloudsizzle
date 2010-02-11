@@ -13,7 +13,7 @@
 			</thead>
 			<tbody>
 				{% for course in courses %}
-				<tr>
+				<tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
 					<td><a href="{{ department.code }}/{{ course.code }}">{{course.code}}</a></td>
 					<td><a href="{{ department.code }}/{{ course.code }}">{{ course.name }}</a></td>
 					<td>&nbsp;</td>

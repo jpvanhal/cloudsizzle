@@ -11,7 +11,7 @@
 			</thead>
 			<tbody>
 				{% for faculty in faculties %}
-				<tr>
+				<tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
 					<td><a href="{% url courselist.views.list_departments faculty.slug %}">{{ faculty.name }}</a></td>
 				</tr>
 				{% endfor %}

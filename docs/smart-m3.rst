@@ -1,3 +1,7 @@
+====================
+Smart-M3 experiences
+====================
+
 Bugs:
 1. XML special characters cause smart-m3 discard the triplet
 2. Anything resembling namespace (with ":") causes smart-m3 to crash if the

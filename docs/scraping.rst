@@ -1,3 +1,7 @@
+===============
+Screen scraping
+===============
+
 Scrapy scrapers are controlled with the scripts/scrapy-ctl.py script.
 
 Because noppa and oodi require different settings a settings parametere
@@ -8,5 +12,5 @@ python scripts/scrapy-ctl.py crawl --settings cloudsizzle.scrapers.noppa.setting
 
 Scrape completed studies page from Weboodi. Note that you need to set weblogin
 username and password on command line.
- 
+
 python scripts/scrapy-ctl.py crawl --settings cloudsizzle.scrapers.oodi.settings oodi.tkk.fi --set TKK_WEBLOGIN_USERNAME=<username> --set TKK_WEBLOGIN_PASSWORD=<password>

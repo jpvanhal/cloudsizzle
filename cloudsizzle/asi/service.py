@@ -39,7 +39,8 @@ class AbstractService(object):
             triples = self.sc.query(Triple(id_, None, None))
             self.sc.remove(triples)
             data = make_graph(triples)
-
+            if 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' in data[id_].keys():
+                del data[id_]['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']
             log.debug('Received data with id {0} containing {1}.'.format(
                 id_, data))
 

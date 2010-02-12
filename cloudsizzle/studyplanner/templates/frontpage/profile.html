@@ -15,7 +15,7 @@
 				<span class="tab-right"></span>
 				<span class="left-border"></span>
 				<span class="right-border"></span>
-				<a href="{% url profile %}">Profile</a>
+				<a href="{% url profileown %}">Profile</a>
 			</li>
 			<li>
 				<span class="tab-left"></span>
@@ -44,15 +44,15 @@
 			<div class="left-border"></div>
 			
 			<div class="left-col">
-				<h2>Username</h2>
+				<h2>{{ username }}</h2>
 				
-				<img src="../static/graphics/profile_picture.jpg" alt="">
+				<img src={{user_pic}} alt="">
 			</div>
 			
 			<div class="right-col">
-				<h3>Real name</h3>
-				<p>Major: Software Engineering</p>
-				<p>Minor: Distributed Systems</p>
+				<h3>{{ real_name }}</h3>
+				<p>Sex: {{ sex }}</p>
+				<p>Email: {{ email }}</p>
 				
 				<div id="personal-news-feed">
 					<h3>News feed</h3>

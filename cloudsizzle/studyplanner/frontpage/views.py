@@ -77,7 +77,21 @@ def home(request):
 
 def profile(request):
     t = loader.get_template("frontpage/profile.html")
-    c = Context({})
+    try:
+        session = request.session['asi_session']
+    except KeyError:
+        return HttpResponseRedirect('/home/')
+    username = session.username
+    user_id = session.user_id
+    user_inf = api.people.get(user_id)
+    try:
+        real_name = user_inf['name']
+        sex = user_inf['gender']
+        email = user_inf['email']
+    except KeyError:
+        real_name = sex = email =""
+    user_pic = session.getpic()
+    c = Context({'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic})
     return HttpResponse(t.render(c))
 
 def friends(request):

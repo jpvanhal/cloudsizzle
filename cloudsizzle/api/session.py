@@ -105,9 +105,12 @@ class Session(object):
         """Returns the events of this user."""
         friends = people.get_friends(self.user_id)
         events = []
+        
         for friend in friends:
-            events.extend(Event.objects.get(user_id=friend))
-
+            try:
+                events.extend(Event.objects.get(user_id=friend))
+            except Event.DoesNotExist:
+                print 'No event'
         return events
 
     def get_planned_courses(self):

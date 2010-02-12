@@ -117,12 +117,12 @@ class RegisterServer(AbstractServer):
             base_url=settings.ASI_BASE_URL,
             app_name=settings.ASI_APP_NAME,
             app_password=settings.ASI_APP_PASSWORD) as ac:
-
-            user_info = ac.create_user(
+            user_info = ac.create_user(**data)
+            '''
                 username=data['username'],
                 password=data['password'],
                 email=data['email'])
-
+            '''
             if 'messages' not in user_info.keys():
                 # Copy user info from ASI to SIB.
                 triples = user_to_rdf(user_info)

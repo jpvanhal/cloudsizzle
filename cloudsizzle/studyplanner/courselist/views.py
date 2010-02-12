@@ -9,6 +9,8 @@ import api
 @check_authentication
 def list_faculties(request):
     faculties = api.course.get_faculties()
+    
+    print request.session['asi_session'].user_id
 
     return render_to_response('courselist/list_faculties.html',
         {'asi_session': request.session['asi_session'],

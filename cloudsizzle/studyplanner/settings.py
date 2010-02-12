@@ -3,8 +3,7 @@ import sys
 
 ## Include the directory for API in path
 
-study_plan = str(os.path.dirname(__file__))
-sys.path.insert(0, study_plan.replace(os.sep+study_plan.split(os.sep)[-1], ""))
+sys.path.insert(0, os.path.dirname(__file__) + "/..")
 
 # Django settings for cloudsizzle project.
 
@@ -20,12 +19,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'test'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'root'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'pb123'         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASE_ENGINE = 'sqlite3'
+DATABASE_NAME = 'db.sqlite'
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -84,7 +80,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'django.contrib.auth',
+#    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
@@ -93,5 +89,5 @@ INSTALLED_APPS = (
     'studyplanner.events',
 )
 
-AUTHENTICATION_BACKENDS = ('studyplanner.auth.backends.SIBBackend',)
+#AUTHENTICATION_BACKENDS = ('studyplanner.auth.backends.SIBBackend',)
 LOGIN_REDIRECT_URL = '/'

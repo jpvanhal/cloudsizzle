@@ -56,7 +56,7 @@
 			{% ifequal result.type 'course' %}
 			<div class="search-result course">
 				<p class="type">Course</p>
-				<h3><a href="#">{{ result.code }} {{ result.name }}</a></h3>
+				<h3><a href="{# {% url courselist.views.show_course faculty.code department.code course.code %} #}">{{ result.code }} {{ result.name }}</a></h3>
 			</div>
 			{% endifequal %}
 			{% ifequal result.type 'user' %}

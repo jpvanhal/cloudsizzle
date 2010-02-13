@@ -6,6 +6,8 @@ from studyplanner.common.forms import LoginForm, RegisterForm
 from studyplanner.common.planner_session import is_authenticated, authenticate
 from studyplanner.common.planner_session import check_authentication
 import api
+# For the LoginFailed exception
+import api.session
 from studyplanner.events.models import Event
 
 
@@ -32,7 +34,9 @@ def login_register(request):
             username = login_form.cleaned_data['username']
             password = login_form.cleaned_data['password']
             try:
+                print 'calling authenticate'
                 authenticate(request, username, password)
+                print 'authenticate returned'
             except api.session.LoginFailed:
                 # There is probably a smarter way for this, perhaps
                 # a separate view?
@@ -44,22 +48,40 @@ def login_register(request):
             # If fails write errors to form
             # Otherwise login and show home here
             print "register form was valid"
-            return HttpResponseRedirect('/registered/')
+            username = register_form.cleaned_data['username']
+            firstname = register_form.cleaned_data['firstname']
+            lastname = register_form.cleaned_data['lastname']
+            password = register_form.cleaned_data['password']
+            # Django has verified password
+            email = register_form.cleaned_data['email']
+            # Django has verified that consent is checked
+            
+            print "Calling api people.create"
+            api.people.create(username, password, email)
+
+            print "Calling authenticate after register"
+            authenticate(request, username, password)
+            return HttpResponseRedirect('/welcome/')
     # User loaded page with form
     else:
         print "login-request view getted"
         login_form = LoginForm()
         register_form = RegisterForm()
-        
+
     return render_to_response('frontpage/login-register.html',
         {'loginform': login_form, 'registerform': register_form,
+    })
+
+def welcome(request):
+    return render_to_response('frontpage/welcome.html',
+        {'asi_session': request.session['asi_session'],
     })
                 
 def logout(request):
     """Log the user out. Removes ASI connection from session"""
     # No reason to fail even if no session exists.
     if 'asi_session' in request.session:
-#        request.session['asi_session'].close()
+        request.session['asi_session'].close()
         del request.session['asi_session']
     
     return HttpResponseRedirect('/')
@@ -68,11 +90,11 @@ def logout(request):
 # appropriate file and application.
 
 def home(request):
-    events = request.session['asi_session'].get_events()
-    
+#    events = request.session['asi_session'].get_events()
     t = loader.get_template("frontpage/home.html")
     c = Context({ 'asi_session': request.session['asi_session'],
-                  'events': events})
+                  #'events': events
+                  })
     return HttpResponse(t.render(c))
 
 def profile(request, user_id):
@@ -165,7 +187,7 @@ def search(request):
         scope = searchform.cleaned_data['scope']
         results = []
         
-        if scope == 'all' or scope == 'people':
+        if scope == 'all' or scope == 'users':
             for userid in api.people.search(query):
                 details = api.people.get(userid)
                 results.append(
@@ -193,5 +215,3 @@ def notifications(request):
     t = loader.get_template("frontpage/notifications.html")
     c = Context({})
     return HttpResponse(t.render(c))
-
-

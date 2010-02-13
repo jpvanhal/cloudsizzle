@@ -9,9 +9,7 @@ import api
 @check_authentication
 def list_faculties(request):
     faculties = api.course.get_faculties()
-    
     print request.session['asi_session'].user_id
-
     return render_to_response('courselist/list_faculties.html',
         {'asi_session': request.session['asi_session'],
         'faculties': faculties})
@@ -46,3 +44,10 @@ def show_course(request, faculty, department, course):
     return render_to_response('courselist/show_course.html',
         {'asi_session': request.session['asi_session'],
         'faculty': faculty, 'department': department, 'course': course})
+
+def show_bare_course(request, course):
+    course = api.course.get_course(course)
+    
+    return render_to_response('courselist/show_course.html',
+        {'asi_session': request.session['asi_session'],
+        'course': course})

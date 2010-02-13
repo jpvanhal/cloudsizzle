@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     
     #TODO
     url(r'^home/$', 'studyplanner.frontpage.views.home', name='home'),
+    url(r'^welcome/?$', 'studyplanner.frontpage.views.welcome', name='welcome'),
     url(r'^profile$', 'studyplanner.frontpage.views.profile', name='profileown'),
     url(r'^profile/(?P<user_id>[a-zA-Z0-9-_]+)$', 'studyplanner.frontpage.views.profile', name='profile'),
     url(r'^profile/(?P<user_id>[a-zA-Z0-9-_]+)/friends/$', 'studyplanner.frontpage.views.friends', name='friends'),

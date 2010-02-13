@@ -1,7 +1,7 @@
 """Classes/functions related to global session management in the studyplanner"""
 from studyplanner.settings import LOGIN_PAGE
 from django.http import HttpResponseRedirect
-from cloudsizzle.api import Session
+from api import Session
 
 """Decorator that checks if the user is authenticated. If not, they are
 returned the login page.

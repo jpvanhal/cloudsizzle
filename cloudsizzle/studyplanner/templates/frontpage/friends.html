@@ -49,7 +49,7 @@
                 {% if friends %}
                     <p class="small">{{ friends|length }} friend{{ friends|pluralize }} in total</p>
                 {% else %}
-                    <p class="small">Username does not currently have any friends</p>
+                    <p class="small">{{ profile_user.username }} does not currently have any friends</p>
                 {% endif %}
                 
                 <div id="friends">
@@ -65,8 +65,28 @@
                             
                             <a href="{% url frontpage.views.profile friend.user_id %}"><img src="../../../static/graphics/profile_picture_small.jpg" alt=""></a>
                             <h2><a href="{% url frontpage.views.profile friend.user_id %}">{{ friend.username }}</a></h2>
-                            <p>3 mutual courses</p>
-                            <p>2 mutual friends</p>
+                            <p>FIXME mutual courses</p>
+                            <p>FIXME mutual friends</p>
+                            
+                        </div> <!-- /friend -->
+                    {% endfor %}
+                    
+                    {% if requests %}
+                    <h1>Pending friend requests</h1>
+                    {% endif %}
+                    {% for request in requests %}
+                        <div class="friend{% if forloop.last %} last{% endif %}">
+                            <form method="post" action="{% url addfriend request.user_id %}">
+                                <div>
+                                    <input name="friend_id" value="{{ request.user_id }}" type="hidden">
+                                    <input name="remove" value="Accept" class="button" type="submit">
+                                </div>
+                            </form>
+                            
+                            <a href="{% url frontpage.views.profile request.user_id %}"><img src="../../../static/graphics/profile_picture_small.jpg" alt=""></a>
+                            <h2><a href="{% url frontpage.views.profile request.user_id %}">{{ request.username }}</a></h2>
+                            <p>FIXME mutual courses</p>
+                            <p>FIXME mutual friends</p>
                             
                         </div> <!-- /friend -->
                     {% endfor %}

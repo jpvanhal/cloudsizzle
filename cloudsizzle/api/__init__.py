@@ -1,2 +1,2 @@
 from cloudsizzle.api import course, people
-from cloudsizzle.api.session import Session
+from cloudsizzle.api.session import Session, LoginFailed

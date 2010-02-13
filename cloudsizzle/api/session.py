@@ -42,7 +42,7 @@ class Session(object):
         friend_id -- The user id of the friend being requested.
 
         """
-        result = get_service('AddFriendsRequest').request(user_id=self.user_id, friend_id=friend_id)
+        result = get_service('AddFriends').request(user_id=self.user_id, friend_id=friend_id)
         return result
 
     def remove_friend(self, friend_id):

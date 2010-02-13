@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader
 from django.shortcuts import render_to_response
@@ -6,10 +7,8 @@ from studyplanner.common.forms import LoginForm, RegisterForm
 from studyplanner.common.planner_session import is_authenticated, authenticate
 from studyplanner.common.planner_session import check_authentication
 import api
-# For the LoginFailed exception
-import api.session
 from studyplanner.events.models import Event
-
+from cloudsizzle.asi.client import TimeOutError
 
 def index(request):
     print "Index view requested"
@@ -37,10 +36,16 @@ def login_register(request):
                 print 'calling authenticate'
                 authenticate(request, username, password)
                 print 'authenticate returned'
-            except api.session.LoginFailed:
+            except api.LoginFailed as message:
                 # There is probably a smarter way for this, perhaps
                 # a separate view?
+                print "LoginFailed message:-----------"
+                print type(message)
+                print message
                 return HttpResponseRedirect('/?loginfailed')
+            except TimeOutError:
+                print "Timeout while authenticating"
+                return HttpResponseRedirect('internalerror')
             return HttpResponseRedirect('/')
 
         elif register_form.is_valid():
@@ -60,7 +65,16 @@ def login_register(request):
             api.people.create(username, password, email)
 
             print "Calling authenticate after register"
-            authenticate(request, username, password)
+            try:
+                authenticate(request, username, password)
+            except api.LoginFailed:
+                # This means that the user who was succesfully
+                # registered could not authenticate.
+                print "Successful register -> failed auth"
+                return HttpResponseRedirect('/internalerror')
+            except TimeOutError:
+                print "Timeout while authenticating"
+                return HttpResponseRedirect('/internalerror')
             return HttpResponseRedirect('/welcome/')
     # User loaded page with form
     else:
@@ -81,7 +95,9 @@ def logout(request):
     """Log the user out. Removes ASI connection from session"""
     # No reason to fail even if no session exists.
     if 'asi_session' in request.session:
+        print 'Closing session'
         request.session['asi_session'].close()
+        print 'Session closed'
         del request.session['asi_session']
     
     return HttpResponseRedirect('/')
@@ -120,6 +136,8 @@ def profile(request, user_id):
     return HttpResponse(t.render(c))
 
 def friends(request, user_id):
+    asi_session = request.session['asi_session']
+
     profile_user = api.people.get(user_id)
     profile_user['user_id'] = user_id
 
@@ -132,11 +150,30 @@ def friends(request, user_id):
         
         friends.append(friend)
     
+    pending_friend_ids = asi_session.get_pending_friend_requests()
+    pending_requests = []
+    
+    for id in pending_friend_ids:
+        pending = api.people.get(id)
+        pending['user_id'] = id
+        
+        pending_requests.append(pending)
+    
     t = loader.get_template("frontpage/friends.html")
     c = Context({'asi_session': request.session['asi_session'],
-                 'friends': friends,
+                 'friends': friends, 'requests': pending_requests,
                  'profile_user': profile_user})
     return HttpResponse(t.render(c))
+
+def add_friend(request, user_id):
+    print "add_friend called"
+    session = request.session['asi_session']
+    own_id = session.user_id
+    print "adding friend: " + user_id
+    session.add_friend(user_id)
+    print "add returned"
+    
+    return HttpResponseRedirect(reverse("friends", args=[own_id]))
 
 def registrations(request):
     t = loader.get_template("frontpage/registrations.html")

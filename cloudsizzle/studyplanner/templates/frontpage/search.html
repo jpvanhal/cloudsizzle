@@ -34,7 +34,7 @@
 		<h2>Search results</h2>
 		
 		<p>Results 0-10 of {{ results|length }} hits for the keyword "{{ query }}"</p>
-		
+<!--		
 		<ul class="pagination">
 			<li><a href="#">&lt; Previous</a></li>
 			<li><a href="#">1</a></li>
@@ -50,7 +50,7 @@
 			<li><a href="#">53</a></li>
 			<li><a href="#">Next &gt;</a></li>
 		</ul>
-		
+-->
 		<div id="search-results">
 			{% for result in results %}
 			{% ifequal result.type 'course' %}
@@ -60,6 +60,9 @@
 			</div>
 			{% endifequal %}
 			{% ifequal result.type 'user' %}
+<!-- A button is needed here to request a friend. Posts to
+     {% url addfriend result.userid %}
+-->
 			<div class="search-result user">
 				<p class="type">User</p>
 				<img src="/static/graphics/profile_picture_small.jpg" alt="">
@@ -70,7 +73,7 @@
 			{% endifequal %}
 			{% endfor %}
 		</div> <!-- /search-results -->
-		
+<!--
 		<ul class="pagination">
 			<li><a href="#">&lt; Previous</a></li>
 			<li><a href="#">1</a></li>
@@ -86,7 +89,7 @@
 			<li><a href="#">53</a></li>
 			<li><a href="#">Next &gt;</a></li>
 		</ul>
-		
+-->
 		
 	</div> <!-- /advanced-search -->
 		</div> <!-- /content -->

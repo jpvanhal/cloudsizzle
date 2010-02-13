@@ -110,7 +110,7 @@ Installing development version
 
     svn co http://cloudsizzle.cs.hut.fi/svn/trunk cloudsizzle-trunk
 
-2. Copy ``cloudsizzle/settings.py.dev` to ``cloudsizzle/settings.py`` and fill in your settings to that file.
+2. Copy ``cloudsizzle/settings.py.dev`` to ``cloudsizzle/settings.py`` and fill in your settings to that file.
 
 3. Deploy the project in "Development mode". This will also install all needed Python libraries::
 

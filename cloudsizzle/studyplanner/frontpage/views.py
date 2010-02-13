@@ -94,9 +94,23 @@ def profile(request):
     c = Context({'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic})
     return HttpResponse(t.render(c))
 
-def friends(request):
+def friends(request, user_id):
+    profile_user = api.people.get(user_id)
+    profile_user['user_id'] = user_id
+
+    friend_ids = api.people.get_friends(user_id)
+    friends = []
+    
+    for friend_id in friend_ids:
+        friend = api.people.get(friend_id)
+        friend['user_id'] = friend_id
+        
+        friends.append(friend)
+    
     t = loader.get_template("frontpage/friends.html")
-    c = Context({})
+    c = Context({'asi_session': request.session['asi_session'],
+                 'friends': friends,
+                 'profile_user': profile_user})
     return HttpResponse(t.render(c))
 
 def registrations(request):

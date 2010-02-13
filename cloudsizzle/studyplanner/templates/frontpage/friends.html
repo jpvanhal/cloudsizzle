@@ -1,145 +1,81 @@
 {% extends "base.html" %}
 
 {% block content %}
-		<div id="content">	<ul id="breadcrumb">
-		<li><a href="{% url home %}">Home</a> &gt;</li>
-		<li><a href="{% url profile %}">Profile</a> &gt;</li>
-		<li>Friends</li>
-	</ul>
+	<div id="content">
+        <ul id="breadcrumb">
+            <li><a href="{% url home %}">Home</a> &gt;</li>
+            <li><a href="{% url frontpage.views.profile profile_user.user_id %}">{{ profile_user.username }}</a> &gt;</li>
+            <li>Friends</li>
+        </ul>
 
-	<div id="profile" class="rounded-corners-tab">
-		
-		<ul class="tabs">
-			<li>
-				<span class="tab-left"></span>
-				<span class="tab-right"></span>
-				<span class="left-border"></span>
-				<span class="right-border"></span>
-				<span class="bottom-border"></span>
-				<a href="{% url profile %}">Profile</a>
-			</li>
-			<li class="selected">
-				<span class="tab-left"></span>
-				<span class="tab-right"></span>
-				<span class="left-border"></span>
-				<span class="right-border"></span>
-				<a href="{% url friends %}">Friends</a>
-			</li>
-			<li>
-				<span class="tab-left"></span>
-				<span class="tab-right"></span>
-				<span class="left-border"></span>
-				<span class="right-border"></span>
-				<span class="bottom-border"></span>
-				<a href="{% url planned_courses %}">Courses</a>
-			</li>
-		</ul>
-		
-		<div class="tab-content">
-			<div class="top-right"></div>
-			<div class="bottom-left"></div>
-			<div class="bottom-right"></div>
-			<div class="bottom-border"></div>
-			<div class="right-border"></div>
-			<div class="left-border"></div>
-			
-			<h1>Username's friends</h1>
-			
-			<div id="friends">
-				<div class="friend">
-					<form method="post" action="#">
-						<div>
-							<input name="friend_id" value="1" type="hidden">
-							<input name="remove" value="Remove" class="button" type="submit">
-						</div>
-					</form>
-				
-					<a href="#"><img src="../static/graphics/profile_picture_small.jpg" alt=""></a>
-					<h2><a href="#">mmeikalaine</a></h2>
-					<p>3 mutual courses</p>
-					<p>2 mutual friends</p>
-					
-				</div> <!-- /friend -->
-				
-				<div class="friend">
-					<form method="post" action="#">
-						<div>
-							<input name="friend_id" value="1" type="hidden">
-							<input name="remove" value="Remove" class="button" type="submit">
-						</div>
-					</form>
-				
-					<a href="#"><img src="../static/graphics/profile_picture_small.jpg" alt=""></a>
-					<h2><a href="#">mmeikalaine</a></h2>
-					<p>3 mutual courses</p>
-					<p>2 mutual friends</p>
-					
-				</div> <!-- /friend -->
-				
-				<div class="friend">
-					<form method="post" action="#">
-						<div>
-							<input name="friend_id" value="1" type="hidden">
-							<input name="remove" value="Remove" class="button" type="submit">
-						</div>
-					</form>
-				
-					<a href="#"><img src="../static/graphics/profile_picture_small.jpg" alt=""></a>
-					<h2><a href="#">mmeikalaine</a></h2>
-					<p>3 mutual courses</p>
-					<p>2 mutual friends</p>
-					
-				</div> <!-- /friend -->
-				
-				<div class="friend">
-					<form method="post" action="#">
-						<div>
-							<input name="friend_id" value="1" type="hidden">
-							<input name="remove" value="Remove" class="button" type="submit">
-						</div>
-					</form>
-				
-					<a href="#"><img src="../static/graphics/profile_picture_small.jpg" alt=""></a>
-					<h2><a href="#">mmeikalaine</a></h2>
-					<p>3 mutual courses</p>
-					<p>2 mutual friends</p>
-					
-				</div> <!-- /friend -->
-				
-				<div class="friend">
-					<form method="post" action="#">
-						<div>
-							<input name="friend_id" value="1" type="hidden">
-							<input name="remove" value="Remove" class="button" type="submit">
-						</div>
-					</form>
-				
-					<a href="#"><img src="../static/graphics/profile_picture_small.jpg" alt=""></a>
-					<h2><a href="#">mmeikalaine</a></h2>
-					<p>3 mutual courses</p>
-					<p>2 mutual friends</p>
-					
-				</div> <!-- /friend -->
-				
-				<div class="friend last">
-					<form method="post" action="#">
-						<div>
-							<input name="friend_id" value="1" type="hidden">
-							<input name="remove" value="Remove" class="button" type="submit">
-						</div>
-					</form>
-				
-					<a href="#"><img src="../static/graphics/profile_picture_small.jpg" alt=""></a>
-					<h2><a href="#">mmeikalaine</a></h2>
-					<p>3 mutual courses</p>
-					<p>2 mutual friends</p>
-					
-				</div> <!-- /friend -->
-			</div> <!-- /friends -->
-			
-		</div>
-	</div> <!-- /profile -->
-		</div> <!-- /content -->
+        <div id="profile" class="rounded-corners-tab">
+            
+            <ul class="tabs">
+                <li>
+                    <span class="tab-left"></span>
+                    <span class="tab-right"></span>
+                    <span class="left-border"></span>
+                    <span class="right-border"></span>
+                    <span class="bottom-border"></span>
+                    <a href="{% url frontpage.views.profile profile_user.user_id %}">Profile</a>
+                </li>
+                <li class="selected">
+                    <span class="tab-left"></span>
+                    <span class="tab-right"></span>
+                    <span class="left-border"></span>
+                    <span class="right-border"></span>
+                    <a href="{% url frontpage.views.profile profile_user.user_id %}/friends/">Friends</a>
+                </li>
+                <li>
+                    <span class="tab-left"></span>
+                    <span class="tab-right"></span>
+                    <span class="left-border"></span>
+                    <span class="right-border"></span>
+                    <span class="bottom-border"></span>
+                    <a href="{% url frontpage.views.profile profile_user.user_id %}/planned_courses/">Courses</a>
+                </li>
+            </ul>
+            
+            <div class="tab-content">
+                <div class="top-right"></div>
+                <div class="bottom-left"></div>
+                <div class="bottom-right"></div>
+                <div class="bottom-border"></div>
+                <div class="right-border"></div>
+                <div class="left-border"></div>
+                
+                <h1>{{ profile_user.username }}'s friends</h1>
+                
+                {% if friends %}
+                    <p class="small">{{ friends|length }} friend{{ friends|pluralize }} in total</p>
+                {% else %}
+                    <p class="small">Username does not currently have any friends</p>
+                {% endif %}
+                
+                <div id="friends">
+                    
+                    {% for friend in friends %}
+                        <div class="friend{% if forloop.last %} last{% endif %}">
+                            <form method="post" action="#">
+                                <div>
+                                    <input name="friend_id" value="{{ friend.user_id }}" type="hidden">
+                                    <input name="remove" value="Remove" class="button" type="submit">
+                                </div>
+                            </form>
+                            
+                            <a href="{% url frontpage.views.profile friend.user_id %}/friends/"><img src="../../../static/graphics/profile_picture_small.jpg" alt=""></a>
+                            <h2><a href="{% url frontpage.views.profile friend.user_id %}/friends/">{{ friend.username }}</a></h2>
+                            <p>3 mutual courses</p>
+                            <p>2 mutual friends</p>
+                            
+                        </div> <!-- /friend -->
+                    {% endfor %}
+                    
+                </div> <!-- /friends -->
+                
+            </div>
+        </div> <!-- /profile -->
+	</div> <!-- /content -->
 		
 		
 {% endblock content %}

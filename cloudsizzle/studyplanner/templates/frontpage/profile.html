@@ -15,7 +15,7 @@
 				<span class="tab-right"></span>
 				<span class="left-border"></span>
 				<span class="right-border"></span>
-				<a href="{% url profileown %}">Profile</a>
+				<a href="{% url frontpage.views.profile profile_user.user_id %}">Profile</a>
 			</li>
 			<li>
 				<span class="tab-left"></span>
@@ -23,7 +23,7 @@
 				<span class="left-border"></span>
 				<span class="right-border"></span>
 				<span class="bottom-border"></span>
-				<a href="{% url friends %}">Friends</a>
+				<a href="{% url frontpage.views.profile profile_user.user_id %}/friends/">Friends</a>
 			</li>
 			<li>
 				<span class="tab-left"></span>
@@ -31,7 +31,7 @@
 				<span class="left-border"></span>
 				<span class="right-border"></span>
 				<span class="bottom-border"></span>
-				<a href="{% url planned_courses %}">Courses</a>
+				<a href="{% url frontpage.views.profile profile_user.user_id %}/planned_courses/">Courses</a>
 			</li>
 		</ul> <!-- /tabs -->
 		

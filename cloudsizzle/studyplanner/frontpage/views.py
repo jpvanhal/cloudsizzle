@@ -75,7 +75,10 @@ def home(request):
                   'events': events})
     return HttpResponse(t.render(c))
 
-def profile(request):
+def profile(request, user_id):
+    profile_user = api.people.get(user_id)
+    profile_user['user_id'] = user_id
+
     t = loader.get_template("frontpage/profile.html")
     try:
         session = request.session['asi_session']
@@ -90,8 +93,8 @@ def profile(request):
         email = user_inf['email']
     except KeyError:
         real_name = sex = email =""
-    user_pic = session.getpic()
-    c = Context({'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic})
+    #user_pic = session.getpic()
+    c = Context({'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'asi_session': session, 'profile_user': profile_user})
     return HttpResponse(t.render(c))
 
 def friends(request, user_id):
@@ -179,7 +182,8 @@ def search(request):
         
         
         c = Context({'searchform': searchform, 'results': results,
-                    'query': query
+                     'query': query,
+                     'asi_session': request.session['asi_session']
             })
     else:
         c = Context({'searchform': searchform})

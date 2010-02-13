@@ -4,9 +4,8 @@ Deployment guide
 
 This document describes how CloudSizzle system can be deployed for development and production.
 
-
-Starting the required daemons
-=============================
+Step 1. Start the required daemon processes
+===========================================
 
 It might be a good idea to start these processes in a ``screen``.
 
@@ -27,20 +26,29 @@ ASI service knowledge processor handles all service request related to ASI like 
     python -m cloudsizzle.asi.server
 
 
+Step 2. Deploy the Django application
+=====================================
+
 Deploying for development
-=========================
+-------------------------
 
 1. Go to ``cloudsizzle/studyplanner`` directory inside project root.
 
-2. Execute the command below in order to start development server::
+2. Edit ``settings.py`` and make sure that the database settings are correct.
 
-    python manage.py runserver.
+3. Execute the command below in order to create the database tables::
 
-3. Go to http://localhost:8000 with your web browser.
+    python manage.py syncdb
+
+4. Execute the command below in order to start development server::
+
+    python manage.py runserver
+
+5. Go to http://localhost:8000 with your web browser.
 
 
-Deploying for production
-=========================
+Deploying with Apache and mod_wsgi
+----------------------------------
 
 ``django.wsgi``::
 

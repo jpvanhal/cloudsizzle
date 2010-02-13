@@ -117,7 +117,7 @@ Installing development version
     cd cloudsizzle-trunk
     python setup.py develop
 
-:: _Subversion: http://subversion.tigris.org/
+.. _Subversion: http://subversion.tigris.org/
 
 
 Step 5. Run the unit tests

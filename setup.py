@@ -18,7 +18,7 @@ setup(
         'Scrapy == 0.8',
         'kpwrapper >= 1.0.3',
         'asilib >= 1.0.2',
-        'asibsync >= 1.0.2',
+        'asibsync >= 0.9.3',
     ],
     packages = find_packages(),
     include_package_data = True,

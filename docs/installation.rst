@@ -29,7 +29,7 @@ Below is a list of Python libraries that Cloudsizzle uses. You do not need to in
 * `Scrapy`_ 0.8
 * `kpwrapper`_ 1.0.3
 * `asilib`_ 1.0.2
-* `asibsync`_ 1.0.2
+* `asibsync`_ 0.9.3
 
 .. _Django: http://www.djangoproject.com/
 .. _Scrapy: http://www.scrapy.org/

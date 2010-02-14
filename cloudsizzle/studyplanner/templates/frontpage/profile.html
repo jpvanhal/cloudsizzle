@@ -1,52 +1,8 @@
-{% extends "base.html" %}
-
-{% block content %}
-		
-		<div id="content">	<ul id="breadcrumb">
-		<li><a href="{% url home %}">Home</a> &gt;</li>
-		<li>Profile</li>
-	</ul>
-
-	<div id="profile" class="rounded-corners-tab">
-		
-		<ul class="tabs">
-			<li class="selected">
-				<span class="tab-left"></span>
-				<span class="tab-right"></span>
-				<span class="left-border"></span>
-				<span class="right-border"></span>
-				<a href="{% url profileown %}">Profile</a>
-			</li>
-			<li>
-				<span class="tab-left"></span>
-				<span class="tab-right"></span>
-				<span class="left-border"></span>
-				<span class="right-border"></span>
-				<span class="bottom-border"></span>
-				<a href="{% url friends asi_session.user_id%}">Friends</a>
-			</li>
-			<li>
-				<span class="tab-left"></span>
-				<span class="tab-right"></span>
-				<span class="left-border"></span>
-				<span class="right-border"></span>
-				<span class="bottom-border"></span>
-				<a href="{% url plannedcourses%}">Courses</a>
-			</li>
-		</ul> <!-- /tabs -->
-		
-		<div class="tab-content">
-			<div class="top-right"></div>
-			<div class="bottom-left"></div>
-			<div class="bottom-right"></div>
-			<div class="bottom-border"></div>
-			<div class="right-border"></div>
-			<div class="left-border"></div>
-			
+{% extends "frontpage/profile_base.html" %}
+{% block profile-content %}
 			<div class="left-col">
 				<h2>{{ username }}</h2>
-				
-				<img src={{user_pic}} alt="">
+				<img src="{{ user_pic }}" alt="">
 			</div>
 			
 			<div class="right-col">
@@ -81,10 +37,5 @@
 						<p class="date">2 hours ago</p>
 					</div> <!-- /feed-item -->
 				</div>
-			</div>
-		</div>
-	</div> <!-- /profile -->
-		</div> <!-- /content -->
-		
-
-{% endblock content %}
+			</div> <!-- right-col -->
+{% endblock profile-content %}

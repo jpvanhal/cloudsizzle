@@ -6,6 +6,7 @@ from django import forms
 from studyplanner.common.forms import LoginForm, RegisterForm
 from studyplanner.common.planner_session import is_authenticated, authenticate
 from studyplanner.common.planner_session import check_authentication
+from studyplanner.events.event import event
 import api
 from studyplanner.events.models import Event
 from cloudsizzle.asi.client import TimeOutError
@@ -140,7 +141,11 @@ def profile(request, user_id):
         user_pic = ASI_BASE_URL + user_pic
     except (KeyError, TypeError):
         user_pic = '' 
-    c = Context({'asi_session':session,'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic})
+    # example
+    feeds = [event(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb', action="study", object_name='mew', object_scr='http://dict.cn/', update_time='2 hours'),\
+             event(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb', action="study", object_name='mew', object_scr='http://dict.cn/', update_time='2 hours'),]
+    #==========
+    c = Context({'asi_session':session,'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic, 'feeds':feeds})
     return HttpResponse(t.render(c))
 
 def friends(request, user_id):

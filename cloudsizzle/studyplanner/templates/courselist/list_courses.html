@@ -16,7 +16,7 @@
 				<tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
 					<td><a href="{{ department.code }}/{{ course.code }}">{{course.code}}</a></td>
 					<td><a href="{{ department.code }}/{{ course.code }}">{{ course.name }}</a></td>
-					<td>&nbsp;</td>
+					<td>{{ course.friendcount }}</td>
 				</tr>
 				{% endfor %}
 			</tbody>

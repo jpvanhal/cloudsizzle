@@ -1,3 +1,8 @@
+"""Frontpage view that handles most of the study planner. Probably needs to be 
+split into individual applications or files. 
+
+""" 
+
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import Context, loader
@@ -9,6 +14,7 @@ from studyplanner.common.planner_session import check_authentication
 from studyplanner.events.event import event
 import api
 from studyplanner.events.models import Event
+from studyplanner.frontpage.models import PlannedCourse 
 from cloudsizzle.asi.client import TimeOutError
 
 def index(request):
@@ -119,7 +125,7 @@ def profile(request, user_id):
     try:
         session = request.session['asi_session']
     except KeyError:
-        return HttpResponseRedirect('/home/')
+        return HttpResponseRedirect(reverse('home'))
     username = session.username
     user_id = session.user_id
     user_inf = dict(api.people.get(user_id))
@@ -141,11 +147,12 @@ def profile(request, user_id):
         user_pic = ASI_BASE_URL + user_pic
     except (KeyError, TypeError):
         user_pic = '' 
-    # example
+    # example 
     feeds = [event(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb', action="study", object_name='mew', object_scr='http://dict.cn/', update_time='2 hours'),\
              event(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb', action="study", object_name='mew', object_scr='http://dict.cn/', update_time='2 hours'),]
-    #==========
-    c = Context({'asi_session':session,'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic, 'feeds':feeds})
+    # All profile sub-pages need to have the template name in Context, this is
+    # used to correctly render the active tab in the common parent template 
+    c = Context({'asi_session':session,'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic, 'feeds':feeds, 'template':profile})
     return HttpResponse(t.render(c))
 
 def friends(request, user_id):
@@ -214,7 +221,7 @@ def planned_courses(request):
     if request.method == "GET":
         asi_session = request.session['asi_session']
 
-        coursedb = PlannedCourse.objects.filter(user__user_id=asi_session.user_id)
+        coursedb = PlannedCourse.objects.filter(user_id=asi_session.user_id)
         planned_courses = []
 
         for course_entry in coursedb:

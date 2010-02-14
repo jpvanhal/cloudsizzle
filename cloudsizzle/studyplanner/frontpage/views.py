@@ -138,7 +138,11 @@ def profile(request, user_id):
     except KeyError:
         real_name = sex = email =""
     #user_pic = session.getpic()
-    c = Context({'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'asi_session': session, 'profile_user': profile_user})
+    # All profile sub-pages need to give the template name, this used
+    # used to correctly render the active tab in the common parent template
+    c = Context({'username':username, 'real_name':real_name, 'sex':sex,
+                'email':email, 'asi_session': session,
+                'profile_user': profile_user, 'template': 'profile'})
     return HttpResponse(t.render(c))
 
 """Show friends and pending friend requests and handle adding and removal"""
@@ -169,7 +173,7 @@ def friends(request, user_id):
     t = loader.get_template("frontpage/friends.html")
     c = Context({'asi_session': request.session['asi_session'],
                  'friends': friends, 'requests': pending_requests,
-                 'profile_user': profile_user})
+                 'profile_user': profile_user, 'template': 'friends'})
     return HttpResponse(t.render(c))
 
 def add_friend(request, user_id):
@@ -212,7 +216,7 @@ def planned_courses(request):
     t = loader.get_template("frontpage/planned_courses.html")
     c = Context({'asi_session': asi_session,
                 'planned_courses': planned_courses,
-                })
+                'template': 'planned_courses'})
     return HttpResponse(t.render(c))
 
 def recommendedcourse(request):

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="content">
+	<ul id="breadcrumb">
+		<li><a href="{% url home %}">Home</a> &gt;</li>
+		<li>Profile</li>
+	</ul>
+	{# selected-class needs to be made conditional on the subpage #}
+	<div id="profile" class="rounded-corners-tab">
+		<ul class="tabs">
+			<li{% ifequal template 'profile' %} class="selected"{% endifequal %}>
+				<span class="tab-left"></span>
+				<span class="tab-right"></span>
+				<span class="left-border"></span>
+				<span class="right-border"></span>
+				{% ifnotequal template 'profile' %}<span class="bottom-border"></span>{% endifnotequal %}
+				<a href="{% url profile asi_session.user_id %}">Profile</a>
+			</li>
+			<li{% ifequal template 'friends' %} class="selected"{% endifequal %}>
+				<span class="tab-left"></span>
+				<span class="tab-right"></span>
+				<span class="left-border"></span>
+				<span class="right-border"></span>
+				{% ifnotequal template 'friends' %}<span class="bottom-border"></span>{% endifnotequal %}
+				<a href="{% url friends asi_session.user_id %}">Friends</a>
+			</li>
+			<li{% ifequal template 'planned_courses' %} class="selected"{% endifequal %}>
+				<span class="tab-left"></span>
+				<span class="tab-right"></span>
+				<span class="left-border"></span>
+				<span class="right-border"></span>
+				{% ifnotequal template 'planned_courses' %}<span class="bottom-border"></span>{% endifnotequal %}
+				<a href="{% url plannedcourses %}">Courses</a>
+			</li>
+		</ul> <!-- /tabs -->
+
+                <div class="tab-content">
+		<div class="top-right"></div>
+		<div class="bottom-left"></div>
+		<div class="bottom-right"></div>
+		<div class="bottom-border"></div>
+		<div class="right-border"></div>
+		<div class="left-border"></div>
+		{% block profile-content %}
+		{% endblock %}
+		</div> <!-- tab-content -->
+	</div> <!-- /profile -->
+</div> <!-- /content -->
+{% endblock content %}

@@ -14,3 +14,7 @@ class FriendRequest(Event):
 
 class NewFriendEvent(Event):
     new_friend = models.CharField(max_length=22)
+
+class EventsLog(Event):
+    action = models.CharField(max_length=40)
+    object = models.CharField(max_length=30)

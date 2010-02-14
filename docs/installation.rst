@@ -30,12 +30,14 @@ Below is a list of Python libraries that Cloudsizzle uses. You do not need to in
 * `kpwrapper`_ 1.0.3
 * `asilib`_ 1.0.2
 * `asibsync`_ 0.9.3
+* `MiniMock`_ 1.2 (optional, needed for unit tests)
 
 .. _Django: http://www.djangoproject.com/
 .. _Scrapy: http://www.scrapy.org/
 .. _kpwrapper: http://pypi.python.org/pypi/kpwrapper
 .. _asilib: http://pypi.python.org/pypi/asilib
 .. _asibsync: http://pypi.python.org/pypi/asibsync
+.. _MiniMock: http://pypi.python.org/pypi/MiniMock
 
 Step 2. Change Python's default character encoding
 ==================================================
@@ -125,7 +127,7 @@ Step 5. Run the unit tests
 
 In order to ensure that everything is installed correctly, you should run the unit tests. You can run them with the following command in the project root::
 
-    python setup.py unittest
+    python setup.py test
 
 This will not, however, run Django's unit tests. Those can be run by changing to ``cloudsizzle/studyplanner`` directory inside project root and running::
 

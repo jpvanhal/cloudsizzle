@@ -13,8 +13,8 @@
 BOT_NAME = 'cloudsizzle'
 BOT_VERSION = '1.0'
 
-SPIDER_MODULES = ['cloudsizzle.oodi.scrapers.spiders']
-NEWSPIDER_MODULE = 'cloudsizzle.oodi.scrapers.spiders'
+SPIDER_MODULES = ['cloudsizzle.scrapers.oodi.spiders']
+NEWSPIDER_MODULE = 'cloudsizzle.scrapers.oodi.spiders'
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 
 LOG_LEVEL = 'DEBUG'

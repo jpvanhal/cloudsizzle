@@ -140,7 +140,7 @@ def profile(request, user_id):
         user_pic = ASI_BASE_URL + user_pic
     except (KeyError, TypeError):
         user_pic = '' 
-    c = Context({'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic})
+    c = Context({'asi_session':session,'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic})
     return HttpResponse(t.render(c))
 
 def friends(request, user_id):

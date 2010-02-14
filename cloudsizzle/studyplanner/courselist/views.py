@@ -4,6 +4,7 @@ from studyplanner.common.planner_session import check_authentication
 from studyplanner.courselist.models import Course
 from studyplanner.courselist.models import Faculty
 from studyplanner.courselist.models import Department
+from studyplanner.frontpage.models import PlannedCourse
 import api
 
 @check_authentication
@@ -41,9 +42,17 @@ def show_course(request, faculty, department, course):
     
     course = api.course.get_course(course)
     
+    #check if user has planned to take the course
+    asi_session = request.session['asi_session']
+    uid = asi_session.user_id
+    plannedcourses = PlannedCourse.objects.filter(user_id=uid)
+    isplanned = False
+    if course in plannedcourses:
+        isplanned = True
+    
     return render_to_response('courselist/show_course.html',
         {'asi_session': request.session['asi_session'],
-        'faculty': faculty, 'department': department, 'course': course})
+        'faculty': faculty, 'department': department, 'course': course, 'isplanned': isplanned})
 
 def show_bare_course(request, course):
     course = api.course.get_course(course)

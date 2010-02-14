@@ -47,9 +47,19 @@
 		</table>
 		
 		<div class="options">
-			<form method="post" action="#">
+		    <!-- should be changed to ajax so that http delete can be used -->
+		    {% if isplanned %}
+		    <form method="post" action="#">
+		    {% else %}
+			<form method="post" action="{% url plannedcourses %}">
+			{% endif %}
 				<div>
+				    <input type="hidden" name="course_code" value="{{ course.code }}" />
+				    {% if isplanned %}
 					<input type="submit" name="submit" value="Plan to take course" class="button" />
+					{% else %}
+					<input type="submit" name="submit" value="Remove from planned courses" class="button" />
+				    {% endif %}
 				</div>
 			</form>
 			

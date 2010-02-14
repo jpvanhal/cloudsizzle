@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django import forms
@@ -199,11 +199,45 @@ def friendscourses(request):
     return HttpResponse(t.render(c))
 
 def planned_courses(request):
-    t = loader.get_template("frontpage/planned_courses.html")
-    c = Context({'asi_session': asi_session,
-                'planned_courses': planned_courses,
-                'template': 'planned_courses'})
-    return HttpResponse(t.render(c))
+    """
+    If the request is GET this function returns
+    a list of all planned courses.
+    
+    If the request is POST this function will 
+    add a course to the planned courses.
+    """
+    if request.method == "GET":
+        asi_session = request.session['asi_session']
+
+        coursedb = PlannedCourse.objects.filter(user__user_id=asi_session.user_id)
+        planned_courses = []
+
+        for course_entry in coursedb:
+            course_code = course_entry.course_code
+            planned_courses.append(api.course.get_course(course_code))
+
+        print planned_courses
+
+        t = loader.get_template("frontpage/planned_courses.html")
+        c = Context({'asi_session': asi_session,
+                    'planned_courses': planned_courses,
+                    'template': 'planned_courses'})
+        return HttpResponse(t.render(c))
+        
+    elif request.method == "POST":
+        cc = request.POST.get('course_code',None)
+        asi_session = request.session['asi_session']
+        uid = asi_session.user_id
+        
+        if(cc != None):
+            course = PlannedCourse(course_code = cc, user_id = uid)
+            course.save()
+            request.method = "GET"
+            return HttpResponseRedirect('/courses')
+        
+        else:
+            return HttpResponseBadRequest("could not add course to planned courses")
+        
 
 def recommendedcourse(request):
     t = loader.get_template("frontpage/recommend_course.html")

@@ -5,7 +5,7 @@ from django.db import models
 
 """Base model for all information related to single user"""
 class User(models.Model):
-    user_id = models.CharField(max_length=22)
+    user_id = models.CharField(max_length=22, primary_key=True)
     # Neither of these used because of time constraints
     majorcode = models.CharField(max_length=15)
     minorcode = models.CharField(max_length=15)
@@ -17,7 +17,7 @@ class User(models.Model):
 class PlannedCourse(models.Model):
     # Only course code is needed here, all other information is available
     # through API(tm)
-    user = models.ForeignKey(User)
+    user_id = models.CharField(max_length=22)
     course_code = models.CharField(max_length=20)
     
     def __unicode__(self):

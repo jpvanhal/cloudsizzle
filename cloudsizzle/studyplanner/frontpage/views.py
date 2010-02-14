@@ -1,7 +1,3 @@
-"""Frontpage view that handles most of the study planner. Probably needs to be
-split into individual applications or files.
-
-"""
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader
@@ -13,8 +9,6 @@ from studyplanner.common.planner_session import check_authentication
 import api
 from studyplanner.events.models import Event
 from cloudsizzle.asi.client import TimeOutError
-from studyplanner.frontpage.models import User, PlannedCourse
-
 
 def index(request):
     print "Index view requested"
@@ -120,9 +114,6 @@ def home(request):
     return HttpResponse(t.render(c))
 
 def profile(request, user_id):
-    profile_user = api.people.get(user_id)
-    profile_user['user_id'] = user_id
-
     t = loader.get_template("frontpage/profile.html")
     try:
         session = request.session['asi_session']
@@ -130,22 +121,28 @@ def profile(request, user_id):
         return HttpResponseRedirect('/home/')
     username = session.username
     user_id = session.user_id
-    user_inf = api.people.get(user_id)
+    user_inf = dict(api.people.get(user_id))
     try:
-        real_name = user_inf['name']
+        real_name = user_inf['name']['unstructured']
+    except (KeyError, TypeError):
+        real_name = 'Unknown'
+    try:
         sex = user_inf['gender']
+    except KeyError:
+        sex = 'Unknown'
+    try:
         email = user_inf['email']
     except KeyError:
-        real_name = sex = email =""
-    #user_pic = session.getpic()
-    # All profile sub-pages need to give the template name, this used
-    # used to correctly render the active tab in the common parent template
-    c = Context({'username':username, 'real_name':real_name, 'sex':sex,
-                'email':email, 'asi_session': session,
-                'profile_user': profile_user, 'template': 'profile'})
+        email = 'Unknown' 
+    try:
+        user_pic = user_inf['avatar']['link']['href']
+        from cloudsizzle.settings import ASI_BASE_URL
+        user_pic = ASI_BASE_URL + user_pic
+    except (KeyError, TypeError):
+        user_pic = '' 
+    c = Context({'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic})
     return HttpResponse(t.render(c))
 
-"""Show friends and pending friend requests and handle adding and removal"""
 def friends(request, user_id):
     asi_session = request.session['asi_session']
 
@@ -202,17 +199,6 @@ def friendscourses(request):
     return HttpResponse(t.render(c))
 
 def planned_courses(request):
-    asi_session = request.session['asi_session']
-
-    coursedb = PlannedCourse.objects.filter(user__user_id=asi_session.user_id)
-    planned_courses = []
-
-    for course_entry in coursedb:
-        course_code = course_entry.course_code
-        planned_courses.append(api.course.get_course(course_code))
-
-    print planned_courses
-
     t = loader.get_template("frontpage/planned_courses.html")
     c = Context({'asi_session': asi_session,
                 'planned_courses': planned_courses,

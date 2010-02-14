@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-		
-		<div id="content">	<ul id="breadcrumb">
-		<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a> &gt;</li>
-		<li><a href="http://lyrion.net/cloudsizzle/profile.php">Profile</a> &gt;</li>
+<div id="content">
+	<ul id="breadcrumb">
+		<li><a href="{% url home %}">Home</a> &gt;</li>
+		<li><a href="{% url profileown %}">Profile</a> &gt;</li>
 		<li>Planned courses</li>
 	</ul>
 	
@@ -17,7 +17,7 @@
 				<span class="left-border"></span>
 				<span class="right-border"></span>
 				<span class="bottom-border"></span>
-				<a href="{% url profile %}">Profile</a>
+				<a href="{% url profileown %}">Profile</a>
 			</li>
 			<li>
 				<span class="tab-left"></span>
@@ -25,14 +25,14 @@
 				<span class="left-border"></span>
 				<span class="right-border"></span>
 				<span class="bottom-border"></span>
-				<a href="{% url friends %}">Friends</a>
+				<a href="{% url friends asi_session.user_id %}">Friends</a>
 			</li>
 			<li class="selected">
 				<span class="tab-left"></span>
 				<span class="tab-right"></span>
 				<span class="left-border"></span>
 				<span class="right-border"></span>
-				<a href="{% url planned_courses %}">Courses</a>
+				<a href="{% url plannedcourses %}">Courses</a>
 			</li>
 		</ul>
 		
@@ -43,6 +43,48 @@
 			<div class="bottom-border"></div>
 			<div class="right-border"></div>
 			<div class="left-border"></div>
+
+			<h1>Courses</h1>
 			
-		</div><!-- wrapper -->
-		{% endblock content %}
+			<div class="left-col">
+				<ul id="courses-sub-menu">
+					<li class="selected">Planned courses</li>
+					<li><a href="{% url friendscourses %}">Friends' courses</a></li>
+				</ul>
+			</div>
+			
+			<div class="right-col">
+				<h2>Planned courses</h2>
+				
+				<table>
+					<tr>
+						<th>Course code</th>
+						<th>Course name</th>
+						<th>Credits</th>
+						<th>Timing</th>
+						<th>Friends</th>
+					</tr>
+					{% for course in planned_courses %}
+					<tr{% if forloop.counter|divisibleby:2 %} class="even"{% endif %}>
+						<td>{{ course.code }}</td>
+						<td>{{ course.name }}</td>
+						<td>{{ course.extent }}</td>
+						<!-- Timing not in use
+						<td>
+							<select name="id_1">
+								<option>Spring 2010</option>
+								<option>Autumn 2010</option>
+								<option>Spring 2011</option>
+								<option>Autumn 2011</option>
+							</select>
+						</td>
+						-->
+						<td>{{ course.friends }}</td>
+					</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div><!-- tab-content -->
+	</div><!-- profile -->
+</div><!-- content -->
+{% endblock content %}

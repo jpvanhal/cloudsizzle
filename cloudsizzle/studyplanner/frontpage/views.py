@@ -1,3 +1,7 @@
+"""Frontpage view that handles most of the study planner. Probably needs to be
+split into individual applications or files.
+
+"""
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader
@@ -9,6 +13,8 @@ from studyplanner.common.planner_session import check_authentication
 import api
 from studyplanner.events.models import Event
 from cloudsizzle.asi.client import TimeOutError
+from studyplanner.frontpage.models import User, PlannedCourse
+
 
 def index(request):
     print "Index view requested"
@@ -135,6 +141,7 @@ def profile(request, user_id):
     c = Context({'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'asi_session': session, 'profile_user': profile_user})
     return HttpResponse(t.render(c))
 
+"""Show friends and pending friend requests and handle adding and removal"""
 def friends(request, user_id):
     asi_session = request.session['asi_session']
 
@@ -191,8 +198,21 @@ def friendscourses(request):
     return HttpResponse(t.render(c))
 
 def planned_courses(request):
+    asi_session = request.session['asi_session']
+
+    coursedb = PlannedCourse.objects.filter(user__user_id=asi_session.user_id)
+    planned_courses = []
+
+    for course_entry in coursedb:
+        course_code = course_entry.course_code
+        planned_courses.append(api.course.get_course(course_code))
+
+    print planned_courses
+
     t = loader.get_template("frontpage/planned_courses.html")
-    c = Context({})
+    c = Context({'asi_session': asi_session,
+                'planned_courses': planned_courses,
+                })
     return HttpResponse(t.render(c))
 
 def recommendedcourse(request):

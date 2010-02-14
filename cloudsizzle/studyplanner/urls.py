@@ -23,17 +23,20 @@ urlpatterns = patterns('',
     #user list
     #url(r'^users/$', 'studyplanner.userlist.views.list_users', name='list of users'),
     
-    #TODO
     url(r'^home/$', 'studyplanner.frontpage.views.home', name='home'),
+
     url(r'^welcome/?$', 'studyplanner.frontpage.views.welcome', name='welcome'),
+
     url(r'^profile$', 'studyplanner.frontpage.views.profile', name='profileown'),
     url(r'^profile/add_friend/(?P<user_id>[a-zA-Z0-9-_]+)/?$', 'studyplanner.frontpage.views.add_friend', name='addfriend'),
+    url(r'^profile/friendscourses/?$', 'studyplanner.frontpage.views.friendscourses', name='friendscourses'),
+    url(r'^profile/plannedcourses/?$', 'studyplanner.frontpage.views.planned_courses', name='plannedcourses'),
     url(r'^profile/(?P<user_id>[a-zA-Z0-9-_]+)$', 'studyplanner.frontpage.views.profile', name='profile'),
     url(r'^profile/(?P<user_id>[a-zA-Z0-9-_]+)/friends/$', 'studyplanner.frontpage.views.friends', name='friends'),
+
     url(r'^registrations/$', 'studyplanner.frontpage.views.registrations', name='registrations'),
+
     url(r'^completedstudies/$', 'studyplanner.frontpage.views.completedstudies', name='completedstudies'),
-    url(r'^friendscourses/$', 'studyplanner.frontpage.views.friendscourses', name='friendscourses'),
-    url(r'^plannedcourses/$', 'studyplanner.frontpage.views.planned_courses', name='planned_courses'),
     #url(r'^coursesfaculty/$', 'studyplanner.frontpage.views.coursesfaculty', name='coursesfaculty'),
     #url(r'^coursesdepartment/$', 'studyplanner.frontpage.views.coursesdepartment', name='coursesdepartment'),
     #url(r'^course/$', 'studyplanner.frontpage.views.course', name='course'),

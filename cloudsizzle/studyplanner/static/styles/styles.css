@@ -851,3 +851,11 @@ ul.tabs li.selected a {
 	margin-bottom: 0;
 	border: none;
 }
+
+div.post {
+	color: blue;
+	font-weight: bold;
+	font-size: 85%;
+	cursor: pointer;
+}
+

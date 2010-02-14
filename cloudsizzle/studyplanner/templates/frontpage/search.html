@@ -63,12 +63,14 @@
 <!-- A button is needed here to request a friend. Posts to
      {% url addfriend result.userid %}
 -->
+            
 			<div class="search-result user">
 				<p class="type">User</p>
 				<img src="/static/graphics/profile_picture_small.jpg" alt="">
 				<h3><a href="{% url profile result.userid %}">{{ result.username }}</a></h3>
 				<p>2 mutual friends</p>
 				<p>3 mutual courses</p>
+				<div id="{{ result.username }}" class="post" onclick="addfriend('{% url addfriend result.userid %}','{{ result.username}}')">add friend</div>
 			</div>
 			{% endifequal %}
 			{% endfor %}

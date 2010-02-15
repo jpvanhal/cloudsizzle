@@ -2,7 +2,6 @@
 split into individual applications or files. 
 
 """ 
-
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import Context, loader
@@ -16,6 +15,7 @@ import api
 from studyplanner.events.models import Event
 from studyplanner.frontpage.models import PlannedCourse 
 from cloudsizzle.asi.client import TimeOutError
+from studyplanner.courselist import utils
 
 def index(request):
     print "Index view requested"
@@ -214,10 +214,14 @@ def completedstudies(request):
     c = Context({})
     return HttpResponse(t.render(c))
 
-def friendscourses(request):
-    t = loader.get_template("frontpage/friends_courses.html")
-    c = Context({})
-    return HttpResponse(t.render(c))
+def friends_courses(request):
+    asi_session = request.session['asi_session']
+    
+    courses = utils.courses_taken_by_friends(asi_session.user_id)
+
+    return render_to_response('frontpage/friends_courses.html',
+        {'courses': courses, 'asi_session': asi_session, 'template': 'courses'
+    })
 
 def planned_courses(request):
     """

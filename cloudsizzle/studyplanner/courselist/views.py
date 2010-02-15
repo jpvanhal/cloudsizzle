@@ -55,13 +55,17 @@ def show_course(request, faculty, department, course):
     # This should be made a function and moved to utils
     isplanned = PlannedCourse.objects.filter(user_id=uid,
                                      course_code=course['code']).count() > 0
-    return render_to_response('courselist/show_course.html',
-        {'asi_session': request.session['asi_session'],
-        'faculty': faculty, 'department': department, 'course': course, 'isplanned': isplanned})
-
-def show_bare_course(request, course):
-    course = api.course.get_course(course)
+                                     
+    fids = utils.friends_taking_course(uid, course['code'])
+    friends = []
+    for fid in fids:
+        friend = api.people.get(fid)
+        friend['user_id'] = fid
+        friends.append(friend)
+    
+    print friends
     
     return render_to_response('courselist/show_course.html',
         {'asi_session': request.session['asi_session'],
-        'course': course})
+        'faculty': faculty, 'department': department, 'course': course,
+        'isplanned': isplanned, 'friends': friends})

@@ -21,5 +21,5 @@ class PlannedCourse(models.Model):
     course_code = models.CharField(max_length=20)
     
     def __unicode__(self):
-        return self.course_code
+        return self.course_code + "/" + self.user_id
    

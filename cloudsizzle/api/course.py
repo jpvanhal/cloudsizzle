@@ -54,11 +54,22 @@ def get_course(code):
             msg = 'There is no course with code "{0}".'.format(code)
             raise Exception(msg)
 
+        
         course = fetch_rdf_graph(code, dont_follow=['department'])
         course['code'] = code
 
-        return course
+        # Fetch department and faculty codes separately, as the structure
+        # constructed by fetch_rdf_graph becomes sanely does not
+        # contain the codes. These just go and assume that every course
+        # has both faculty and department. With Noppa scraping this
+        # is necessarily true.
+        triples = sc.query(Triple(course['code'], 'department', None))
+        course['department'] = str(triples[0].object)
+        
+        triples = sc.query(Triple(course['department'], 'faculty', None))
+        course['faculty'] = str(triples[0].object)
 
+        return course
 
 # This and the following are identical in structure. Probably a place for
 # some abstraction

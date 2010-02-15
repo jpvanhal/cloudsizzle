@@ -71,21 +71,9 @@
 			<h2>Friends taking this course</h2>
 			
 			<ul id="friend-list">
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+				{% for friend in friends %}
+				<li><a href="{% url profile friend.user_id %}"><img src="/static/images/profile_picture_small.jpg" alt="" />{{ friend.username }}</a></li>
+				{% endfor %}
 			</ul> <!-- /friend-list -->
 			
 		</div> <!-- /course -->

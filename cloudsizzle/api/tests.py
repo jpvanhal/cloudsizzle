@@ -2,7 +2,7 @@
 
 import unittest
 import doctest
-from cloudsizzle.api import course, people, session
+from cloudsizzle import api
 from cloudsizzle import pool
 from cloudsizzle.kp import Triple, uri, literal
 from cloudsizzle.tests import SIBTestCase
@@ -24,14 +24,14 @@ class PeopleAPITestCase(SIBTestCase):
                uri('http://cos.alpha.sizl.org/people#Friend'),
                uri('http://cos.alpha.sizl.org/people/ID#d81F3WQH0r3OK1aaWPEYjL'))
         ])
-        friends = sorted(people.get_friends('d-cfIOQH0r3RjGaaWPEYjL'))
+        friends = sorted(api.people.get_friends('d-cfIOQH0r3RjGaaWPEYjL'))
         expected = ['d81F3WQH0r3OK1aaWPEYjL', 'd8vrPqQH0r3QeEaaWPEYjL',
             'd9JgtWQH0r3QBRaaWPEYjL']
         self.assertEqual(expected, friends)
 
     def test_get_friends_of_a_lonely_user(self):
         # triple store is empty
-        friends = people.get_friends('aQ0zwc2Pur3PwyaaWPEYjL')
+        friends = api.people.get_friends('aQ0zwc2Pur3PwyaaWPEYjL')
         self.assertEqual(0, len(friends))
 
     def test_get_person(self):
@@ -67,7 +67,7 @@ class PeopleAPITestCase(SIBTestCase):
         }
 
         uid = 'dn3FNGIomr3OicaaWPEYjL'
-        actual = people.get(uid)
+        actual = api.people.get(uid)
 
         self.assertEqual(expected, actual)
 
@@ -76,59 +76,59 @@ class PeopleAPITestCase(SIBTestCase):
             'bbYJ_80fWr3Om4aaWPEYjL',
             'dn3FNGIomr3OicaaWPEYjL',
         ]
-        user_ids = people.get_all()
+        user_ids = api.people.get_all()
         self.assertEqual(expected, sorted(user_ids))
 
     def test_search_people_with_query_in_username_and_realname(self):
-        self.assertEqual(['dn3FNGIomr3OicaaWPEYjL'], people.search('Jannu'))
+        self.assertEqual(['dn3FNGIomr3OicaaWPEYjL'], api.people.search('Jannu'))
 
     def test_search_people_with_query_only_in_username(self):
-        self.assertEqual(['bbYJ_80fWr3Om4aaWPEYjL'], people.search('test4'))
+        self.assertEqual(['bbYJ_80fWr3Om4aaWPEYjL'], api.people.search('test4'))
 
     def test_search_people_with_query_only_in_realname(self):
-        self.assertEqual(['bbYJ_80fWr3Om4aaWPEYjL'], people.search('hemmo'))
+        self.assertEqual(['bbYJ_80fWr3Om4aaWPEYjL'], api.people.search('hemmo'))
 
     def test_search_people_with_no_matches(self):
-        self.assertEqual([], people.search('ei ooo'))
+        self.assertEqual([], api.people.search('ei ooo'))
 
 
 class CourseAPITestCase(SIBTestCase):
 
     def test_search_exact_course_code(self):
-        result = course.search(u'T-106.1003')
+        result = api.course.search(u'T-106.1003')
         self.assertEqual(['T-106.1003'], result)
 
 
     def test_search_case_insensitive_course_code(self):
-        result = course.search(u't-106.1003')
+        result = api.course.search(u't-106.1003')
         self.assertEqual(['T-106.1003'], result)
 
 
     def test_search_partial_course_code(self):
-        result = course.search(u'T-106')
+        result = api.course.search(u'T-106')
         expected = ['T-106.1003', 'T-106.1041', 'T-106.1043', 'T-106.1061']
         self.assertEqual(expected, result)
 
 
     def test_search_exact_course_name(self):
-        result = course.search(u'Tietotekniikan työkurssi')
+        result = api.course.search(u'Tietotekniikan työkurssi')
         self.assertEqual(['T-106.1061'], result)
 
 
     def test_search_partial_course_name(self):
-        result = course.search(u'työkurssi')
+        result = api.course.search(u'työkurssi')
         self.assertEqual(['T-106.1061'], result)
 
 
     def test_search_case_insensitive_and_partial_course_name(self):
-        result = course.search(u'TYÖkUrssi')
+        result = api.course.search(u'TYÖkUrssi')
         self.assertEqual(['T-106.1061'], result)
 
 
     def test_search_does_not_find_departments_or_faculties(self):
-        result = course.search(u'Deparment')
+        result = api.course.search(u'Deparment')
         self.assertEqual(0, len(result))
-        result = course.search(u'Faculty')
+        result = api.course.search(u'Faculty')
         self.assertEqual(0, len(result))
 
 
@@ -147,16 +147,16 @@ class CourseAPITestCase(SIBTestCase):
                 'University of Technology.',
             'prerequisites': 'None.',
         }
-        actual = course.get_course('T-106.1003')
+        actual = api.course.get_course('T-106.1003')
         self.assertEqual(expected, actual)
 
 
     def test_get_course_raises_exception_with_invalid_code(self):
-        self.assertRaises(Exception, course.get_course, 'foobar')
+        self.assertRaises(Exception, api.course.get_course, 'foobar')
 
 
     def test_get_courses_by_department(self):
-        courses = course.get_courses_by_department('T3050')
+        courses = api.course.get_courses_by_department('T3050')
         self.assertEqual(5, len(courses))
         self.assertEqual('T-0.7050', courses[0]['code'])
         self.assertEqual('T-106.1061', courses[4]['code'])
@@ -205,7 +205,7 @@ class CourseAPITestCase(SIBTestCase):
                 'name': 'Language Centre',
             },
         ]
-        actual = course.get_departments_by_faculty('il')
+        actual = api.course.get_departments_by_faculty('il')
         self.assertEqual(expected, actual)
 
 
@@ -232,7 +232,7 @@ class CourseAPITestCase(SIBTestCase):
                 'name': 'Faculty of Chemistry and Materials Sciences',
             },
         ]
-        actual = course.get_faculties()
+        actual = api.course.get_faculties()
         self.assertEqual(expected, actual)
 
 
@@ -241,12 +241,12 @@ class CourseAPITestCase(SIBTestCase):
             'code': 'T3050',
             'name': 'Department of Computer Science and Engineering',
         }
-        actual = course.get_department_info('T3050')
+        actual = api.course.get_department_info('T3050')
         self.assertEqual(expected, actual)
 
 
     def test_get_department_info_raises_exception_with_invalid_code(self):
-        self.assertRaises(Exception, course.get_department_info, 'foobar')
+        self.assertRaises(Exception, api.course.get_department_info, 'foobar')
 
 
     def test_get_faculty_info(self):
@@ -254,18 +254,56 @@ class CourseAPITestCase(SIBTestCase):
             'code': 'il',
             'name': 'Faculty of Information and Natural Sciences',
         }
-        actual = course.get_faculty_info('il')
+        actual = api.course.get_faculty_info('il')
         self.assertEqual(expected, actual)
 
 
     def test_get_faculty_info_raises_exception_with_invalid_code(self):
-        self.assertRaises(Exception, course.get_faculty_info, 'foobar')
+        self.assertRaises(Exception, api.course.get_faculty_info, 'foobar')
+
+class SessionAPITestCase(SIBTestCase):
+    def setUp(self):
+        super(SessionAPITestCase, self).setUp()
+        self.session = api.Session(username='pihina1', password='sala1')
+        # Skip logging in with ASI
+        self.session.user_id = 'd7TllUbOar34UjaaWPEYjL'
+
+    def test_get_completed_courses(self):
+        actual = self.session.get_completed_courses()
+        expected = [
+            {
+                'code': 'T-106.5600',
+                'name': 'Concurrent Programming P',
+                'teacher': 'Heikki Saikkonen',
+                'date': '2009-12-21',
+                'grade': '5',
+                'cr': '5',
+            },
+            {
+                'code': 'Mat-1.401',
+                'name': 'Basic Course in Mathematics L 1',
+                'teacher': 'Juhani Pitkäranta',
+                'date': '2004-12-14',
+                'grade': '2',
+                'ocr': '6',
+            },
+        ]
+        self.assertEqual(expected, actual)
+
+    def test_is_completed_course(self):
+        self.assertTrue(self.session.is_completed_course('T-106.5600') is True)
+        self.assertTrue(self.session.is_completed_course('Mat-1.401') is True)
+        self.assertTrue(self.session.is_completed_course('T-106.1003') is False)
+        self.assertTrue(self.session.is_completed_course('foobar') is False)
+        self.assertTrue(self.session.is_completed_course('') is False)
+
 
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(PeopleAPITestCase, 'test'))
     suite.addTest(unittest.makeSuite(CourseAPITestCase, 'test'))
-    for module in (course, people, session):
+    suite.addTest(unittest.makeSuite(SessionAPITestCase, 'test'))
+    for module in (api.course, api.people, api.session):
         suite.addTest(doctest.DocTestSuite(module,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS))
     return suite

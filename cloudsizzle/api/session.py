@@ -4,12 +4,12 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'cloudsizzle.studyplanner.settings'
 from cloudsizzle.api.asi_client import get_service
 from cloudsizzle.kp import Triple, uri
 from cloudsizzle import pool
-from cloudsizzle.utils import listify
+from cloudsizzle.utils import listify, fetch_rdf_graph
 from cloudsizzle.api import people
 from cloudsizzle.studyplanner.events.models import Event
 
 PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
-
+CLOUDSIZZLE_RDF_BASE = 'http://cloudsizzle.cs.hut.fi/ontology/'
 
 class LoginFailed(Exception):
     pass
@@ -105,7 +105,7 @@ class Session(object):
         """Returns the events of this user."""
         friends = people.get_friends(self.user_id)
         events = []
-        
+
         for friend in friends:
             try:
                 events.extend(Event.objects.get(user_id=friend))
@@ -118,14 +118,41 @@ class Session(object):
         pass
 
     def get_completed_courses(self):
-        """Returns the completed courses for this user """
-        pass
+        """Returns the completed courses for this user sorted by most recent
+        completion first.
+
+        """
+        user_uri = '{0}/ID#{1}'.format(PEOPLE_BASE_URI, self.user_id)
+
+        with pool.get_connection() as sc:
+            all_completed_course_uris = set(triple.subject
+                for triple in sc.query(
+                    Triple(None, 'rdf:type', 'CompletedCourse')))
+            all_user_uris = set(triple.subject
+                for triple in sc.query(Triple(None, 'user', uri(user_uri))))
+            completed_course_uris = all_completed_course_uris & all_user_uris
+
+            completed_courses = []
+            for subject in completed_course_uris:
+                completed_course = fetch_rdf_graph(
+                    subject, dont_follow=['user'])
+                del completed_course['user']
+                completed_courses.append(completed_course)
+
+            return sorted(completed_courses, key=lambda item: item['date'],
+                reverse=True)
 
     def is_planned_course(self, course_code):
         pass
 
     def is_completed_course(self, course_code):
-        pass
+        subject = '{0}people/{1}/courses/completed/{2}'.format(
+            CLOUDSIZZLE_RDF_BASE, self.user_id, course_code)
+        triple = Triple(subject, 'rdf:type', 'CompletedCourse')
+        with pool.get_connection() as sc:
+            return len(sc.query(triple)) > 0
+
+
 if __name__ == '__main__':
     '''
     test

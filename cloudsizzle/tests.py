@@ -627,6 +627,77 @@ class SIBTestCase(unittest.TestCase):
                 literal('Ei vaadita.')),
         ])
 
+        # Completed courses
+        subject = uri('http://cloudsizzle.cs.hut.fi/ontology/people/d7TllUbOar34UjaaWPEYjL/courses/completed/T-106.5600')
+        self.sc.insert([
+            Triple(
+                subject,
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('CompletedCourse')),
+            Triple(
+                subject,
+                uri('name'),
+                literal('Concurrent Programming P')),
+            Triple(
+                subject,
+                uri('teacher'),
+                literal('Heikki Saikkonen')),
+            Triple(
+                subject,
+                uri('date'),
+                literal('2009-12-21')),
+            Triple(
+                subject,
+                uri('grade'),
+                literal('5')),
+            Triple(
+                subject,
+                uri('cr'),
+                literal('5')),
+            Triple(
+                subject,
+                uri('code'),
+                literal('T-106.5600')),
+            Triple(
+                subject,
+                uri('user'),
+                uri('http://cos.alpha.sizl.org/people/ID#d7TllUbOar34UjaaWPEYjL')),
+        ])
+        subject = uri('http://cloudsizzle.cs.hut.fi/ontology/people/d7TllUbOar34UjaaWPEYjL/courses/completed/Mat-1.401')
+        self.sc.insert([
+            Triple(
+                subject,
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                literal('CompletedCourse')),
+            Triple(
+                subject,
+                uri('name'),
+                literal('Basic Course in Mathematics L 1')),
+            Triple(
+                subject,
+                uri('teacher'),
+                literal('Juhani Pitkäranta')),
+            Triple(
+                subject,
+                uri('date'),
+                literal('2004-12-14')),
+            Triple(
+                subject,
+                uri('grade'),
+                literal('2')),
+            Triple(
+                subject,
+                uri('code'),
+                literal('Mat-1.401')),
+            Triple(
+                subject,
+                uri('ocr'),
+                literal('6')),
+            Triple(
+                subject,
+                uri('user'),
+                uri('http://cos.alpha.sizl.org/people/ID#d7TllUbOar34UjaaWPEYjL'))
+        ])
 
     def tearDown(self):
         self.sc.triple_store.clear()

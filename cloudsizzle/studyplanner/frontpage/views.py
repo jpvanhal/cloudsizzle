@@ -107,7 +107,7 @@ def logout(request):
         print 'Session closed'
         del request.session['asi_session']
     
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect(reverse('frontpage'))
     
 #for the mockups if anyone feels like it they should move this code to the
 # appropriate file and application.

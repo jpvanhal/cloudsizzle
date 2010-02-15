@@ -253,11 +253,22 @@ def planned_courses(request):
             course = PlannedCourse(course_code = cc, user_id = uid)
             course.save()
             request.method = "GET"
-            return HttpResponseRedirect('/courses')
+            return HttpResponseRedirect(reverse("plannedcourses"))
         
         else:
             return HttpResponseBadRequest("could not add course to planned courses")
         
+def remove_planned_course(request):
+    """ 
+    this method removes a course from planned courses
+    we use this method because the AJAX http DELETE does not work
+    with all browsers
+    """
+    cc = request.POST.get('course_code',None)
+    asi_session = request.session['asi_session']
+    uid = asi_session.user_id
+    PlannedCourse.objects.filter(user_id = uid).filter(course_code = cc).delete()
+    return HttpResponseRedirect(reverse("plannedcourses"))
 
 def recommendedcourse(request):
     t = loader.get_template("frontpage/recommend_course.html")

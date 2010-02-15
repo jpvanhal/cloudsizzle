@@ -49,7 +49,7 @@
 		<div class="options">
 		    <!-- should be changed to ajax so that http delete can be used -->
 		    {% if isplanned %}
-		    <form method="post" action="#">
+		    <form method="post" action="{% url removefromplannedcourses %}">
 		    {% else %}
 		    <form method="post" action="{% url plannedcourses %}">
 		    {% endif %}

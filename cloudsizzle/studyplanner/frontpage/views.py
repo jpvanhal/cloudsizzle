@@ -128,7 +128,8 @@ def feed(request, user_id):
     # All profile sub-pages need to have the template name in Context, this is
     # used to correctly render the active tab in the common parent template 
     c = Context({'feeds':feeds, 'template':profile})
-    return HttpResponse(t.render(c))   
+    return HttpResponse(t.render(c))
+    
 def profile(request, user_id):
     t = loader.get_template("frontpage/profile.html")
     try:
@@ -322,26 +323,20 @@ def search(request):
     if searchform.is_valid():
         query = searchform.cleaned_data['query']
         scope = searchform.cleaned_data['scope']
-        results = []
+        userresults = []
+        courseresults = []
         
         if scope == 'all' or scope == 'users':
             for userid in api.people.search(query):
                 details = api.people.get(userid)
-                results.append(
-                    {'type':'user', 'userid':userid,
-                    'username':details['username'],}
-                )
+                userresults.append(details)
         if scope == 'all' or scope == 'courses':
             for coursecode in api.course.search(query):
                 details = api.course.get_course(coursecode)
-                results.append(
-                    {'type':'course', 'code': coursecode,
-                    'name':details['name']}
-                )
+                courseresults.append(details)
         
-        
-        c = Context({'searchform': searchform, 'results': results,
-                     'query': query,
+        c = Context({'searchform': searchform, 'userresults': userresults,
+                     'courseresults': courseresults, 'query': query,
                      'asi_session': request.session['asi_session']
             })
     else:

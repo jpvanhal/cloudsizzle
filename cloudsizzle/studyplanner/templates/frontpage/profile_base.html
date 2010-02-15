@@ -14,7 +14,7 @@
 				<span class="left-border"></span>
 				<span class="right-border"></span>
 				{% ifnotequal template 'profile' %}<span class="bottom-border"></span>{% endifnotequal %}
-				<a href="{% url profile user_id %}">Profile</a>
+				<a href="{% url profile asi_session.user_id %}">Profile</a>
 			</li>
 			<li{% ifequal template 'friends' %} class="selected"{% endifequal %}>
 				<span class="tab-left"></span>
@@ -22,7 +22,7 @@
 				<span class="left-border"></span>
 				<span class="right-border"></span>
 				{% ifnotequal template 'friends' %}<span class="bottom-border"></span>{% endifnotequal %}
-				<a href="{% url friends user_id %}">Friends</a>
+				<a href="{% url friends asi_session.user_id %}">Friends</a>
 			</li>
 			<li{% ifequal template 'planned_courses' %} class="selected"{% endifequal %}>
 				<span class="tab-left"></span>

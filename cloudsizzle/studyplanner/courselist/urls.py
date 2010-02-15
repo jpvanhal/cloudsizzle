@@ -9,5 +9,5 @@ urlpatterns = patterns('courselist.views',
     # match the faculty view. This is neede because search results
     # do not give faculty or department. Perhaps the search should
     # be fixed instead...
-    (r'^(?P<course>[a-zA-Z0-9-\.]+)$', 'show_bare_course'),
+    url(r'^(?P<course>[a-zA-Z0-9-\.]+)$', 'show_bare_course', name="show_bare_course"),
 )

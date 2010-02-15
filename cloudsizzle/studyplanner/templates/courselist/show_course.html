@@ -18,85 +18,30 @@
 			<div class="bottom-border"></div>
 			<div class="left-border"></div>
 			<div class="right-border"></div>
-			
-			<h1>{{ course.code }} {{ course.name }}</h1>
-			<table>
-				<tr>
-					<th>Credits</th>
-					<td>{% if course.extent %}{{ course.extent }} cr {% endif %}</td>
-				</tr>
-				<tr>
-					<th>Teaching period</th>
-					<td>{{ course.teaching_period }}</td>
-				</tr>
-				<tr>
-					<th>Learning outcomes</th>
-					<td>{{ course.learning_outcomes }}</td>
-				</tr>
-				<tr>
-					<th>Content</th>
-					<td>{{ course.content }}</td>
-				</tr>
-				<tr>
-					<th>Prerequisites</th>
-					<td>{{ course.prerequisites }}</td>
-				</tr>
-				<tr>
-					<th>Study materials</th>
-					<td>{{ course.study_materials }}</td>
-				</tr>
-			</table>
-			
-			<div class="options">
-				<!-- should be changed to ajax so that http delete can be used -->
-				{% if isplanned %}
-				<form method="post" action="#">
-				{% else %}
-				<form method="post" action="{% url plannedcourses %}">
-				{% endif %}
-					<div>
-						<input type="hidden" name="course_code" value="{{ course.code }}" />
-						{% if isplanned %}
-							<input type="submit" name="submit" value="Remove from planned courses" class="button" />
-						{% else %}
-						<input type="submit" name="submit" value="Plan to take course" class="button" />
-						{% endif %}
-					</div>
-				</form>
-				
-				<form method="post" action="#">
-					<div>
-						<input type="submit" name="submit" value="Enroll to course" class="button" />
-					</div>
-				</form>
-				
-				<form method="post" action="recommend_course.php">
-					<div>
-						<input type="submit" name="submit" value="Recommend course" class="button" />
-					</div>
-				</form>
-			</div> <!-- /options -->
-			
-			<h2>Friends taking this course</h2>
-			
-			<ul id="friend-list">
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-				<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
-			</ul> <!-- /friend-list -->
-			
-		</div> <!-- /course -->
-	</div> <!-- /content -->
+			<div class="button">
+			    <a href="{% url recommendcourse course.code %}">Recommend course</a>
+			</div>
+		</div>
+		
+		<h2>Friends taking this course</h2>
+		
+		<ul id="friend-list">
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+			<li><a href="#"><img src="/static/images/profile_picture_small.jpg" alt="" />mmeikalaine</a></li>
+		</ul> <!-- /friend-list -->
+		
+	</div> <!-- /course -->
 {% endblock %}

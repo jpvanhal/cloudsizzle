@@ -270,10 +270,35 @@ def remove_planned_course(request):
     PlannedCourse.objects.filter(user_id = uid).filter(course_code = cc).delete()
     return HttpResponseRedirect(reverse("plannedcourses"))
 
-def recommendedcourse(request):
+def recommendcourse(request, coursecode):
+    asi_session = request.session['asi_session']
+    
+    friend_ids = api.people.get_friends(asi_session.user_id)
+    friends = []
+    
+    for friend_id in friend_ids:
+        friend = api.people.get(friend_id)
+        friend['user_id'] = friend_id
+        
+        friends.append(friend)
+    
+    course = api.course.get_course(coursecode)
+    
     t = loader.get_template("frontpage/recommend_course.html")
-    c = Context({})
+    c = Context({'asi_session': asi_session,
+                'friends': friends,
+                'course': course})
     return HttpResponse(t.render(c))
+    
+def recommend_to_friends(request, coursecode):
+    """
+    This method takes a post form with friend id's and 
+    adds to their recommended courses.
+    """
+    res = request.POST
+    print res
+    
+    return HttpResponseRedirect(reverse("home"))
 
 def generalinfo(request):
     t = loader.get_template("frontpage/general_info.html")

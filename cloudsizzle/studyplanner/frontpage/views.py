@@ -160,7 +160,7 @@ def profile(request, user_id):
     except (KeyError, TypeError):
         user_pic = '' 
     feedurl = reverse('feed', args=[user_id])
-    c = Context({'asi_session':session, 'user_id':user_id, 'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic, 'template':feedurl})
+    c = Context({'asi_session':session, 'user_id':user_id, 'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic, 'template':profile})
     return HttpResponse(t.render(c))
 
 def friends(request, user_id):

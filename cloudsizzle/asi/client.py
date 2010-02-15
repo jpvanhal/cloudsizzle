@@ -55,7 +55,8 @@ class AbstractClient(AbstractService):
                     raise TimeOutError
                 self.condition.wait(self.timeout)
 
-            response = self.responses[request_id]
+            response = self.responses.pop(request_id)
+            
             return response
 
 class LoginClient(AbstractClient):

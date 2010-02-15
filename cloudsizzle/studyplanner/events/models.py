@@ -16,7 +16,7 @@ class NewFriendEvent(Event):
     new_friend = models.CharField(max_length=22)
 '''
 #this action can be "'became a friend of'" for friend adding or
-'enrolled to' for planing course. object should be friend_id or course_code
+'enrolled to' for planing course. object should be friend_id or department_code#course_code
 '''
 class EventsLog(Event):
     action = models.CharField(max_length=40)

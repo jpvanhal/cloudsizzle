@@ -19,8 +19,8 @@
                                 </div>
                             </form>
                             
-                            <a href="{% url frontpage.views.profile friend.user_id %}"><img src="../../../static/graphics/profile_picture_small.jpg" alt=""></a>
-                            <h2><a href="{% url frontpage.views.profile friend.user_id %}">{{ friend.username }}</a></h2>
+                            <a href="{% url profile friend.user_id %}"><img src="../../../static/graphics/profile_picture_small.jpg" alt=""></a>
+                            <h2><a href="{% url profile friend.user_id %}">{{ friend.username }}</a></h2>
                             <p>FIXME mutual courses</p>
                             <p>FIXME mutual friends</p>
                             
@@ -39,8 +39,8 @@
                                 </div>
                             </form>
                             
-                            <a href="{% url frontpage.views.profile request.user_id %}"><img src="../../../static/graphics/profile_picture_small.jpg" alt=""></a>
-                            <h2><a href="{% url frontpage.views.profile request.user_id %}">{{ request.username }}</a></h2>
+                            <a href="{% url profile request.user_id %}"><img src="../../../static/graphics/profile_picture_small.jpg" alt=""></a>
+                            <h2><a href="{% url profile request.user_id %}">{{ request.username }}</a></h2>
                             <p>FIXME mutual courses</p>
                             <p>FIXME mutual friends</p>
                             

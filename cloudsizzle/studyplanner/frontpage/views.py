@@ -53,7 +53,7 @@ def login_register(request):
             except TimeOutError:
                 print "Timeout while authenticating"
                 return HttpResponseRedirect('internalerror')
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(reverse('home'))
 
         elif register_form.is_valid():
             # Use API to try and register
@@ -82,7 +82,7 @@ def login_register(request):
             except TimeOutError:
                 print "Timeout while authenticating"
                 return HttpResponseRedirect('/internalerror')
-            return HttpResponseRedirect('/welcome/')
+            return HttpResponseRedirect(reverse(welcome))
     # User loaded page with form
     else:
         print "login-request view getted"

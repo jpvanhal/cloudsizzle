@@ -159,7 +159,7 @@ def profile(request, user_id):
         user_pic = ASI_BASE_URL + user_pic
     except (KeyError, TypeError):
         user_pic = '' 
-    feedurl = '../../feed/'+user_id
+    feedurl = reverse('feed', args=[user_id])
     c = Context({'asi_session':session, 'user_id':user_id, 'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic, 'template':feedurl})
     return HttpResponse(t.render(c))
 

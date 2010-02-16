@@ -142,8 +142,14 @@ def profile(request, user_id):
     user = api.people.get(user_id)
 
     username = user['username']
-    realname = user['name']['unstructured'] if isinstance(user['name'], dict) else username
-    avatar_url = '{0}{1}/large_thumbnail'.format(ASI_BASE_URL, user['avatar']['link']['href'])
+    try:
+        realname = user['name']['unstructured']
+    except (KeyError, TypeError):
+        realname = username
+    try:
+        avatar_url = '{0}{1}/large_thumbnail'.format(ASI_BASE_URL, user['avatar']['link']['href'])
+    except (KeyError, TypeError):
+        avatar_url = ''
     feedurl = 'frontpage/feeds.html'
 
     c = Context({

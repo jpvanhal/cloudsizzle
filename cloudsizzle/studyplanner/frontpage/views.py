@@ -220,7 +220,8 @@ def friends_courses(request):
     courses = utils.courses_taken_by_friends(asi_session.user_id)
 
     return render_to_response('frontpage/friends_courses.html',
-        {'courses': courses, 'asi_session': asi_session, 'template': 'courses'
+        {'courses': courses, 'asi_session': asi_session,
+        'template': 'planned_courses'
     })
 
 def planned_courses(request):
@@ -333,6 +334,7 @@ def search(request):
         if scope == 'all' or scope == 'users':
             for userid in api.people.search(query):
                 details = api.people.get(userid)
+                details['userid'] = userid
                 userresults.append(details)
         if scope == 'all' or scope == 'courses':
             for coursecode in api.course.search(query):

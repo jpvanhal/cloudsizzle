@@ -12,7 +12,7 @@ from studyplanner.common.planner_session import is_authenticated, authenticate
 from studyplanner.common.planner_session import check_authentication
 from studyplanner.events.event import event
 import api
-from studyplanner.events.models import Event
+from studyplanner.events.models import Event, PlannedCourse as PlannedCourseEvent
 from studyplanner.frontpage.models import PlannedCourse 
 from cloudsizzle.asi.client import TimeOutError
 from studyplanner.courselist import utils
@@ -261,6 +261,8 @@ def planned_courses(request):
         if(cc != None):
             course = PlannedCourse(course_code = cc, user_id = uid)
             course.save()
+            e = PlannedCourseEvent(course_code = cc, user_id = uid)
+            e.save()
             request.method = "GET"
             return HttpResponseRedirect(reverse("plannedcourses"))
         

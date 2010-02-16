@@ -142,6 +142,8 @@ class CourseAPITestCase(SIBTestCase):
                 'applications in Unix, WWW and MS Windows environments.',
             'teaching_period': 'I (Autumn)',
             'extent': '2',
+            'faculty': 'il',
+            'department': 'T3050',
             'learning_outcomes': 'Having completed this course you are ' \
                 'familiar with the use of information systems at Helsinki ' \
                 'University of Technology.',

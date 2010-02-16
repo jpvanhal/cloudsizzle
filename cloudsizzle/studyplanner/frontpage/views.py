@@ -1,7 +1,7 @@
-"""Frontpage view that handles most of the study planner. Probably needs to be 
-split into individual applications or files. 
+"""Frontpage view that handles most of the study planner. Probably needs to be
+split into individual applications or files.
 
-""" 
+"""
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import Context, loader
@@ -13,9 +13,10 @@ from studyplanner.common.planner_session import check_authentication
 from studyplanner.events.event import event
 import api
 from studyplanner.events.models import Event, PlannedCourse as PlannedCourseEvent
-from studyplanner.frontpage.models import PlannedCourse 
+from studyplanner.frontpage.models import PlannedCourse
 from cloudsizzle.asi.client import TimeOutError
 from studyplanner.courselist import utils
+from cloudsizzle.settings import ASI_BASE_URL
 
 def index(request):
     print "Index view requested"
@@ -70,7 +71,7 @@ def login_register(request):
             # Django has verified password
             email = register_form.cleaned_data['email']
             # Django has verified that consent is checked
-            
+
             print "Calling api people.create"
             api.people.create(username, password, email)
 
@@ -100,7 +101,7 @@ def welcome(request):
     return render_to_response('frontpage/welcome.html',
         {'asi_session': request.session['asi_session'],
     })
-                
+
 def logout(request):
     """Log the user out. Removes ASI connection from session"""
     # No reason to fail even if no session exists.
@@ -109,9 +110,9 @@ def logout(request):
         request.session['asi_session'].close()
         print 'Session closed'
         del request.session['asi_session']
-    
+
     return HttpResponseRedirect(reverse('frontpage'))
-    
+
 #for the mockups if anyone feels like it they should move this code to the
 # appropriate file and application.
 
@@ -125,47 +126,36 @@ def home(request):
 
 def feed(request, user_id):
     t = loader.get_template("frontpage/feeds.html")
-    # example 
+    # example
     feeds = [event(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb', action="study", object_name='mew', object_scr='http://dict.cn/', update_time='2 hours'),\
              event(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb', action="study", object_name='mew', object_scr='http://dict.cn/', update_time='2 hours'),]
     # All profile sub-pages need to have the template name in Context, this is
-    # used to correctly render the active tab in the common parent template 
+    # used to correctly render the active tab in the common parent template
     c = Context({'feeds':feeds, 'template':profile})
     return HttpResponse(t.render(c))
-    
+
+
+@check_authentication
 def profile(request, user_id):
     t = loader.get_template("frontpage/profile.html")
-    try:
-        session = request.session['asi_session']
-    except KeyError:
-        return HttpResponseRedirect(reverse('home'))
-    
-    user_inf = dict(api.people.get(user_id))
-    try:
-        username = user_inf['username']
-    except (KeyError, TypeError):
-        username = 'Unknown'
-    try:
-        real_name = user_inf['name']['unstructured']
-    except (KeyError, TypeError):
-        real_name = 'Unknown'
-    try:
-        sex = user_inf['gender']
-    except KeyError:
-        sex = 'Unknown'
-    try:
-        email = user_inf['email']
-    except KeyError:
-        email = 'Unknown' 
-    try:
-        user_pic = user_inf['avatar']['link']['href']
-        from cloudsizzle.settings import ASI_BASE_URL
-        user_pic = ASI_BASE_URL + user_pic
-    except (KeyError, TypeError):
-        user_pic = '' 
+
+    user = api.people.get(user_id)
+
+    username = user['username']
+    realname = user['name']['unstructured'] if isinstance(user['name'], dict) else username
+    avatar_url = '{0}{1}/large_thumbnail'.format(ASI_BASE_URL, user['avatar']['link']['href'])
     feedurl = reverse('feed', args=[user_id])
-    c = Context({'asi_session':session, 'user_id':user_id, 'username':username, 'real_name':real_name, 'sex':sex, 'email':email, 'user_pic':user_pic, 'template':'profile'})
+
+    c = Context({
+	'asi_session': request.session['asi_session'],
+        'user_id': user_id,
+        'username': username,
+        'realname': realname,
+        'avatar_url': avatar_url,
+        'template':'profile',
+    })
     return HttpResponse(t.render(c))
+
 
 def friends(request, user_id):
     asi_session = request.session['asi_session']
@@ -175,22 +165,22 @@ def friends(request, user_id):
 
     friend_ids = api.people.get_friends(user_id)
     friends = []
-    
+
     for friend_id in friend_ids:
         friend = api.people.get(friend_id)
         friend['user_id'] = friend_id
-        
+
         friends.append(friend)
-    
+
     pending_friend_ids = asi_session.get_pending_friend_requests()
     pending_requests = []
-    
+
     for id in pending_friend_ids:
         pending = api.people.get(id)
         pending['user_id'] = id
-        
+
         pending_requests.append(pending)
-    
+
     t = loader.get_template("frontpage/friends.html")
     c = Context({'asi_session': request.session['asi_session'],
                  'friends': friends, 'requests': pending_requests,
@@ -204,7 +194,7 @@ def add_friend(request, user_id):
     print "adding friend: " + user_id
     session.add_friend(user_id)
     print "add returned"
-    
+
     return HttpResponseRedirect(reverse("friends", args=[own_id]))
 
 def registrations(request):
@@ -219,7 +209,7 @@ def completedstudies(request):
 
 def friends_courses(request):
     asi_session = request.session['asi_session']
-    
+
     courses = utils.courses_taken_by_friends(asi_session.user_id)
 
     return render_to_response('frontpage/friends_courses.html',
@@ -231,8 +221,8 @@ def planned_courses(request):
     """
     If the request is GET this function returns
     a list of all planned courses.
-    
-    If the request is POST this function will 
+
+    If the request is POST this function will
     add a course to the planned courses.
     """
     if request.method == "GET":
@@ -252,12 +242,12 @@ def planned_courses(request):
                     'planned_courses': planned_courses,
                     'template': 'planned_courses'})
         return HttpResponse(t.render(c))
-        
+
     elif request.method == "POST":
         cc = request.POST.get('course_code',None)
         asi_session = request.session['asi_session']
         uid = asi_session.user_id
-        
+
         if(cc != None):
             course = PlannedCourse(course_code = cc, user_id = uid)
             course.save()
@@ -265,12 +255,12 @@ def planned_courses(request):
             e.save()
             request.method = "GET"
             return HttpResponseRedirect(reverse("plannedcourses"))
-        
+
         else:
             return HttpResponseBadRequest("could not add course to planned courses")
-        
+
 def remove_planned_course(request):
-    """ 
+    """
     this method removes a course from planned courses
     we use this method because the AJAX http DELETE does not work
     with all browsers
@@ -283,32 +273,32 @@ def remove_planned_course(request):
 
 def recommendcourse(request, coursecode):
     asi_session = request.session['asi_session']
-    
+
     friend_ids = api.people.get_friends(asi_session.user_id)
     friends = []
-    
+
     for friend_id in friend_ids:
         friend = api.people.get(friend_id)
         friend['user_id'] = friend_id
-        
+
         friends.append(friend)
-    
+
     course = api.course.get_course(coursecode)
-    
+
     t = loader.get_template("frontpage/recommend_course.html")
     c = Context({'asi_session': asi_session,
                 'friends': friends,
                 'course': course})
     return HttpResponse(t.render(c))
-    
+
 def recommend_to_friends(request, coursecode):
     """
-    This method takes a post form with friend id's and 
+    This method takes a post form with friend id's and
     adds to their recommended courses.
     """
     res = request.POST
     print res
-    
+
     return HttpResponseRedirect(reverse("home"))
 
 def generalinfo(request):
@@ -335,7 +325,7 @@ def search(request):
         scope = searchform.cleaned_data['scope']
         userresults = []
         courseresults = []
-        
+
         if scope == 'all' or scope == 'users':
             for userid in api.people.search(query):
                 details = api.people.get(userid)
@@ -345,7 +335,7 @@ def search(request):
             for coursecode in api.course.search(query):
                 details = api.course.get_course(coursecode)
                 courseresults.append(details)
-        
+
         c = Context({'searchform': searchform, 'userresults': userresults,
                      'courseresults': courseresults, 'query': query,
                      'asi_session': request.session['asi_session']

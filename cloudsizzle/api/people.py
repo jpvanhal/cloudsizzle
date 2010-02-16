@@ -106,6 +106,8 @@ def search(query):
     """
     with pool.get_connection() as sc:
         query = query.lower()
+        if isinstance(query, unicode):
+            query = query.encode('utf8')
 
         user_ids = set()
 

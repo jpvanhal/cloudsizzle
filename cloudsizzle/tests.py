@@ -288,6 +288,48 @@ class SIBTestCase(unittest.TestCase):
                 uri('http://cos.alpha.sizl.org/people#address'),
                 None)
         ])
+        self.sc.insert([
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#c0OzVoMZ0r3yhJaaWPEYjL'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://cos.alpha.sizl.org/people#Person')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#c0OzVoMZ0r3yhJaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#username'),
+                literal('lassi')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#c0OzVoMZ0r3yhJaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#updated_at'),
+                literal('2010-01-08T08:57:54Z')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#c0OzVoMZ0r3yhJaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#role'),
+                None),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#c0OzVoMZ0r3yhJaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#name'),
+                uri('http://cos.alpha.sizl.org/people#5aa1b375-c422-4829-96f9-14ad2a04544f')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#5aa1b375-c422-4829-96f9-14ad2a04544f'),
+                uri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                uri('http://cos.alpha.sizl.org/people#Name')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#5aa1b375-c422-4829-96f9-14ad2a04544f'),
+                uri('http://cos.alpha.sizl.org/people#unstructured'),
+                literal('Lassi Seppälä')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#5aa1b375-c422-4829-96f9-14ad2a04544f'),
+                uri('http://cos.alpha.sizl.org/people#given_name'),
+                literal('Lassi')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people#5aa1b375-c422-4829-96f9-14ad2a04544f'),
+                uri('http://cos.alpha.sizl.org/people#family_name'),
+                literal('Seppälä')),
+            Triple(
+                uri('http://cos.alpha.sizl.org/people/ID#c0OzVoMZ0r3yhJaaWPEYjL'),
+                uri('http://cos.alpha.sizl.org/people#is_association'),
+                None),
+            ])
 
         # Course information
         self.sc.insert([

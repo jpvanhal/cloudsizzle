@@ -74,22 +74,34 @@ class PeopleAPITestCase(SIBTestCase):
     def test_get_all_people(self):
         expected = [
             'bbYJ_80fWr3Om4aaWPEYjL',
+            'c0OzVoMZ0r3yhJaaWPEYjL',
             'dn3FNGIomr3OicaaWPEYjL',
         ]
         user_ids = api.people.get_all()
         self.assertEqual(expected, sorted(user_ids))
 
     def test_search_people_with_query_in_username_and_realname(self):
-        self.assertEqual(['dn3FNGIomr3OicaaWPEYjL'], api.people.search('Jannu'))
+        self.assertEqual(
+            ['dn3FNGIomr3OicaaWPEYjL'],
+            api.people.search('Jannu'))
 
     def test_search_people_with_query_only_in_username(self):
-        self.assertEqual(['bbYJ_80fWr3Om4aaWPEYjL'], api.people.search('test4'))
+        self.assertEqual(
+            ['bbYJ_80fWr3Om4aaWPEYjL'],
+            api.people.search('test4'))
 
     def test_search_people_with_query_only_in_realname(self):
-        self.assertEqual(['bbYJ_80fWr3Om4aaWPEYjL'], api.people.search('hemmo'))
+        self.assertEqual(
+            ['bbYJ_80fWr3Om4aaWPEYjL'],
+            api.people.search('hemmo'))
 
     def test_search_people_with_no_matches(self):
         self.assertEqual([], api.people.search('ei ooo'))
+
+    def test_search_people_with_unicode_query(self):
+        self.assertEqual(
+            ['c0OzVoMZ0r3yhJaaWPEYjL'],
+            api.people.search(u'SEPPÄlä'))
 
 
 class CourseAPITestCase(SIBTestCase):

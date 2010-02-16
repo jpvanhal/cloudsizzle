@@ -49,10 +49,13 @@ def login_register(request):
                 print "LoginFailed message:-----------"
                 print type(message)
                 print message
-                return HttpResponseRedirect('/?loginfailed')
+                # Some way of passing the login failed message
+                # to user is needed. Maybe it could be done inside
+                # Django form handling?
+                return HttpResponseRedirect(reverse('frontpage'))
             except TimeOutError:
                 print "Timeout while authenticating"
-                return HttpResponseRedirect('internalerror')
+                return HttpResponseRedirect(reverse('internalerror'))
             return HttpResponseRedirect(reverse('home'))
 
         elif register_form.is_valid():
@@ -78,10 +81,10 @@ def login_register(request):
                 # This means that the user who was succesfully
                 # registered could not authenticate.
                 print "Successful register -> failed auth"
-                return HttpResponseRedirect('/internalerror')
+                return HttpResponseRedirect(reverse('internalerror'))
             except TimeOutError:
                 print "Timeout while authenticating"
-                return HttpResponseRedirect('/internalerror')
+                return HttpResponseRedirect(reverse('internalerror'))
             return HttpResponseRedirect(reverse(welcome))
     # User loaded page with form
     else:
@@ -353,3 +356,6 @@ def notifications(request):
     t = loader.get_template("frontpage/notifications.html")
     c = Context({})
     return HttpResponse(t.render(c))
+
+def internal_error(request):
+    return render_to_response('frontpage/internal_error.html')

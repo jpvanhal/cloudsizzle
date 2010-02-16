@@ -42,6 +42,8 @@ urlpatterns = patterns('',
     url(r'^recommendtofriends/(?P<coursecode>[a-zA-Z0-9-\.]+)$', 'studyplanner.frontpage.views.recommend_to_friends', name='recommendtofriends'),
     url(r'^search$', 'studyplanner.frontpage.views.search', name='search'),
 
+    url(r'^internalerror$', 'studyplanner.frontpage.views.internal_error', name='internalerror'),
+
     url(r'^courses/', include('courselist.urls')),
     #url(r'^completed/', 'completedstudies.views.index'),
 

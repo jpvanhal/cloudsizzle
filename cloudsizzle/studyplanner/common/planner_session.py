@@ -15,7 +15,7 @@ class check_authentication(object):
         if 'asi_session' in request.session:
             return self.func(request, *args, **kwargs)
         else:
-            return HttpResponseRedirect(LOGIN_PAGE)
+            return HttpResponseRedirect(reverse(frontpage))
 
 """ Dis is a decorator
 

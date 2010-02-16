@@ -3,9 +3,9 @@ Created on Feb 14, 2010
 
 @author: pb
 '''
-from django.core.urlresolvers import reverse
 
-from studyplanner.events.models import EventsLog
+from django.core.urlresolvers import reverse
+from studyplanner.events.models import *
 import api
 
 class event:
@@ -20,7 +20,8 @@ class event:
         self.update_time=update_time
     @classmethod
     def constructor(cls, user_ids):
-        events = EventsLog.object.filter(user_id=user_ids, action = action).order_by('time')[0:10]
+        events = Event.objects.filter(user_id=user_ids).order_by('-time')[0:10]
+        return events
     @classmethod
     def builder(cls, user_id, events):
         feeds = []
@@ -38,13 +39,15 @@ class event:
         if not isinstance(events, list):
             events = [events,]
         for event in events:
-            action = event.action
+            
             object_name = event.object 
             update_time = event.time
-            if action == 'enrolled to':
+            if isinstance(event, PlannedCourse):
+                action = 'enrolled to'
                 feeds.append(plan_course_event(img_scr=img_scr, user_name=user_name, user_scr=user_scr,\
                        action=action, object_name=object_name, update_time=update_time))
-            if action == 'became a friend of':
+            if isinstance(event, NewFriendEvent):
+                action = 'became a friend of'
                 feeds.append(new_friend_event(img_scr=img_scr, user_name=user_name, user_scr=user_scr,\
                        action=action, object_name=object_name, update_time=update_time))
         return feeds
@@ -59,7 +62,10 @@ class plan_course_event(event):
         object_scr = self.get_object_scr(object_name)       
         event.__init__(self, img_scr=img_scr, user_name=user_name, user_scr=user_scr,\
                    action=action, object_name=object_name, object_scr=object_scr, update_time=update_time)    
-
+    def get_object_scr(self, object_name):
+        courseinfo = api.course.get_course(object_name)
+        object_name += courseinfo['name']        
+        return reverse('show_course', args=[courseinfo['faculty'], courseinfo['department'], courseinfo['code']])
 class new_friend_event(event):
     
     def __init__(self, img_scr='', user_name='', user_scr='', action='', object_name='', update_time=''):
@@ -72,5 +78,11 @@ class new_friend_event(event):
    
         
 if __name__ =='__main__':
+    p = FriendRequest(user_id="bHC0t6gwur37J8aaWPEYjL", new_friend='cwc2e4f14r362vaaWPEYjL')
+    
+    #p.save()
     a = event(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb',user_scr='', action="like", object_name='miao', object_scr='http://dict.cn/')
+    b= event.constructor("bHC0t6gwur37J8aaWPEYjL")
+    print b.user_id
+    print isinstance(b[0], FriendRequest)
     pass

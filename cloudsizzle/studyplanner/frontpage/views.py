@@ -144,7 +144,7 @@ def profile(request, user_id):
     username = user['username']
     realname = user['name']['unstructured'] if isinstance(user['name'], dict) else username
     avatar_url = '{0}{1}/large_thumbnail'.format(ASI_BASE_URL, user['avatar']['link']['href'])
-    feedurl = reverse('feed', args=[user_id])
+    feedurl = 'frontpage/feeds.html'
 
     c = Context({
 	'asi_session': request.session['asi_session'],
@@ -153,6 +153,7 @@ def profile(request, user_id):
         'realname': realname,
         'avatar_url': avatar_url,
         'template':'profile',
+        'feedurl':feedurl,
     })
     return HttpResponse(t.render(c))
 

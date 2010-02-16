@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 		<div id="content">	<ul id="breadcrumb">
-		<li><a href="/">Home</a> &gt;</li>
+		<li><a href="{% url home %}">Home</a> &gt;</li>
 		<li><a href="{% url courselist.views.list_faculties %}">Courses</a> &gt;</li>
 		{% if faculty.code %}<li><a href="{% url courselist.views.list_departments faculty.code %}">{{ faculty.name }}</a> &gt;</li>{% endif %}
 		{% if department.code %}<li><a href="{% url courselist.views.list_courses faculty.code department.code %}">{{ department.name }}</a> &gt;</li>{% endif %}

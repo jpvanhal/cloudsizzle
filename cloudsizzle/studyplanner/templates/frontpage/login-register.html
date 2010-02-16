@@ -52,7 +52,7 @@
 					</p>
 				{% endif %}
 				
-				<form method="post" action="/">
+				<form method="post" action="{% url frontpage %}">
 					{% for field in registerform %}
 					<div>
 						{{ field.label_tag }}

@@ -31,9 +31,12 @@
 			</div>
 		</form>
 		
+		{% if results %}
 		<h2>Search results</h2>
-		
 		<p>{{ results|length }} hits for the keyword "{{ query }}"</p>
+		{% else %}
+		<h2>No results</h2>
+		{% endif %}
 <!--		
 		<ul class="pagination">
 			<li><a href="#">&lt; Previous</a></li>

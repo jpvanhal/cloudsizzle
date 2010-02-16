@@ -341,7 +341,8 @@ def search(request):
                      'asi_session': request.session['asi_session']
             })
     else:
-        c = Context({'searchform': searchform})
+        c = Context({'searchform': searchform,
+                    'asi_session': request.session['asi_session']})
     return HttpResponse(t.render(c))
 
 def notifications(request):

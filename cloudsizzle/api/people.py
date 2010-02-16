@@ -11,10 +11,6 @@ from cloudsizzle.api.asi_client import get_service
 PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
 
 
-class UserAlreadyExists(Exception):
-    pass
-
-
 class UserDoesNotExist(Exception):
     pass
 
@@ -60,6 +56,7 @@ def get(user_id):
         '{0}#Friend'.format(PEOPLE_BASE_URI)])
     if not user:
         raise UserDoesNotExist(user_id)
+    user['user_id'] = user_id
     return user
 
 

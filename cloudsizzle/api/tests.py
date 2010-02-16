@@ -63,6 +63,7 @@ class PeopleAPITestCase(SIBTestCase):
             },
             'updated_at': '2009-08-14T15:04:46Z',
             'username': 'testijannu15',
+            'user_id': 'dn3FNGIomr3OicaaWPEYjL',
             'website': None
         }
 

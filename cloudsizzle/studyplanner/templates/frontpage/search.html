@@ -3,98 +3,130 @@
 {% block content %}
 		
 	<div id="content">	
-	<ul id="breadcrumb">
-		<li><a href="{% url frontpage %}">Home</a> &gt;</li>
-		<li>Search</li>
-	</ul>
-	
-	<div id="advanced-search" class="rounded-corners">
-		<div class="top-left"></div>
-		<div class="top-right"></div>
-		<div class="bottom-left"></div>
-		<div class="bottom-right"></div>
-		<div class="bottom-border"></div>
-		<div class="left-border"></div>
-		<div class="right-border"></div>
-		
-		<h1>Search</h1>
-		
-		<form method="get" action="{% url search %}">
-			{% for field in searchform %}<div>
-				{{ field.errors }}
-				{{ field.label_tag }}
-                                {{ field }}
-                        </div>
+        <ul id="breadcrumb">
+            <li><a href="{% url frontpage %}">Home</a> &gt;</li>
+            <li>Search</li>
+        </ul>
+        
+        <div id="advanced-search" class="rounded-corners">
+            <div class="top-left"></div>
+            <div class="top-right"></div>
+            <div class="bottom-left"></div>
+            <div class="bottom-right"></div>
+            <div class="bottom-border"></div>
+            <div class="left-border"></div>
+            <div class="right-border"></div>
+            
+            <h1>Search</h1>
+            
+            <form method="get" action="{% url search %}">
+                {% for field in searchform %}
+                    <div>
+                        {{ field.errors }}
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <div>
+                    <input name="search" value="Search" class="button" type="submit" />
+                </div>
+            </form>
+            
+            {% if results %}
+            <h2>Search results</h2>
+            <p>{{ results|length }} hits for the keyword "{{ query }}"</p>
+            {% else %}
+            <h2>No results</h2>
+            {% endif %}
+    <!--		
+            <ul class="pagination">
+                <li><a href="#">&lt; Previous</a></li>
+                <li><a href="#">1</a></li>
+                <li></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">6</a></li>
+                <li class="selected"><a href="#">7</a></li>
+                <li><a href="#">8</a></li>
+                <li><a href="#">9</a></li>
+                <li><a href="#">10</a></li>
+                <li>…</li>
+                <li><a href="#">53</a></li>
+                <li><a href="#">Next &gt;</a></li>
+            </ul>
+    -->
+            
+            {% if courseresults %}
+                <table class="courses">
+                    <thead>
+                        <tr>
+                            <th>Course code</th>
+                            <th>Course name</th>
+                            <th>Friends</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in courseresults %}
+                            <tr>
+                                <td><a href="{% url show_course result.faculty result.department result.code %}">{{ result.code }}</a></td>
+                                <td><a href="{% url show_course result.faculty result.department result.code %}">{{ result.name }}</a></td>
+                                <td>fix this</td>
+                            </tr>
                         {% endfor %}
-			<div>
-				<input name="search" value="Search" class="button" type="submit">
-			</div>
-		</form>
-		
-		{% if results %}
-		<h2>Search results</h2>
-		<p>{{ results|length }} hits for the keyword "{{ query }}"</p>
-		{% else %}
-		<h2>No results</h2>
-		{% endif %}
-<!--		
-		<ul class="pagination">
-			<li><a href="#">&lt; Previous</a></li>
-			<li><a href="#">1</a></li>
-			<li></li>
-			<li><a href="#">4</a></li>
-			<li><a href="#">5</a></li>
-			<li><a href="#">6</a></li>
-			<li class="selected"><a href="#">7</a></li>
-			<li><a href="#">8</a></li>
-			<li><a href="#">9</a></li>
-			<li><a href="#">10</a></li>
-			<li>…</li>
-			<li><a href="#">53</a></li>
-			<li><a href="#">Next &gt;</a></li>
-		</ul>
--->
-		<div id="search-results">
-			{% for result in courseresults %}
-			<div class="search-result course">
-				<p class="type">Course</p>
-				<h3><a href="{% url show_course result.faculty result.department result.code %}">{{ result.code }} {{ result.name }}</a></h3>
-			</div>
-			{% endfor %}
-			{% for result in userresults %}
-<!-- A button is needed here to request a friend. Posts to
-     {% url addfriend result.userid %}
--->
-			<div class="search-result user">
-				<p class="type">User</p>
-				<img src="/static/graphics/profile_picture_small.jpg" alt="">
-				<h3><a href="{% url profile result.userid %}">{{ result.username }}</a></h3>
-				<p>FIXME mutual friends</p>
-				<p>FIXME mutual courses</p>
-				<div id="{{ result.username }}" class="post" onclick="addfriend('{% url addfriend result.userid %}','{{ result.username}}')">add friend</div>
-			</div>
-			{% endfor %}
-		</div> <!-- /search-results -->
-<!--
-		<ul class="pagination">
-			<li><a href="#">&lt; Previous</a></li>
-			<li><a href="#">1</a></li>
-			<li>…</li>
-			<li><a href="#">4</a></li>
-			<li><a href="#">5</a></li>
-			<li><a href="#">6</a></li>
-			<li class="selected"><a href="#">7</a></li>
-			<li><a href="#">8</a></li>
-			<li><a href="#">9</a></li>
-			<li><a href="#">10</a></li>
-			<li>…</li>
-			<li><a href="#">53</a></li>
-			<li><a href="#">Next &gt;</a></li>
-		</ul>
--->
-		
-	</div> <!-- /advanced-search -->
-		</div> <!-- /content -->
+                    </tbody>
+                </table>
+            {% endif %}
+            
+            {% if userresults %}
+                <table class="users">
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Username</th>
+                            <th>Mutual friends</th>
+                            <th>Mutual courses</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in userresults %}
+                            <tr>
+                                <td><a href="{% url profile result.userid %}"><img src="/static/graphics/profile_picture_small.jpg" alt="" /></a></td>
+                                <td><a href="{% url profile result.userid %}">{{ result.username }}</a></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>
+                                    <form method="post" action="{% url addfriend result.userid %}">
+                                        <div>
+                                            <input type="submit" name="add_friend" value="Add friend" class="button" />
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+    <!--
+            <ul class="pagination">
+                <li><a href="#">&lt; Previous</a></li>
+                <li><a href="#">1</a></li>
+                <li>…</li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">6</a></li>
+                <li class="selected"><a href="#">7</a></li>
+                <li><a href="#">8</a></li>
+                <li><a href="#">9</a></li>
+                <li><a href="#">10</a></li>
+                <li>…</li>
+                <li><a href="#">53</a></li>
+                <li><a href="#">Next &gt;</a></li>
+            </ul>
+    -->
+            
+        </div> <!-- /advanced-search -->
+    </div> <!-- /content -->
 		
 		
 {% endblock content %}

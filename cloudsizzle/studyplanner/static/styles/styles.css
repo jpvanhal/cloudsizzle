@@ -94,16 +94,8 @@ h1, h2, h3 {
 	font-size: 100%;
 }
 
-.search-result h3 {
-	margin: 0;
-}
-
 #advanced-search h2 {
 	margin-top: 20px;
-}
-
-#advanced-search h3 {
-	font-size: 93%;
 }
 
 #course h2 {
@@ -126,16 +118,6 @@ p.date {
 }
 
 .friend p {
-	font-size: 85%;
-}
-
-.search-result p.type {
-	width: 80px;
-	float: left;
-	font-size: 100%;
-}
-
-.user p {
 	font-size: 85%;
 }
 
@@ -166,6 +148,14 @@ p#username-text {
 
 p.small {
     font-size: 85%;
+}
+
+span.success {
+    color: #66a341;
+}
+
+span.error {
+    
 }
 
 /* /Text */
@@ -223,11 +213,6 @@ ul#friend-list li img {
 form#info img {
 	display: block;
 	margin-bottom: 15px;
-}
-
-.user img {
-	float: left;
-	margin-right: 10px;
 }
 
 .notification-item  img {
@@ -339,7 +324,7 @@ table, th, td {
 	border: 1px solid #507dd6;
 }
 
-#course table, #course th, #course td, #courses table, #courses th, #courses td {
+#course table, #course th, #course td, #courses table, #courses th, #courses td, #advanced-search table, #advanced-search th, #advanced-search td {
 	border: none;
 }
 
@@ -374,27 +359,27 @@ tr.even td {
 	background-color: #90b2f6;
 }
 
-#courses table {
+#courses table, #advanced-search table {
 	width: auto;
 	font-family: Verdana;
 	margin: 0;
 	font-size: 85%;
 }
 
-#courses th {
+#courses th, #advanced-search th {
 	background-color: #fff;
 	color: #0252c0;
 }
 
-#courses th, #courses td {
+#courses th, #courses td, #advanced-search th, #advanced-search td {
 	padding: 5px 20px 5px 10px;
 }
 
-#courses tr.odd td {
+#courses tr.odd td, #advanced-search tr.odd td {
 	background-color: #e8eafe;
 }
 
-#courses tr.even td {
+#courses tr.even td, #advanced-search tr.even td {
 	background-color: #fff;
 }
 
@@ -541,6 +526,12 @@ form#privacy label {
 	margin-right: 20px;
 }
 
+#advanced-search table.users form div {
+    float: none;
+    clear: none;
+    margin: 0;
+}
+
 #advanced-search form label {
 	width: auto;
 	display: block;
@@ -552,10 +543,20 @@ form#privacy label {
 	margin-top: 17px;
 }
 
+#advanced-search table.users form input.button {
+    margin: 0;
+    font-size: 93%;
+}
+
 #advanced-search form {
 	border-bottom: 1px solid #ccc;
 	overflow: hidden;
 	padding: 10px 20px;
+}
+
+#advanced-search table.users form {
+    border: none;
+    padding: 0;
 }
 
 .notification-item form {
@@ -571,6 +572,8 @@ form#privacy label {
     font-style: oblique;
     color: #666;
 }
+
+
 
 /* /Forms */
 
@@ -758,13 +761,6 @@ ul.tabs li.selected a {
 
 /* Rounded corners */
 
-/* Tablesorter */
-
-
-
-/* /Tablesorter */
-
-
 #sign-up, #login-container {
 	width: 500px;
 	margin: 0 auto;
@@ -836,19 +832,6 @@ ul.tabs li.selected a {
 	overflow: hidden;
 }
 
-#search-results {
-	margin: 40px 0;
-	padding: 0 15px;
-	overflow: hidden;
-}
-
-.search-result {
-	margin-bottom: 10px;
-	padding-bottom: 10px;
-	border-bottom: 1px solid #ccc;
-	overflow: hidden;
-}
-
 .notification-item {
 	margin-bottom: 10px;
 	padding-bottom: 10px;
@@ -872,3 +855,8 @@ div.post {
 	cursor: pointer;
 }
 
+.loading {
+    width: 16px;
+    height: 16px;
+    background: url('../graphics/ajax-loader.gif') no-repeat top left;
+}

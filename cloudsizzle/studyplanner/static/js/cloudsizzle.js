@@ -48,5 +48,47 @@ $(document).ready(function(){
     });
 
 	$('#courses table').addClass('tablesorter');
-	$('#courses table').tablesorter({sortList:[[0,0],[2,1]], cssDesc: 'headerSortDown', widgets: ['zebra']});
+	$('#courses table').tablesorter({
+        widgets: ['zebra']
+    });
+    
+    $('#advanced-search table').addClass('tablesorter');
+    $('#advanced-search table.courses').tablesorter({
+        widgets: ['zebra']
+    });
+    $('#advanced-search table.users').tablesorter({
+        widgets: ['zebra'],
+        headers: {
+            0: {
+                sorter: false
+            },
+            4: {
+                sorter: false
+            }
+        }
+    });
+    
+    $('#advanced-search table.users form').submit(function () {
+        
+        var actionURL = $(this).attr('action');
+        var form = $(this);
+        
+        $(this).children('div').replaceWith('<div class="loading"></div>');
+        
+        $.ajax({
+            url: actionURL,
+            type: 'POST',
+            cache: false,
+            success: function(data, textStatus, XMLHttpRequest) {
+                form.children('div.loading').remove();
+                form.replaceWith('<span class="success">Friend request sent</span>');
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                form.children('div.loading').remove();
+                form.replaceWith('<span class="error">An error occurred</span>');
+            }
+        });
+        
+        return false;
+    });
 });

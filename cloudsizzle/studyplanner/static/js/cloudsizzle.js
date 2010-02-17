@@ -1,4 +1,22 @@
 $(document).ready(function(){
+    $('#login form').attr('autocomplete', 'off');
+    $('#sign-up form').attr('autocomplete', 'off');
+    
+    $('#login input#id_username').addClass('form-input-desc');
+    $('#login input#id_username').val('Username');
+    $('#login input#id_password').before('<input type="text" value="Password" id="password-clear" class="form-input-desc" />');
+    $('#login input#id_password').hide();
+    
+    $('#login input#id_username').focus(function () {
+        $('#login input#id_username').removeClass('form-input-desc');
+        $('#login input#id_username').val('');
+    });
+    
+    $('#login input#password-clear').focus(function () {
+        $('#login input#password-clear').remove();
+        $('#login input#id_password').show();
+        $('#login input#id_password').focus();
+    });
 	
 	// add parser through the tablesorter addParser method 
     $.tablesorter.addParser({ 

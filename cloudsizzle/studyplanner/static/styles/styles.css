@@ -413,6 +413,10 @@ input, select {
 	float: left;
 }
 
+#login input {
+    width: 155px;
+}
+
 select {
 	height: 24px;
 }
@@ -436,6 +440,10 @@ input.button {
 	font-weight: bold;
 	font-size: 85%;
 	cursor: pointer;
+}
+
+#login input.button {
+    width: auto;
 }
 
 div#sign-up form input.button, div#login-container form input.button {
@@ -557,6 +565,11 @@ form#privacy label {
 .notification-item form input {
 	margin-right: 10px;
 	margin-bottom: 0;
+}
+
+.form-input-desc {
+    font-style: oblique;
+    color: #666;
 }
 
 /* /Forms */

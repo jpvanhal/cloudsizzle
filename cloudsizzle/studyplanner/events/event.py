@@ -8,7 +8,8 @@ from django.core.urlresolvers import reverse
 from studyplanner.events.models import *
 import api
 
-class EventLog:
+class event:
+#class EventLog:
 
     def __init__(self, img_scr='', user_name='', user_scr='', action='', object_name='', object_scr='', update_time=''):
         self.img_scr=img_scr
@@ -21,6 +22,8 @@ class EventLog:
     @classmethod
     def constructor(cls, user_ids):
         events = Event.objects.filter(user_id=user_ids).order_by('-time')[0:10]
+        return events
+        '''
         if not isinstance(user_ids, list):
             return cls.builder(user_id=user_ids, events)
         elif len(user_ids)==1:
@@ -32,7 +35,7 @@ class EventLog:
             for event in events:
                 result.extend(cls.builder(event.user_id, [event]))
             return result
-        
+        '''
     @classmethod
     def builder(cls, user_id, events):
         feeds = []
@@ -67,7 +70,7 @@ class EventLog:
         return ''
 
 
-class plan_course_event(EventLog):
+class plan_course_event(event):#EventLog):
                 
     def __init__(self, img_scr='', user_name='', user_scr='', action='', object_name='', update_time=''):
         object_scr = self.get_object_scr(object_name)       
@@ -77,7 +80,7 @@ class plan_course_event(EventLog):
         courseinfo = api.course.get_course(object_name)
         object_name += courseinfo['name']        
         return reverse('show_course', args=[courseinfo['faculty'], courseinfo['department'], courseinfo['code']])
-class new_friend_event(EventLog):
+class new_friend_event(event):#EventLog):
     
     def __init__(self, img_scr='', user_name='', user_scr='', action='', object_name='', update_time=''):
         object_scr = self.get_object_scr(object_name)      

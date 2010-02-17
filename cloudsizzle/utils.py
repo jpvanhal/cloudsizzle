@@ -1,11 +1,13 @@
+"""Miscellaneous utility functions."""
 from cloudsizzle import pool
-from cloudsizzle.kp import Triple, uri, literal, wrap_if_not_none
+from cloudsizzle.kp import Triple, uri, wrap_if_not_none
 
 RDF_SCHEMA_URI = 'http://www.w3.org/2000/01/rdf-schema#'
 RDF_SYNTAX_NS_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 
 
 def listify(object_):
+    """Make the given object a list if it is not a list."""
     if isinstance(object_, list):
         return object_
     else:
@@ -13,6 +15,20 @@ def listify(object_):
 
 
 def fetch_rdf_graph(subject, dont_follow=None):
+    """Fetch all triples related to a subject and transform them to a graph.
+
+    First this function fetches all triples with the given subject. Then it
+    calls itself recursively for all such triples that have an URI as their
+    object. The end result is a clean graph of all these triples similar to
+    the output of make_graph().
+
+    Arguments:
+    subject -- The subject of triples to fetch.
+    dont_follow -- A list of predicates which are not followed recursively.
+        This is useful if the RDF graph contains recursive references that
+        cause infinite recursion in this function.
+
+    """
     if dont_follow is None:
         dont_follow = []
 
@@ -56,6 +72,7 @@ def fetch_rdf_graph(subject, dont_follow=None):
 
     return graph[subject]
 
+
 def make_graph(triples):
     """Transforms a list of triples into a graph.
 
@@ -91,7 +108,6 @@ def make_graph(triples):
             ['http://cos.alpha.sizl.org/people/ID#azAC7-RdCr3OiIaaWPfx7J',
              'http://cos.alpha.sizl.org/people/ID#azEe6yRdCr3OiIaaWPfx7J'],
          'rdf:type': 'http://cos.alpha.sizl.org/people#Person'}}
-
 
     """
     graph = {}

@@ -13,12 +13,13 @@ ESCAPE_CHARS = (
     ("'", '%27'),
 )
 
+
 def escape(string):
     """Escape XML special characters with hexadecimal codes.
 
     For example:
-    >>> escape('<a href="/somepage?a=1&b=2">Hello \\'world\\'!</a>')
-    '%3Ca href=%22/somepage?a=1%26b=2%22%3EHello %27world%27!%3C/a%3E'
+    >>> escape('<a href="/foo?a=1&b=2">Hello \\'world\\'!</a>')
+    '%3Ca href=%22/foo?a=1%26b=2%22%3EHello %27world%27!%3C/a%3E'
 
     Percent sign is also escaped:
     >>> escape('%')
@@ -29,12 +30,13 @@ def escape(string):
         string = string.replace(char, escaped)
     return string
 
+
 def unescape(string):
     """Unescape XML special characters escaped with hexadecimal codes.
 
     For example:
-    >>> unescape('%3Ca href=%22/somepage?a=1%26b=2%22%3EHello %27world%27!%3C/a%3E')
-    '<a href="/somepage?a=1&b=2">Hello \\'world\\'!</a>'
+    >>> unescape('%3Ca href=%22/foo?a=1%26b=2%22%3EHello %27world%27!%3C/a%3E')
+    '<a href="/foo?a=1&b=2">Hello \\'world\\'!</a>'
 
     Percent sign is also unescaped:
     >>> unescape('%25')
@@ -45,8 +47,12 @@ def unescape(string):
         string = string.replace(escaped, char)
     return string
 
+
 class Triple(_Triple):
     """
+    Wraps the Triple class and adds escaping and unescaping of XML special
+    characters to it.
+
     >>> triple = Triple('foo', 'bar', '<A & B>')
     >>> tuple = triple.to_tuple()
     >>> tuple
@@ -60,6 +66,7 @@ class Triple(_Triple):
     Triple(None, None, None)
 
     """
+
     @staticmethod
     def from_tuple(tuple_):
         subject, predicate, object_ = tuple_[0]
@@ -82,7 +89,12 @@ class Triple(_Triple):
         tuple_ = (triple, ) + tuple_[1:]
         return tuple_
 
+
 class MockSIBConnection(object):
+    """A fake SIBConnection class that implement the basic API of SIBConnection
+    and does not connect to SIB at all.
+
+    """
     NAMESPACES = {
         'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
         'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
@@ -99,7 +111,7 @@ class MockSIBConnection(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type_, value, traceback):
         pass
 
     def open(self):
@@ -112,22 +124,30 @@ class MockSIBConnection(object):
         for triple in triples:
             self.triple_store.add(triple)
 
-    def _expand_namespace(self, node):
+    def __expand_namespace(self, node):
         if isinstance(node, uri) and ':' in node:
-            ns, value = node.split(':')
+            namespace, value = node.split(':')
             try:
-                return uri(self.NAMESPACES[ns] + value)
+                return uri(self.NAMESPACES[namespace] + value)
             except KeyError:
                 return node
         else:
             return node
 
+    def __node_matches(self, pattern, node):
+        if not pattern:
+            return True
+        return self.__expand_namespace(pattern) == node
+
+    def __matches(self, pattern, triple):
+        return self.__node_matches(pattern.subject, triple.subject) and \
+            self.__node_matches(pattern.predicate, triple.predicate) and \
+            self.__node_matches(pattern.object, triple.object)
+
     def query(self, query):
         result = []
         for triple in self.triple_store:
-            if ((not query.subject or self._expand_namespace(query.subject) == triple.subject) and
-                (not query.predicate or self._expand_namespace(query.predicate) == triple.predicate) and
-                (not query.object or self._expand_namespace(query.object) == triple.object)):
+            if self.__matches(query, triple):
                 result.append(triple)
         return result
 
@@ -140,7 +160,5 @@ class MockSIBConnection(object):
             self.triple_store.remove(triple)
         return True
 
-    def subscribe(self, triples, handler):
-        raise NotImplemented
 
 kpwrapper.Triple = Triple

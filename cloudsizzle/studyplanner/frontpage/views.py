@@ -158,15 +158,16 @@ def profile(request, user_id=None):
     except (KeyError, TypeError):
         avatar_url = ''
     feedurl = 'frontpage/feeds.html'
-
+    feeds = EventLog.constructor(user_ids=user_id)
     c = Context({
-    	'asi_session': asi_session,
+	'asi_session': request.session['asi_session'],
         'user_id': user_id,
         'username': username,
         'realname': realname,
         'avatar_url': avatar_url,
         'template':'profile',
         'feedurl':feedurl,
+        'feeds':feeds,
     })
     return HttpResponse(t.render(c))
 

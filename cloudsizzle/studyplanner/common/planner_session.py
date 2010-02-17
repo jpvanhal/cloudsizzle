@@ -1,5 +1,4 @@
 """Classes/functions related to global session management in the studyplanner"""
-from studyplanner.settings import LOGIN_PAGE
 from django.http import HttpResponseRedirect
 from api import Session
 
@@ -10,7 +9,7 @@ returned the login page.
 class check_authentication(object):
     def __init__(self, func):
         self.func = func
-    
+
     def __call__(self, request, *args, **kwargs):
         if 'asi_session' in request.session:
             return self.func(request, *args, **kwargs)
@@ -22,7 +21,7 @@ class check_authentication(object):
 @check_authentication
 def foo():
   pass
-  
+
 foo = check_authentication(foo)
 """
 
@@ -47,7 +46,5 @@ def authenticate(request, username, password):
     # This will throw exception for invalid username
     # Let's say the caller will handle it.
     asi_session.open()
-    
+
     request.session['asi_session'] = asi_session
-    
-    

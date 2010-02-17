@@ -10,9 +10,6 @@ sys.path.insert(0, os.path.dirname(__file__) + "/..")
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-# Unauthenticated users will always be redirected to this URL
-LOGIN_PAGE = '/'
-
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
@@ -67,7 +64,6 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
 ROOT_URLCONF = 'studyplanner.urls'
@@ -80,13 +76,9 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-#    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'studyplanner.events',
     'studyplanner.frontpage',
 )
-
-#AUTHENTICATION_BACKENDS = ('studyplanner.auth.backends.SIBBackend',)
-LOGIN_REDIRECT_URL = '/'

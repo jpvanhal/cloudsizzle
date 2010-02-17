@@ -3,18 +3,18 @@
 {% block title %}CloudSizzle | Profile | {{ profile_user.username }}{% endblock title %}
 
 {% block profile-content %}
-			<div class="left-col">
-				<h2>{{ username }}</h2>
-				<img src="{{ avatar_url }}" alt="">
-			</div>
-			
-			<div class="right-col">
-				<h3>{{ realname }}</h3>
-				
-				<div id="personal-news-feed">
-					<h3>News feed</h3>
-								 		
-					{% include feedurl %}	 		
-				</div>
-			</div> <!-- right-col -->
+    <div class="left-col">
+        <h2>{{ username }}</h2>
+        <img src="{{ avatar_url }}" alt="">
+    </div>
+    
+    <div class="right-col">
+        <h3>{{ realname }}</h3>
+        
+        <div id="personal-news-feed">
+            <h3>News feed</h3>
+                                
+            {% include feedurl %}	 		
+        </div>
+    </div> <!-- right-col -->
 {% endblock profile-content %}

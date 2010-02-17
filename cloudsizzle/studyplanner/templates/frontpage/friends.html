@@ -11,7 +11,7 @@
         <p class="results">{{ profile_user.username }} does not currently have any friends</p>
     {% endif %}
     
-    <div id="friends">
+    <div class="friends">
         
         {% for friend in friends %}
             <div class="friend{% if forloop.last %} last{% endif %}">
@@ -29,10 +29,12 @@
                 
             </div> <!-- /friend -->
         {% endfor %}
-        
-        {% if requests %}
-        <h1>Pending friend requests</h1>
-        {% endif %}
+    </div> <!-- /friends -->
+    
+    {% if requests %}
+        <h2>Pending friend requests</h2>
+    {% endif %}
+    <div class="friends">
         {% for request in requests %}
             <div class="friend{% if forloop.last %} last{% endif %}">
                 <form method="post" action="{% url addfriend request.user_id %}">
@@ -49,6 +51,5 @@
                 
             </div> <!-- /friend -->
         {% endfor %}
-        
     </div> <!-- /friends -->
 {% endblock profile-content %}

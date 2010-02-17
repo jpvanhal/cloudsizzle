@@ -91,6 +91,7 @@ h2 {
 .friend h2 {
 	margin-bottom: 0;
 	font-size: 100%;
+    clear: none;
 }
 
 #advanced-search h2 {
@@ -247,9 +248,11 @@ ul#sub-nav li {
 
 ul#courses-sub-menu {
 	width: 200px;
+    float: left;
 	border-top: 2px solid #ccc;
 	border-left: 2px solid #ccc;
 	border-right: 2px solid #ccc;
+	margin-right: 30px;
 }
 
 ul#courses-sub-menu li {
@@ -316,13 +319,12 @@ table {
 }
 
 table, th, td {
-	xborder: 1px solid #507dd6;
     border: none;
 }
 
-/*#course table, #course th, #course td, table.courses, table.courses thead tr th, table.courses tbody tr td, #advanced-search table, #advanced-search th, #advanced-search td {
-	border: none;
-}*/
+table.profile-courses, table.profile-courses th, table.profile-courses td {
+    border: 1px solid #507dd6;
+}
 
 th {
 	background-color: #5586e9;
@@ -781,12 +783,6 @@ ul.tabs li.selected a {
 .left-col {
 	width: 250px;
 	float: left;
-	margin-right: 150px;
-}
-
-#courses-page .left-col {
-	width: 204px;
-	margin-right: 30px;
 }
 
 .right-col {
@@ -811,9 +807,9 @@ ul.tabs li.selected a {
 	overflow: hidden;
 }
 
-#friends {
+.friends {
 	width: 600px;
-    margin-top: 20px;
+    margin: 20px 0;
 }
 
 .friend {

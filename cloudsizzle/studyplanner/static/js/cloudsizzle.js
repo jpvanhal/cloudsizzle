@@ -93,4 +93,14 @@ $(document).ready(function(){
         
         return false;
     });
+    
+    $('#search form').submit(function (event) {
+        var query = $('#search form input#query').val();
+        var scope = $('#search form input#scope').val();
+        var actionURL = $(this).attr('action') + '?query=' + query + '&scope=' + scope;
+        
+        window.location = actionURL;
+
+        return false;
+    });
 });

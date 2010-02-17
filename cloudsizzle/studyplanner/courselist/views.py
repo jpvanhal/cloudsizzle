@@ -1,4 +1,5 @@
 """Views for browsing through available courses"""
+from django.template import RequestContext
 from django.shortcuts import render_to_response
 from studyplanner.common.planner_session import check_authentication
 from studyplanner.courselist.models import Course
@@ -13,7 +14,8 @@ def list_faculties(request):
     faculties = api.course.get_faculties()
     return render_to_response('courselist/list_faculties.html',
         {'asi_session': request.session['asi_session'],
-        'faculties': faculties})
+        'faculties': faculties},
+        context_instance=RequestContext(request))
 
 @check_authentication
 def list_departments(request, faculty):
@@ -22,7 +24,8 @@ def list_departments(request, faculty):
 
     return render_to_response('courselist/list_departments.html',
         {'asi_session': request.session['asi_session'],
-        'faculty': faculty, 'departments': departments})
+        'faculty': faculty, 'departments': departments},
+        context_instance=RequestContext(request))
 
 @check_authentication
 def list_courses(request, faculty, department):
@@ -38,7 +41,8 @@ def list_courses(request, faculty, department):
                                 
     return render_to_response('courselist/list_courses.html',
         {'asi_session': asi_session,
-        'faculty': faculty, 'department': department, 'courses': courses})
+        'faculty': faculty, 'department': department, 'courses': courses},
+        context_instance=RequestContext(request))
 
 @check_authentication
 def show_course(request, faculty, department, course):
@@ -70,4 +74,5 @@ def show_course(request, faculty, department, course):
     return render_to_response('courselist/show_course.html',
         {'asi_session': request.session['asi_session'],
         'faculty': faculty, 'department': department, 'course': course,
-        'isplanned': isplanned, 'friends': friends, 'iscompleted': iscompleted})
+        'isplanned': isplanned, 'friends': friends, 'iscompleted': iscompleted},
+        context_instance=RequestContext(request))

@@ -7,13 +7,13 @@
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta name="description" content="SITE DESCRIPTION"/>
 	<meta name="keywords" content=""/>
-	<link rel="stylesheet" type="text/css" media="all" href="/static/styles/reset.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="/static/styles/styles.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/reset.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/styles.css" />
 </head>
 <body id="login-page">
 	<div id="wrapper">
 		<div id="header">
-			<img src="/static/graphics/logo.png" alt="" id="logo" />
+			<img src="{{ MEDIA_URL }}graphics/logo.png" alt="" id="logo" />
 
 			<div id="login">
 				<form method="post" action="{% url frontpage %}">
@@ -71,7 +71,7 @@
 		<p>&copy; CloudSizzle 2010</p>
 	</div> <!-- /footer -->
 
-	<script type="text/javascript" src="/static/js/jquery-1.4.1.min.js"></script>
-	<script type="text/javascript" src="/static/js/cloudsizzle.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.4.1.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/cloudsizzle.js"></script>
 </body>
 </html>

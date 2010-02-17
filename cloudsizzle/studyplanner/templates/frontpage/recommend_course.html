@@ -21,7 +21,7 @@
 			    {% for friend in friends %}
 				<div>
 					<label for="{{ friend.user_id }}">
-						<img src="../../../static/graphics/profile_picture_small.jpg" alt="">
+						<img src="{{ MEDIA_URL }}graphics/profile_picture_small.jpg" alt="">
 						{{ friend.username }}
 					</label>
 					<input name="{{ friend.user_id }}" id="{{ friend.user_id }}" type="checkbox">

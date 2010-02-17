@@ -7,14 +7,14 @@
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta name="description" content="SITE DESCRIPTION"/>
 	<meta name="keywords" content=""/>
-	<link rel="stylesheet" type="text/css" media="all" href="/static/styles/reset.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="/static/styles/tablesorter/style.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="/static/styles/styles.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/reset.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/tablesorter/style.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/styles.css" />
 </head>
 <body id="courses-page">
 	<div id="wrapper">
 		<div id="header">
-			<img src="/static/graphics/logo_small.png" alt="" id="logo" />
+			<img src="{{ MEDIA_URL }}graphics/logo_small.png" alt="" id="logo" />
 
 			<p id="username-text">Hello, {{ asi_session.username }}</p>
 
@@ -35,7 +35,7 @@
 					<div>
 						<input type="text" name="query" id="query" />
 						<input type="hidden" name="scope" value="all" id="scope" />
-						<input type="image" src="/static/graphics/search_btn.png" name="submit_btn" class="search-button" />
+						<input type="image" src="{{ MEDIA_URL }}graphics/search_btn.png" name="submit_btn" class="search-button" />
 					</div>
 				</form>
 			</div> <!-- /search -->
@@ -48,9 +48,9 @@
 		<p>&copy; CloudSizzle 2010</p>
 	</div> <!-- /footer -->
     
-	<script type="text/javascript" src="/static/js/jquery-1.4.1.min.js"></script>
-	<script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript" src="/static/js/cloudsizzle.js"></script>
-	<script type="text/javascript" src="/static/js/cloudsizzle-header.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.4.1.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.tablesorter.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/cloudsizzle.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/cloudsizzle-header.js"></script>
 </body>
 </html>

@@ -8,8 +8,10 @@ $(document).ready(function(){
     $('#login input#id_password').hide();
     
     $('#login input#id_username').focus(function () {
-        $('#login input#id_username').removeClass('form-input-desc');
-        $('#login input#id_username').val('');
+        if ($('#login input#id_username').val() == 'Username') {
+            $('#login input#id_username').removeClass('form-input-desc');
+            $('#login input#id_username').val('');
+        }
     });
     
     $('#login input#password-clear').focus(function () {

@@ -20,12 +20,12 @@ class EventLog:
         self.update_time=update_time
     @classmethod
     def constructor(cls, user_ids):
+        if not isinstance(user_ids, list):
+            user_ids = [user_ids,]
         if user_ids == []:
             return []
-        events = Event.objects.filter(user_id=user_ids).order_by('-time')[0:10]
-        if not isinstance(user_ids, list):
-            return cls.builder(user_id=user_ids, events=events)
-        elif len(user_ids)==1:
+        events = Event.objects.filter(user_id__in=user_ids).order_by('-time')[0:10]
+        if len(user_ids)==1:
             return cls.builder(user_id=user_ids[0], events=events)
         else:
             result = [] 
@@ -100,7 +100,10 @@ if __name__ =='__main__':
     p1 = NewFriendEvent(user_id="bHC0t6gwur37J8aaWPEYjL", new_friend='a0cHdkgvSr35qmaaWPEYjL')
     #p1.save()
     p2 = PlannedCourse(user_id="bHC0t6gwur37J8aaWPEYjL",course_code='A-8.2310')
-    p2.save()
+    #p2.save()
     #a = event(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb',user_scr='', action="like", object_name='miao', object_scr='http://dict.cn/')
-
+    b = EventLog.constructor(['cwc2e4f14r362vaaWPEYjL','bHC0t6gwur37J8aaWPEYjL'])
+    for b1 in b:
+        print b1.action
+    
 

@@ -118,13 +118,20 @@ def logout(request):
 # appropriate file and application.
 
 def home(request):
-#    events = request.session['asi_session'].get_events()
+    asi_session = request.session['asi_session']
+    user_id = asi_session.user_id
+    friends = api.people.get_friends(user_id)        
     t = loader.get_template("frontpage/home.html")
-    c = Context({ 'asi_session': request.session['asi_session'],
-                  #'events': events
-                  })
+    feedurl = 'frontpage/feeds.html'
+    feeds = EventLog.constructor(user_ids=friends)
+    c = Context({
+    'asi_session': request.session['asi_session'],
+        'feedurl':feedurl,
+        'feeds':feeds,
+    })
     return HttpResponse(t.render(c))
-
+'''
+discarded
 def feed(request, user_id):
     t = loader.get_template("frontpage/feeds.html")
     # example
@@ -134,7 +141,7 @@ def feed(request, user_id):
     # used to correctly render the active tab in the common parent template
     c = Context({'feeds':feeds, 'template':profile})
     return HttpResponse(t.render(c))
-
+'''
 
 @check_authentication
 def profile(request, user_id=None):
@@ -159,6 +166,7 @@ def profile(request, user_id=None):
         avatar_url = ''
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=user_id)
+    #feeds = EventLog.constructor(user_ids=['cwc2e4f14r362vaaWPEYjL','bHC0t6gwur37J8aaWPEYjL'])
     c = Context({
 	'asi_session': request.session['asi_session'],
         'user_id': user_id,

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>CloudSizzle</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta name="description" content="SITE DESCRIPTION"/>
 	<meta name="keywords" content=""/>
@@ -14,7 +14,7 @@
 	<div id="wrapper">
 		<div id="header">
 			<img src="/static/graphics/logo.png" alt="" id="logo" />
-			
+
 			<div id="login">
 				<form method="post" action="{% url frontpage %}">
 					<div>
@@ -26,7 +26,7 @@
 				</form>
 			</div> <!-- /login -->
 		</div> <!-- /header -->
-		
+
 		<div id="content">
 			<div id="sign-up" class="rounded-corners">
 				<div class="top-left"></div>
@@ -36,10 +36,10 @@
 				<div class="bottom-border"></div>
 				<div class="left-border"></div>
 				<div class="right-border"></div>
-				
+
 				<h2>Sign up</h2>
 				<span>Fields marked with * are mandatory</span>
-				
+
 				{% if registerform.errors %}
 					<p class="errors">
 					{% for field in registerform %}
@@ -51,7 +51,7 @@
 					{% endfor %}
 					</p>
 				{% endif %}
-				
+
 				<form method="post" action="{% url frontpage %}">
 					{% for field in registerform %}
 					<div>
@@ -66,11 +66,11 @@
 			</div>
 		</div> <!-- /content -->
 	</div><!-- wrapper -->
-	
+
 	<div id="footer">
 		<p>&copy; CloudSizzle 2010</p>
 	</div> <!-- /footer -->
-	
+
 	<script type="text/javascript" src="/static/js/jquery-1.4.1.min.js"></script>
 	<script type="text/javascript" src="/static/js/cloudsizzle.js"></script>
 </body>

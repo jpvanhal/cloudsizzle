@@ -1,0 +1,32 @@
+{% extends "frontpage/profile_courses.html" %}
+{% block profile-courses-content %}
+    <h2>Planned courses</h2>
+                        
+    <table>
+        <tr>
+            <th>Course code</th>
+            <th>Course name</th>
+            <th>Credits</th>
+            <!-- <th>Timing</th> -->
+            <th>Friends</th>
+        </tr>
+        {% for course in planned_courses %}
+        <tr{% if forloop.counter|divisibleby:2 %} class="even"{% endif %}>
+            <td>{{ course.code }}</td>
+            <td>{{ course.name }}</td>
+            <td>{{ course.extent }}</td>
+            <!-- Timing not in use
+            <td>
+                <select name="id_1">
+                    <option>Spring 2010</option>
+                    <option>Autumn 2010</option>
+                    <option>Spring 2011</option>
+                    <option>Autumn 2011</option>
+                </select>
+            </td>
+            -->
+            <td>{{ course.friends }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock profile-courses-content %}

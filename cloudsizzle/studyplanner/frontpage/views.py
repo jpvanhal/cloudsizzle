@@ -169,7 +169,7 @@ def profile(request, user_id=None):
     #feeds = EventLog.constructor(user_ids=['cwc2e4f14r362vaaWPEYjL','bHC0t6gwur37J8aaWPEYjL'])
     c = Context({
 	'asi_session': request.session['asi_session'],
-        'user_id': user_id,
+        'profile_user': user,
         'username': username,
         'realname': realname,
         'avatar_url': avatar_url,
@@ -225,22 +225,40 @@ def registrations(request):
     c = Context({})
     return HttpResponse(t.render(c))
 
-def completedstudies(request):
-    t = loader.get_template("frontpage/completed_studies.html")
-    c = Context({})
-    return HttpResponse(t.render(c))
+@check_authentication
+def completed_courses(request, user_id):
+    t = loader.get_template("frontpage/profile_courses_completed.html")
 
-def friends_courses(request):
     asi_session = request.session['asi_session']
+    profile_user = api.people.get(asi_session.user_id)
+    courses = asi_session.get_completed_courses()
 
-    courses = utils.courses_taken_by_friends(asi_session.user_id)
-
-    return render_to_response('frontpage/friends_courses.html',
-        {'courses': courses, 'asi_session': asi_session,
-        'template': 'planned_courses'
+    c = Context({
+        'asi_session': asi_session,
+        'profile_user': profile_user,
+        'courses': courses,
+        'template': 'profile_courses_completed',
     })
 
-def planned_courses(request):
+    return HttpResponse(t.render(c))
+
+@check_authentication
+def friends_courses(request, user_id):
+    asi_session = request.session['asi_session']
+    profile_user = api.people.get(asi_session.user_id)
+    courses = utils.courses_taken_by_friends(user_id)
+
+    return render_to_response(
+        'frontpage/profile_courses_friends.html',
+        {
+            'profile_user': profile_user,
+            'courses': courses, 
+            'asi_session': asi_session,
+            'template': 'profile_courses_friends'
+    })
+
+@check_authentication
+def planned_courses(request, user_id):
     """
     If the request is GET this function returns
     a list of all planned courses.
@@ -248,37 +266,40 @@ def planned_courses(request):
     If the request is POST this function will
     add a course to the planned courses.
     """
-    if request.method == "GET":
-        asi_session = request.session['asi_session']
+    try:
+        user = api.people.get(user_id)
+    except api.people.UserDoesNotExist:
+        raise Http404
+        
+    coursedb = PlannedCourse.objects.filter(user_id=user_id)
+    planned_courses = []
 
-        coursedb = PlannedCourse.objects.filter(user_id=asi_session.user_id)
-        planned_courses = []
+    for course_entry in coursedb:
+        course_code = course_entry.course_code
+        planned_courses.append(api.course.get_course(course_code))
 
-        for course_entry in coursedb:
-            course_code = course_entry.course_code
-            planned_courses.append(api.course.get_course(course_code))
+    t = loader.get_template("frontpage/profile_courses_planned.html")
+    c = Context({
+        'asi_session': request.session['asi_session'],
+        'profile_user': user,
+        'planned_courses': planned_courses,
+        'template': 'profile_courses_planned',
+    })
+    return HttpResponse(t.render(c))
 
-        print planned_courses
-
-        t = loader.get_template("frontpage/planned_courses.html")
-        c = Context({'asi_session': asi_session,
-                    'planned_courses': planned_courses,
-                    'template': 'planned_courses'})
-        return HttpResponse(t.render(c))
-
-    elif request.method == "POST":
-        cc = request.POST.get('course_code',None)
+def add_to_planned_courses(request):
+    if request.method == "POST":
+        cc = request.POST.get('course_code', None)
         asi_session = request.session['asi_session']
         uid = asi_session.user_id
 
         if(cc != None):
-            course = PlannedCourse(course_code = cc, user_id = uid)
+            course = PlannedCourse(course_code=cc, user_id=uid)
             course.save()
-            e = PlannedCourseEvent(course_code = cc, user_id = uid)
+            e = PlannedCourseEvent(course_code=cc, user_id=uid)
             e.save()
             request.method = "GET"
-            return HttpResponseRedirect(reverse("plannedcourses"))
-
+            return HttpResponseRedirect(reverse("plannedcourses", args=[uid]))
         else:
             return HttpResponseBadRequest("could not add course to planned courses")
 
@@ -292,7 +313,7 @@ def remove_planned_course(request):
     asi_session = request.session['asi_session']
     uid = asi_session.user_id
     PlannedCourse.objects.filter(user_id = uid).filter(course_code = cc).delete()
-    return HttpResponseRedirect(reverse("plannedcourses"))
+    return HttpResponseRedirect(reverse("plannedcourses", args=[uid]))
 
 def recommendcourse(request, coursecode):
     asi_session = request.session['asi_session']

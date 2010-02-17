@@ -1,0 +1,22 @@
+{% extends "frontpage/profile_courses.html" %}
+{% block profile-courses-content %}
+<h2>Friend's courses</h2>
+				
+<table>
+	<tr>
+		<th>Course code</th>
+		<th>Course name</th>
+		<th>Credits</th>
+		<th>Friends</th>
+	</tr>
+	{% for course in courses %}
+	<tr {% if forloop.counter|divisibleby:2 %} class="even"{% endif %}>
+		<td><a href="{% url show_course course.faculty course.department course.code %}">{{ course.code }}</a></td>
+		<td><a href="{% url show_course course.faculty course.department course.code %}">{{ course.name }}</a></td>
+		<td>{{ course.extent }} cr</td>
+		<td>{{ course.friendcount }}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% endblock profile-courses-content %}

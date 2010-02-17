@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load mytags %}
 {% block content %}
 <div id="content">
 	<ul id="breadcrumb">
@@ -14,7 +15,7 @@
 				<span class="left-border"></span>
 				<span class="right-border"></span>
 				{% ifnotequal template 'profile' %}<span class="bottom-border"></span>{% endifnotequal %}
-				<a href="{% url profile asi_session.user_id %}">Profile</a>
+				<a href="{% url profile profile_user.user_id %}">Profile</a>
 			</li>
 			<li{% ifequal template 'friends' %} class="selected"{% endifequal %}>
 				<span class="tab-left"></span>
@@ -22,15 +23,15 @@
 				<span class="left-border"></span>
 				<span class="right-border"></span>
 				{% ifnotequal template 'friends' %}<span class="bottom-border"></span>{% endifnotequal %}
-				<a href="{% url friends asi_session.user_id %}">Friends</a>
+				<a href="{% url friends profile_user.user_id %}">Friends</a>
 			</li>
-			<li{% ifequal template 'planned_courses' %} class="selected"{% endifequal %}>
+			<li{% if template|startswith:'profile_courses' %} class="selected"{% endif %}>
 				<span class="tab-left"></span>
 				<span class="tab-right"></span>
 				<span class="left-border"></span>
 				<span class="right-border"></span>
-				{% ifnotequal template 'planned_courses' %}<span class="bottom-border"></span>{% endifnotequal %}
-				<a href="{% url plannedcourses %}">Courses</a>
+				{% if not template|startswith:'planned_courses' %}<span class="bottom-border"></span>{% endif %}
+				<a href="{% url plannedcourses profile_user.user_id %}">Courses</a>
 			</li>
 		</ul> <!-- /tabs -->
 

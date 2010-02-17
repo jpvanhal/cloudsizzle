@@ -50,9 +50,9 @@
 			<div class="options">
 			    {% if not iscompleted %}
 				    {% if isplanned %}
-				    <form method="post" action="{% url removefromplannedcourses %}">
+				    <form method="post" action="{% url remove_from_planned_courses %}">
 				    {% else %}
-				    <form method="post" action="{% url plannedcourses %}">
+				    <form method="post" action="{% url add_to_planned_courses %}">
 				    {% endif %}
 					    <div>
 						    <input type="hidden" name="course_code" value="{{ course.code }}" />

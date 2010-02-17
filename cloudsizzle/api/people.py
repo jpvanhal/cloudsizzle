@@ -128,3 +128,29 @@ def search(query):
                 user_ids.add(uid)
 
         return list(user_ids)
+
+def get_completed_courses(user_id):
+    """Returns the completed courses for the given user sorted by most recent
+    completion first.
+
+    """
+    user_uri = '{0}/ID#{1}'.format(PEOPLE_BASE_URI, user_id)
+
+    with pool.get_connection() as sc:
+        all_completed_course_uris = set(triple.subject
+            for triple in sc.query(
+                Triple(None, 'rdf:type', 'CompletedCourse')))
+        all_user_uris = set(triple.subject
+            for triple in sc.query(Triple(None, 'user', uri(user_uri))))
+        completed_course_uris = all_completed_course_uris & all_user_uris
+
+        completed_courses = []
+        for subject in completed_course_uris:
+            completed_course = fetch_rdf_graph(
+                subject, dont_follow=['user'])
+            del completed_course['user']
+            completed_courses.append(completed_course)
+
+        return sorted(completed_courses, key=lambda item: item['date'],
+            reverse=True)
+

@@ -231,7 +231,7 @@ def completed_courses(request, user_id):
 
     asi_session = request.session['asi_session']
     profile_user = api.people.get(user_id)
-    courses = asi_session.get_completed_courses()
+    courses = api.people.get_completed_courses(user_id)
 
     c = Context({
         'asi_session': asi_session,

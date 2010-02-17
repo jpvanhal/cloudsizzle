@@ -122,25 +122,7 @@ class Session(object):
         completion first.
 
         """
-        user_uri = '{0}/ID#{1}'.format(PEOPLE_BASE_URI, self.user_id)
-
-        with pool.get_connection() as sc:
-            all_completed_course_uris = set(triple.subject
-                for triple in sc.query(
-                    Triple(None, 'rdf:type', 'CompletedCourse')))
-            all_user_uris = set(triple.subject
-                for triple in sc.query(Triple(None, 'user', uri(user_uri))))
-            completed_course_uris = all_completed_course_uris & all_user_uris
-
-            completed_courses = []
-            for subject in completed_course_uris:
-                completed_course = fetch_rdf_graph(
-                    subject, dont_follow=['user'])
-                del completed_course['user']
-                completed_courses.append(completed_course)
-
-            return sorted(completed_courses, key=lambda item: item['date'],
-                reverse=True)
+        return people.get_completed_courses(self.user_id)
 
     def is_planned_course(self, course_code):
         pass

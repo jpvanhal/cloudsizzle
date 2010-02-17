@@ -230,7 +230,7 @@ def completed_courses(request, user_id):
     t = loader.get_template("frontpage/profile_courses_completed.html")
 
     asi_session = request.session['asi_session']
-    profile_user = api.people.get(asi_session.user_id)
+    profile_user = api.people.get(user_id)
     courses = asi_session.get_completed_courses()
 
     c = Context({
@@ -245,7 +245,7 @@ def completed_courses(request, user_id):
 @check_authentication
 def friends_courses(request, user_id):
     asi_session = request.session['asi_session']
-    profile_user = api.people.get(asi_session.user_id)
+    profile_user = api.people.get(user_id)
     courses = utils.courses_taken_by_friends(user_id)
 
     return render_to_response(

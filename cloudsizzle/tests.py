@@ -10,9 +10,9 @@ class SIBTestCase(unittest.TestCase):
     def setUp(self):
         self.tt = TraceTracker()
         self.sc = MockSIBConnection()
-        mock('pool._pool')
-        mock('pool._pool.acquire', tracker=self.tt, returns=self.sc)
-        mock('pool._pool.release', tracker=self.tt)
+        mock('pool.POOL')
+        mock('pool.POOL.acquire', tracker=self.tt, returns=self.sc)
+        mock('pool.POOL.release', tracker=self.tt)
 
         # Basic ontology
         self.sc.insert([

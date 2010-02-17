@@ -1,6 +1,6 @@
 $(document).ready(function(){
-    $('#login form').attr('autocomplete', 'off');
-    $('#sign-up form').attr('autocomplete', 'off');
+    $('form#login').attr('autocomplete', 'off');
+    $('form#sign-up').attr('autocomplete', 'off');
     
     $('#login input#id_username').addClass('form-input-desc');
     $('#login input#id_username').val('Username');
@@ -49,8 +49,8 @@ $(document).ready(function(){
         type: 'numeric' 
     });
 
-	$('#courses table').addClass('tablesorter');
-	$('#courses table').tablesorter({
+	$('table.courses').addClass('tablesorter');
+	$('table.courses').tablesorter({
         widgets: ['zebra']
     });
     
@@ -94,9 +94,9 @@ $(document).ready(function(){
         return false;
     });
     
-    $('#search form').submit(function (event) {
-        var query = $('#search form input#query').val();
-        var scope = $('#search form input#scope').val();
+    $('form#search').submit(function (event) {
+        var query = $('form#search input#query').val();
+        var scope = $('form#search input#scope').val();
         var actionURL = $(this).attr('action') + '?query=' + query + '&scope=' + scope;
         
         window.location = actionURL;

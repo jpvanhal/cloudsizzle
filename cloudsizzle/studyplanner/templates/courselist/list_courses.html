@@ -3,25 +3,24 @@
 {% block title %}CloudSizzle | {{ department.name }} | Courses{% endblock title %}
 
 {% block courselistings %}
-		<h1>Courses in {{ department.name }}</h1>
-		
-		<table>
-			<thead>
-				<tr>
-					<th>Course code</th>
-					<th>Course name</th>
-					<th>Friends</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for course in courses %}
-				<tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
-					<td><a href="{{ department.code }}/{{ course.code }}">{{course.code}}</a></td>
-					<td><a href="{{ department.code }}/{{ course.code }}">{{ course.name }}</a></td>
-					<td>{{ course.friendcount }}</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-		
+    <h1>Courses in {{ department.name }}</h1>
+    
+    <table class="courses">
+        <thead>
+            <tr>
+                <th>Course code</th>
+                <th>Course name</th>
+                <th>Friends</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+                <tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
+                    <td><a href="{{ department.code }}/{{ course.code }}">{{course.code}}</a></td>
+                    <td><a href="{{ department.code }}/{{ course.code }}">{{ course.name }}</a></td>
+                    <td>{{ course.friendcount }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

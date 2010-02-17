@@ -13,22 +13,20 @@
 <body id="login-page">
 	<div id="wrapper">
 		<div id="header">
-			<img src="{{ MEDIA_URL }}graphics/logo.png" alt="" id="logo" />
-
-			<div id="login">
-				<form method="post" action="{% url frontpage %}">
-					<div>
-						{% for field in loginform %}
-							{{ field }}
-                        {% endfor %}
-						<input type="submit" name="submit" value="Login" class="button" />
-					</div>
-				</form>
-			</div> <!-- /login -->
+			<h1><span>CloudSizzle social study planner</span></h1>
+			
+            <form method="post" action="{% url frontpage %}" id="login">
+                <div>
+                    {% for field in loginform %}
+                        {{ field }}
+                    {% endfor %}
+                    <input type="submit" name="submit" value="Login" class="button" />
+                </div>
+            </form>
 		</div> <!-- /header -->
 
 		<div id="content">
-			<div id="sign-up" class="rounded-corners">
+			<div class="rounded-corners">
 				<div class="top-left"></div>
 				<div class="top-right"></div>
 				<div class="bottom-left"></div>
@@ -38,7 +36,8 @@
 				<div class="right-border"></div>
 
 				<h2>Sign up</h2>
-				<span>Fields marked with * are mandatory</span>
+                
+				<p class="mandatory-info">Fields marked with * are mandatory</p>
 
 				{% if registerform.errors %}
 					<p class="errors">
@@ -52,12 +51,12 @@
 					</p>
 				{% endif %}
 
-				<form method="post" action="{% url frontpage %}">
+				<form method="post" action="{% url frontpage %}" id="sign-up">
 					{% for field in registerform %}
-					<div>
-						{{ field.label_tag }}
-						{{ field }}
-					</div>
+                        <div>
+                            {{ field.label_tag }}
+                            {{ field }}
+                        </div>
 					{% endfor %}
 					<div>
 						<input type="submit" name="submit" value="Sign up" class="button" />
@@ -65,7 +64,7 @@
 				</form>
 			</div>
 		</div> <!-- /content -->
-	</div><!-- wrapper -->
+	</div><!-- /wrapper -->
 
 	<div id="footer">
 		<p>&copy; CloudSizzle 2010</p>

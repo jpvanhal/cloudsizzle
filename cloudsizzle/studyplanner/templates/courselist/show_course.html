@@ -12,7 +12,7 @@
 			<li>{{ course.code }} {{ course.name }}</li>
 		</ul>
 		
-		<div id="course" class="rounded-corners">
+		<div class="rounded-corners">
 			<div class="top-left"></div>
 			<div class="top-right"></div>
 			<div class="bottom-left"></div>
@@ -22,7 +22,8 @@
 			<div class="right-border"></div>
 			
 			<h1>{{ course.code }} {{ course.name }}</h1>
-			<table>
+            
+			<table id="course">
 				<tr>
 					<th>Credits</th>
 					<td>{% if course.extent %}{{ course.extent }} cr {% endif %}</td>
@@ -49,7 +50,7 @@
 				</tr>
 			</table>
 			
-			<div class="options">
+			<div id="options">
 			    {% if not iscompleted %}
 				    {% if isplanned %}
 				    <form method="post" action="{% url remove_from_planned_courses %}">
@@ -66,9 +67,13 @@
 					    </div>
 				    </form>
 				{% endif %}
-				<div class="button">
-				    <a href="{% url recommendcourse course.code %}">Recommend course</a>
-				</div>
+				
+                <form method="get" action="{% url recommendcourse course.code %}">
+                    <div>
+                        <input type="submit" name="submit" value="Recommend course" class="button" />
+                    </div>
+                </form>
+				
 			</div> <!-- /options -->
 			
 			<h2>Friends taking this course</h2>
@@ -79,6 +84,6 @@
 				{% endfor %}
 			</ul> <!-- /friend-list -->
 			
-		</div> <!-- /course -->
+		</div>
 	</div> <!-- /content -->
 {% endblock %}

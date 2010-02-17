@@ -14,35 +14,33 @@
 <body id="courses-page">
 	<div id="wrapper">
 		<div id="header">
-			<img src="{{ MEDIA_URL }}graphics/logo_small.png" alt="" id="logo" />
+			<a href="{% url home %}"><img src="/static/graphics/logo_small.png" alt="" id="logo" /></a>
 
 			<p id="username-text">Hello, {{ asi_session.username }}</p>
 
-			<ul class="main-nav">
+			<ul>
 				<li><a href="{% url home %}">Home</a></li>
 				<li><a href="{% url profile %}">Profile</a></li>
 				<li><a href="{% url courses %}">Courses</a></li>
 			</ul>
 
-			<ul class="main-nav" id="sub-nav">
+			<ul id="sub-nav">
 				<li><a href="#">Settings</a></li>
 				<li><a href="{% url logout_user %}">Logout</a></li>
 			</ul> <!-- /sub-nav -->
 
-
-			<div id="search">
-				<form method="get" action="{% url search %}">
-					<div>
-						<input type="text" name="query" id="query" />
-						<input type="hidden" name="scope" value="all" id="scope" />
-						<input type="image" src="{{ MEDIA_URL }}graphics/search_btn.png" name="submit_btn" class="search-button" />
-					</div>
-				</form>
-			</div> <!-- /search -->
+            <form method="get" action="{% url search %}" id="search">
+                <div>
+                    <input type="text" name="query" id="query" />
+                    <input type="hidden" name="scope" value="all" id="scope" />
+                    <input type="image" src="/static/graphics/search_btn.png" name="submit_btn" class="search-button" />
+                </div>
+            </form>
 		</div> <!-- /header -->
-	{% block content %}
-	{% endblock content %}
-	</div><!-- wrapper -->
+        
+        {% block content %}
+        {% endblock content %}
+	</div><!-- /wrapper -->
 
 	<div id="footer">
 		<p>&copy; CloudSizzle 2010</p>

@@ -3,23 +3,22 @@
 {% block title %}CloudSizzle | {{ faculty.name }} | Departments{% endblock title %}
 
 {% block courselistings %}
-		<h1>Departments in {{ faculty.name }}</h1>
-		
-		<table>
-			<thead>
-				<tr>
-					<th>Code</th>
-					<th>Departments and other units of the faculties</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for department in departments %}
-				<tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
-					<td><a href="{% url courselist.views.list_courses faculty.code, department.code %}">{{department.code}}</a></td>
-					<td><a href="{% url courselist.views.list_courses faculty.code, department.code %}">{{ department.name }}</a></td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-		
+    <h1>Departments in {{ faculty.name }}</h1>
+    
+    <table class="courses">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Departments and other units of the faculties</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for department in departments %}
+                <tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
+                    <td><a href="{% url courselist.views.list_courses faculty.code, department.code %}">{{department.code}}</a></td>
+                    <td><a href="{% url courselist.views.list_courses faculty.code, department.code %}">{{ department.name }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

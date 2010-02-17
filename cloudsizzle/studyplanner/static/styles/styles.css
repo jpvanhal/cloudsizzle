@@ -43,19 +43,6 @@ strong {
 	margin: 15px 0 0 0;
 }
 
-#login-page #header #logo {
-	margin: 40px 0 0 0;
-}
-
-#header #login {
-	float: right;
-	margin: 57px 30px 0 0;
-}
-
-#header #search {
-	float: right;
-}
-
 #footer {
 	height: 25px;
 	background: url('../graphics/footer_background.png') repeat-x top left;
@@ -77,10 +64,22 @@ h1, h2, h3 {
 	font-weight: bold;
 }
 
-#login-page h1 {
-	margin: 0;
-	padding: 0;
+h2 {
+	clear: both;
 }
+
+#login-page h1 {
+    width: 258px;
+    height: 47px;
+    float: left;
+	margin: 40px 0 0 0;
+    background: url('../graphics/logo.png') no-repeat top left;
+}
+
+#login-page h1 span {
+    display: none;
+}
+
 
 #login-page h2 {
 	float: left;
@@ -98,15 +97,11 @@ h1, h2, h3 {
 	margin-top: 20px;
 }
 
-#course h2 {
-	clear: both;
-}
-
 /* /Headings */
 
 /* Text */
 
-#login-page span {
+#login-page p.mandatory-info {
 	float: left;
 	margin: 17px 0 0 20px;
 	font-size: 85%;
@@ -126,7 +121,7 @@ div#login-container form p {
 	margin: 13px 0 0 10px;
 }
 
-#sign-up p.errors, #login-container p.errors {
+p.errors {
 	width: 450px;
 	clear: both;
 	border: 1px solid #ff0000;
@@ -146,7 +141,7 @@ p#username-text {
 	color: #fff;
 }
 
-p.small {
+p.results {
     font-size: 85%;
 }
 
@@ -183,7 +178,7 @@ table a {
 	color: #0252c0;
 }
 
-#courses table a {
+table.courses a {
 	color: #4272e2;
 }
 
@@ -224,19 +219,19 @@ form#info img {
 
 /* Lists */
 
-ul.main-nav {
+#header ul {
 	clear: right;
 	float: left;
 	margin: 2px 0 0 40px;
 }
 
-ul.main-nav  li {
+#header ul  li {
 	display: inline;
 	list-style: none;
 	margin-right: 10px;
 }
 
-ul.main-nav li a {
+#header ul li a {
 	color: #fff;
 	text-decoration: none;
 	font-weight: bold;
@@ -321,12 +316,13 @@ table {
 }
 
 table, th, td {
-	border: 1px solid #507dd6;
+	xborder: 1px solid #507dd6;
+    border: none;
 }
 
-#course table, #course th, #course td, #courses table, #courses th, #courses td, #advanced-search table, #advanced-search th, #advanced-search td {
+/*#course table, #course th, #course td, table.courses, table.courses thead tr th, table.courses tbody tr td, #advanced-search table, #advanced-search th, #advanced-search td {
 	border: none;
-}
+}*/
 
 th {
 	background-color: #5586e9;
@@ -336,18 +332,18 @@ th {
 	padding: 5px;
 }
 
-#course table {
+table#course {
 	width: 600px;
 	float: left;
 	margin-bottom: 30px;
 }
 
-#course th {
+table#course tr th {
 	background-color: #fff;
 	color: #000;
 }
 
-#course th, #course td {
+table#course tr th, table#course tr td {
 	vertical-align: top;
 }
 
@@ -359,27 +355,27 @@ tr.even td {
 	background-color: #90b2f6;
 }
 
-#courses table, #advanced-search table {
+table.courses, #advanced-search table {
 	width: auto;
 	font-family: Verdana;
 	margin: 0;
 	font-size: 85%;
 }
 
-#courses th, #advanced-search th {
+table.courses thead tr th, #advanced-search th {
 	background-color: #fff;
 	color: #0252c0;
 }
 
-#courses th, #courses td, #advanced-search th, #advanced-search td {
+table.courses thead tr th, table.courses tbody tr td, #advanced-search th, #advanced-search td {
 	padding: 5px 20px 5px 10px;
 }
 
-#courses tr.odd td, #advanced-search tr.odd td {
+table.courses tbody tr.odd td, #advanced-search tr.odd td {
 	background-color: #e8eafe;
 }
 
-#courses tr.even td, #advanced-search tr.even td {
+table.courses tbody tr.even td, #advanced-search tr.even td {
 	background-color: #fff;
 }
 
@@ -387,7 +383,17 @@ tr.even td {
 
 /* Forms */
 
-#header #login input {
+form#login {
+	float: right;
+	margin: 57px 30px 0 0;
+}
+
+form#search {
+	float: right;
+}
+
+form#login input {
+    width: 155px;
 	float: left;
 	margin-left: 10px;
 }
@@ -398,15 +404,11 @@ input, select {
 	float: left;
 }
 
-#login input {
-    width: 155px;
-}
-
 select {
 	height: 24px;
 }
 
-#search form input {
+form#search input {
 	width: 120px;
 }
 
@@ -427,11 +429,11 @@ input.button {
 	cursor: pointer;
 }
 
-#login input.button {
+form#login input.button {
     width: auto;
 }
 
-div#sign-up form input.button, div#login-container form input.button {
+form#sign-up input.button, div#login-container form input.button {
 	margin-left: 210px;
 	margin-top: 10px;
 }
@@ -445,11 +447,11 @@ div#sign-up form input.button, div#login-container form input.button {
 	margin-left: 210px;
 }
 
-#search form input.search-button {
-	width: auto;
+form#search input.search-button {
+    width: auto;
 }
 
-div#sign-up form {
+form#sign-up {
 	clear: both;
 }
 
@@ -586,6 +588,11 @@ form#privacy label {
 	padding: 16px 16px 36px 16px;
 	background-color: #fff;
 	overflow: hidden;
+}
+
+#login-page .rounded-corners {
+	width: 500px;
+	margin: 0 auto;
 }
 
 .rounded-corners-tab {
@@ -761,11 +768,6 @@ ul.tabs li.selected a {
 
 /* Rounded corners */
 
-#sign-up, #login-container {
-	width: 500px;
-	margin: 0 auto;
-}
-
 #news-feed {
 	width: 592px;
 	float: left;
@@ -822,7 +824,7 @@ ul.tabs li.selected a {
 	border-bottom: 1px solid #ccc;
 }
 
-.options {
+#options {
 	width: 200px;
 	float: right;
 }

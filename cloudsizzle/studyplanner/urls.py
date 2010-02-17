@@ -27,11 +27,11 @@ urlpatterns = patterns('',
 
     url(r'^welcome/?$', 'studyplanner.frontpage.views.welcome', name='welcome'),
 
-    url(r'^profile$', 'studyplanner.frontpage.views.profile', name='profileown'),
     url(r'^profile/add_friend/(?P<user_id>[a-zA-Z0-9-_]+)/?$', 'studyplanner.frontpage.views.add_friend', name='addfriend'),
     url(r'^profile/friendscourses/?$', 'studyplanner.frontpage.views.friends_courses', name='friendscourses'),
     url(r'^profile/plannedcourses/?$', 'studyplanner.frontpage.views.planned_courses', name='plannedcourses'),
     url(r'^profile/removeplannedcourses/?$', 'studyplanner.frontpage.views.remove_planned_course', name='removefromplannedcourses'),
+    url(r'^profile/$', 'studyplanner.frontpage.views.profile', name='profile'),
     url(r'^profile/(?P<user_id>[a-zA-Z0-9-_]+)$', 'studyplanner.frontpage.views.profile', name='profile'),
     url(r'^profile/(?P<user_id>[a-zA-Z0-9-_]+)/friends/$', 'studyplanner.frontpage.views.friends', name='friends'),
 

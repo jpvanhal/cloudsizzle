@@ -3,7 +3,8 @@ split into individual applications or files.
 
 """
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseRedirect, \
+    HttpResponseBadRequest, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django import forms
@@ -136,10 +137,16 @@ def feed(request, user_id):
 
 
 @check_authentication
-def profile(request, user_id):
+def profile(request, user_id=None):
     t = loader.get_template("frontpage/profile.html")
 
-    user = api.people.get(user_id)
+    asi_session = request.session['asi_session']
+    user_id = user_id if user_id else asi_session.user_id
+
+    try:
+        user = api.people.get(user_id)
+    except api.people.UserDoesNotExist:
+        raise Http404
 
     username = user['username']
     try:
@@ -153,7 +160,7 @@ def profile(request, user_id):
     feedurl = 'frontpage/feeds.html'
 
     c = Context({
-	'asi_session': request.session['asi_session'],
+    	'asi_session': asi_session,
         'user_id': user_id,
         'username': username,
         'realname': realname,

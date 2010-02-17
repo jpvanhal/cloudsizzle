@@ -12,6 +12,10 @@ PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
 
 
 class UserDoesNotExist(Exception):
+    """This exception is raised, when an API function tries do something with
+    a user that does not exist.
+
+    """
     pass
 
 
@@ -153,4 +157,3 @@ def get_completed_courses(user_id):
 
         return sorted(completed_courses, key=lambda item: item['date'],
             reverse=True)
-

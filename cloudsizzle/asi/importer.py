@@ -1,8 +1,12 @@
+"""This module contains a knowledge processor for importing people and their
+friends from ASI to SIB.
+
+"""
 from asilib import ASIConnection
 # This probably not a public interface, but we need to use it
 # because we want to copy all users not synchronize a single user
 from asibsync.sib_agent import to_rdf_instance
-from cloudsizzle.kp import SIBConnection, Triple, bnode, uri, literal
+from cloudsizzle.kp import SIBConnection, Triple, uri
 from cloudsizzle import settings
 
 
@@ -12,10 +16,27 @@ RDF_BASE_TYPE = 'Person'
 
 
 def user_to_rdf(user):
+    """Convert a user dict to a list of RDF triples.
+
+    Arguments:
+    user -- A dictionary representing user as returned by asilib or
+            cloudsizzle.api.people.get()
+
+    """
     return to_rdf_instance(user, RDF_BASE_URI, RDF_BASE_TYPE, 'id')
 
 
 def friends_to_rdf(user, friends):
+    """Convert user's friends to a list of RDF triples.
+
+    Arguments:
+    user -- A dictionary representing user.
+    friends -- List of dictionaries representing user's friends.
+
+    Both user and friend dictionaries should be similar to those returned by
+    asilib or cloudsizzle.api.people.get()
+
+    """
     triples = []
     for friend in friends:
         triples.append(Triple(
@@ -27,6 +48,12 @@ def friends_to_rdf(user, friends):
 
 
 def import_asi():
+    """Import people and their friends from ASI to SIB.
+
+    Note that this method does not update people that are already in SIB
+    correctly (old people triples are not removed).
+
+    """
     with SIBConnection('ASI to SIB dump', method='preconfigured') as sc:
 
         with ASIConnection(base_url=settings.ASI_BASE_URL,

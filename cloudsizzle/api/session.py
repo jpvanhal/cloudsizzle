@@ -2,9 +2,9 @@ import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cloudsizzle.studyplanner.settings'
 
 from cloudsizzle.api.asi_client import get_service
-from cloudsizzle.kp import Triple, uri
+from cloudsizzle.kp import Triple
 from cloudsizzle import pool
-from cloudsizzle.utils import listify, fetch_rdf_graph
+from cloudsizzle.utils import listify
 from cloudsizzle.api import people
 from cloudsizzle.studyplanner.events.models import Event
 
@@ -12,6 +12,7 @@ PEOPLE_BASE_URI = 'http://cos.alpha.sizl.org/people'
 CLOUDSIZZLE_RDF_BASE = 'http://cloudsizzle.cs.hut.fi/ontology/'
 
 class LoginFailed(Exception):
+    """Raised when logging in with ASI fails for any reason."""
     pass
 
 class Session(object):
@@ -42,7 +43,8 @@ class Session(object):
         friend_id -- The user id of the friend being requested.
 
         """
-        result = get_service('AddFriends').request(user_id=self.user_id, friend_id=friend_id)
+        service = get_service('AddFriends')
+        result = service.request(user_id=self.user_id, friend_id=friend_id)
         return result
 
     def remove_friend(self, friend_id):
@@ -52,7 +54,8 @@ class Session(object):
         friend_id -- The user id of the friend being broken up with.
 
         """
-        result = get_service('RemoveFriendsRequest').request(user_id=self.user_id, friend_id=friend_id)
+        service = get_service('RemoveFriendsRequest')
+        result = service.request(user_id=self.user_id, friend_id=friend_id)
         try:
             return result['result']
         except KeyError:
@@ -63,12 +66,6 @@ class Session(object):
 
         A friend request is accepted by making the same request in the opposite
         direction.
-
-        Example:
-        #>>> with Session("pang1", "123456") as session:
-        #...     session.get_pending_friend_requests()
-        #...
-        #["azAC7-RdCr3OiIaaWPfx7J", "azEe6yRdCr3OiIaaWPfx7J"]
 
         """
         pending_friend_ids = []
@@ -90,7 +87,8 @@ class Session(object):
         friend_id -- User id of the friend whose request this user is rejecting
 
         """
-        result = get_service('RejectFriendsRequest').request(user_id=self.user_id, friend_id=friend_id)
+        service = get_service('RejectFriendRequest')
+        result = service.request(user_id=self.user_id, friend_id=friend_id)
         return result
 
     def add_to_planned_courses(self, course_code):
@@ -133,15 +131,3 @@ class Session(object):
         triple = Triple(subject, 'rdf:type', 'CompletedCourse')
         with pool.get_connection() as sc:
             return len(sc.query(triple)) > 0
-
-
-if __name__ == '__main__':
-    '''
-    test
-    '''
-    session = Session(username='pang3', password='123456')
-    session.open()
-    #session.user_id = 'aJVepae1Or35tGaaWPEYjL' #''
-    # print session.add_friend(friend_id='aJVepae1Or35tGaaWPEYjL')
-    print session.remove_friend('aJVepae1Or35tGaaWPEYjL')
-    session.close()

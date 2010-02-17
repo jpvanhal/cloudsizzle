@@ -3,8 +3,7 @@
 import unittest
 import doctest
 from cloudsizzle import api
-from cloudsizzle import pool
-from cloudsizzle.kp import Triple, uri, literal
+from cloudsizzle.kp import Triple, uri
 from cloudsizzle.tests import SIBTestCase
 
 class PeopleAPITestCase(SIBTestCase):

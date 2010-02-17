@@ -1,15 +1,28 @@
 import logging
 import threading
 import time
-from cloudsizzle.asi.service import AbstractService, ASIServiceKnowledgeProcessor
-from cloudsizzle.kp import Triple, bnode, SIBConnection
+from cloudsizzle.asi.service import AbstractService
+from cloudsizzle.kp import Triple, bnode
 
-log = logging.getLogger('cloudsizzle.asi.client')
+LOG = logging.getLogger('cloudsizzle.asi.client')
+
 
 class TimeOutError(Exception):
+    """Raised if a service request is not responded after a certain time
+    period.
+
+    """
     pass
 
+
 class AbstractClient(AbstractService):
+    """Abstract base class for building the client side of a request-response
+    type service.
+
+    AbstractClient subscribes to service responses and provides a method for
+    making service requests.
+
+    """
     def __init__(self, sc, timeout=30):
         super(AbstractClient, self).__init__(sc)
         self.responses = {}
@@ -22,6 +35,10 @@ class AbstractClient(AbstractService):
 
     @property
     def needs_response(self):
+        """A boolean value indicating if this service request needs to wait
+        for a response.
+
+        """
         return True
 
     def process(self, id_, data):
@@ -30,10 +47,16 @@ class AbstractClient(AbstractService):
             self.condition.notify_all()
 
     def request(self, **params):
+        """Make a service request with the given data.
+
+        Arguments:
+        params -- A dict containing the request data.
+
+        """
         request = params
         request['rdf:type'] = self.request_type
 
-        log.debug('Making a {0} with parameters {1}.'.format(
+        LOG.debug('Making a {0} with parameters {1}.'.format(
             self.request_type, request))
 
         triples = []
@@ -44,9 +67,9 @@ class AbstractClient(AbstractService):
 
         request_id = self.sc.last_result[1]['id']
         if self.needs_response:
-            return self.get_response(request_id)
+            return self._get_response(request_id)
 
-    def get_response(self, request_id):
+    def _get_response(self, request_id):
         wait_start_time = time.time()
         with self.condition:
             while request_id not in self.responses:
@@ -56,15 +79,19 @@ class AbstractClient(AbstractService):
                 self.condition.wait(self.timeout)
 
             response = self.responses.pop(request_id)
-            
+
             return response
 
+
 class LoginClient(AbstractClient):
+
     @property
     def name(self):
         return 'Login'
 
+
 class LogoutClient(AbstractClient):
+
     @property
     def name(self):
         return 'Logout'
@@ -75,11 +102,14 @@ class LogoutClient(AbstractClient):
 
 
 class RegisterClient(AbstractClient):
+
     @property
     def name(self):
         return 'Register'
 
+
 class AddFriendsClient(AbstractClient):
+
     @property
     def name(self):
         return 'AddFriends'
@@ -87,7 +117,9 @@ class AddFriendsClient(AbstractClient):
     def request(self, user_id, friend_id):
         AbstractClient.request(self, user_id=user_id, friend_id=friend_id)
 
+
 class RemoveFriendsClient(AbstractClient):
+
     @property
     def name(self):
         return 'RemoveFriends'
@@ -95,43 +127,12 @@ class RemoveFriendsClient(AbstractClient):
     def request(self, user_id, friend_id):
         AbstractClient.request(self, user_id=user_id, friend_id=friend_id)
 
-class RejectFriendsClient(AbstractClient):
+
+class RejectFriendRequestClient(AbstractClient):
+
     @property
     def name(self):
-        return 'RejectFriends'
+        return 'RejectFriendRequest'
 
     def request(self, user_id, friend_id):
         AbstractClient.request(self, user_id=user_id, friend_id=friend_id)
-
-if __name__ == '__main__':
-    try:
-        sc = SIBConnection('ASI service client', method='preconfigured')
-        sc.open()
-        sc.close()
-        asi_client_kp = ASIServiceKnowledgeProcessor(services=(
-            LoginClient(sc),
-            LogoutClient(sc),
-            RegisterClient(sc),
-            RejectFriendsClient(sc),
-            RemoveFriendsClient(sc),
-            AddFriendsClient(sc),
-        ))
-        asi_client_kp.start()
-
-        register = asi_client_kp._services['Register']
-        login = asi_client_kp._services['Login']
-        logout = asi_client_kp._services['Logout']
-        addfriends = asi_client_kp._services['AddFriends']
-
-        try:
-            uid = (login.request(username='pang1', password='123456'))['user_id']
-            print uid
-            #response = addfriends.request(user_id='dRq9He3yWr3QUKaaWPEYjL', friend_id='bl3S3oeZSr35qmaaWPEYjL')
-            #response = register.request(username='pang6', password='123456', email="Pang6@hot.com")
-            logout.request(user_id=uid)
-            #print response
-        except TimeOutError:
-            print "Request timed out."
-        asi_client_kp.stop()
-    except Exception, e:
-        print e

@@ -96,12 +96,12 @@ def login_register(request):
 
     return render_to_response('frontpage/login-register.html',
         {'loginform': login_form, 'registerform': register_form,
-    })
+    }, context_instance=RequestContext(request))
 
 def welcome(request):
     return render_to_response('frontpage/welcome.html',
         {'asi_session': request.session['asi_session'],
-    })
+    }, context_instance=RequestContext(request))
 
 def logout(request):
     """Log the user out. Removes ASI connection from session"""
@@ -254,8 +254,9 @@ def friends_courses(request, user_id):
             'profile_user': profile_user,
             'courses': courses, 
             'asi_session': asi_session,
-            'template': 'profile_courses_friends'
-    })
+            'template': 'profile_courses_friends',
+        },
+        context_instance=RequestContext(request))
 
 @check_authentication
 def planned_courses(request, user_id):
@@ -395,4 +396,6 @@ def notifications(request):
     return HttpResponse(t.render(c))
 
 def internal_error(request):
-    return render_to_response('frontpage/internal_error.html')
+    return render_to_response(
+        'frontpage/internal_error.html',
+        context_instance=RequestContext(request))

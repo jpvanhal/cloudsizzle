@@ -2,7 +2,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>CloudSizzle</title>
+	<title>{% block title %}CloudSizzle - Social study planner{% endblock %}</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta name="description" content="SITE DESCRIPTION"/>
@@ -33,9 +33,9 @@
 			<div id="search">
 				<form method="get" action="{% url search %}">
 					<div>
-						<input type="text" name="query" />
-						<input type="hidden" name="scope"  value="all"/>
-						<input type="image" src="/static/graphics/search_btn.png" name="submit_btn" value="Search" class="search-button" />
+						<input type="text" name="query" id="query" />
+						<input type="hidden" name="scope" value="all" id="scope" />
+						<input type="image" src="/static/graphics/search_btn.png" name="submit_btn" class="search-button" />
 					</div>
 				</form>
 			</div> <!-- /search -->

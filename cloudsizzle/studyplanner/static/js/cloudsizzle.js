@@ -70,6 +70,11 @@ $(document).ready(function(){
         }
     });
     
+    $('table.profile-courses').addClass('tablesorter');
+    $('table.profile-courses').tablesorter({
+        widgets: ['zebra']
+    });
+    
     $('#advanced-search table.users form').submit(function () {
         
         var actionURL = $(this).attr('action');

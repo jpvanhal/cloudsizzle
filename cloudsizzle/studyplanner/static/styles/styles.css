@@ -175,7 +175,7 @@ ul#friend-list li a {
 	font-size: 85%;
 }
 
-table a {
+table tbody tr td a {
 	color: #0252c0;
 }
 
@@ -322,16 +322,17 @@ table, th, td {
     border: none;
 }
 
-table.profile-courses, table.profile-courses th, table.profile-courses td {
+table.profile-courses, table.profile-courses thead tr th, table.profile-courses tbody tr td {
     border: 1px solid #507dd6;
 }
 
-th {
+table.profile-courses thead tr th {
 	background-color: #5586e9;
 	color: #fff;
 	font-weight: bold;
 	font-size: 108%;
 	padding: 5px;
+    border: none;
 }
 
 table#course {
@@ -353,15 +354,19 @@ td {
 	padding: 5px;
 }
 
-tr.even td {
+table.profile-courses tbody tr.odd td {
 	background-color: #90b2f6;
 }
 
-table.courses, #advanced-search table {
+table.courses, table.profile-courses, #advanced-search table {
 	width: auto;
 	font-family: Verdana;
 	margin: 0;
 	font-size: 85%;
+}
+
+table.profile-courses {
+    width: 100%;
 }
 
 table.courses thead tr th, #advanced-search th {
@@ -369,7 +374,7 @@ table.courses thead tr th, #advanced-search th {
 	color: #0252c0;
 }
 
-table.courses thead tr th, table.courses tbody tr td, #advanced-search th, #advanced-search td {
+table.courses thead tr th, table.courses tbody tr td, table.profile-courses thead tr th, table.profile-courses tbody tr td, #advanced-search th, #advanced-search td {
 	padding: 5px 20px 5px 10px;
 }
 
@@ -787,11 +792,12 @@ ul.tabs li.selected a {
 
 .right-col {
 	width: 500px;
-	float: left;
+    float: left;
 }
 
-#courses-page .right-col {
-	width: 650px;
+.right-col-courses {
+    width: 676px;
+    float: left;
 }
 
 #personal-news-feed {

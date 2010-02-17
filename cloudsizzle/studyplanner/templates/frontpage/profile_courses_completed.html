@@ -3,29 +3,29 @@
 {% block title %}CloudSizzle | Profile | {{ profile_user.username }} | Completed courses{% endblock title %}
 
 {% block profile-courses-content %}
-<h2>Completed studies</h2>
-				
-<table>
-	<thead>
-		<tr>
-			<th>Course code</th>
-			<th>Course name</th>
-			<th>Credits</th>
-			<th>Grading</th>
-			<th>Date</th>
-		</tr>
-	</thead>
-	<tbody
-		{% for course in courses %}>
-		<tr{% if forloop.counter|divisibleby:2 %} class="even"{% endif %}>
-			<td>{{ course.code }}</td>
-			<td>{{ course.name }}</td>
-			<td>{% if course.cr %}{{ course.cr }} cr{% else %}{{course.ocr}} ocr{% endif %}</td>
-			<td>{{ course.grade }}</td>
-			<td>{{ course.date }}</td>
-		</tr
-		{% endfor %}>
-	</tbody>
-</table>
+    <h2>Completed studies</h2>
+                    
+    <table class="profile-courses">
+        <thead>
+            <tr>
+                <th>Course code</th>
+                <th>Course name</th>
+                <th>Credits</th>
+                <th>Grading</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody
+            {% for course in courses %}>
+            <tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
+                <td><a href="{% url show_course course.faculty course.department course.code %}">{{ course.code }}</a></td>
+                <td><a href="{% url show_course course.faculty course.department course.code %}">{{ course.name }}</a></td>
+                <td>{% if course.cr %}{{ course.cr }} cr{% else %}{{course.ocr}} ocr{% endif %}</td>
+                <td>{{ course.grade }}</td>
+                <td>{{ course.date }}</td>
+            </tr
+            {% endfor %}>
+        </tbody>
+    </table>
 
 {% endblock profile-courses-content %}

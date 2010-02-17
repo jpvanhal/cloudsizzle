@@ -6,30 +6,34 @@
     <h2>Planned courses</h2>
                         
     <table class="profile-courses">
-        <tr>
-            <th>Course code</th>
-            <th>Course name</th>
-            <th>Credits</th>
-            <!-- <th>Timing</th> -->
-            <th>Friends</th>
-        </tr>
-        {% for course in planned_courses %}
-        <tr{% if forloop.counter|divisibleby:2 %} class="even"{% endif %}>
-            <td>{{ course.code }}</td>
-            <td>{{ course.name }}</td>
-            <td>{{ course.extent }}</td>
-            <!-- Timing not in use
-            <td>
-                <select name="id_1">
-                    <option>Spring 2010</option>
-                    <option>Autumn 2010</option>
-                    <option>Spring 2011</option>
-                    <option>Autumn 2011</option>
-                </select>
-            </td>
-            -->
-            <td>{{ course.friends }}</td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr>
+                <th>Course code</th>
+                <th>Course name</th>
+                <th>Credits</th>
+                <!-- <th>Timing</th> -->
+                <th>Friends</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in planned_courses %}
+            <tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
+                <td><a href="{% url show_course course.faculty course.department course.code %}">{{ course.code }}</a></td>
+                <td><a href="{% url show_course course.faculty course.department course.code %}">{{ course.name }}</a></td>
+                <td>{{ course.extent }}</td>
+                <!-- Timing not in use
+                <td>
+                    <select name="id_1">
+                        <option>Spring 2010</option>
+                        <option>Autumn 2010</option>
+                        <option>Spring 2011</option>
+                        <option>Autumn 2011</option>
+                    </select>
+                </td>
+                -->
+                <td>{{ course.friends }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 {% endblock profile-courses-content %}

@@ -2,17 +2,17 @@
 
 import doctest
 import unittest
-from minimock import Mock, restore, TraceTracker, mock
+from minimock import restore, TraceTracker, mock
 from cloudsizzle import utils, kp, pool
 from cloudsizzle.kp import MockSIBConnection, Triple, uri, literal
 
 class SIBTestCase(unittest.TestCase):
     def setUp(self):
-        self.tt = TraceTracker()
+        self.trace_tracker = TraceTracker()
         self.sc = MockSIBConnection()
         mock('pool.POOL')
-        mock('pool.POOL.acquire', tracker=self.tt, returns=self.sc)
-        mock('pool.POOL.release', tracker=self.tt)
+        mock('pool.POOL.acquire', tracker=self.trace_tracker, returns=self.sc)
+        mock('pool.POOL.release', tracker=self.trace_tracker)
 
         # Basic ontology
         self.sc.insert([
@@ -787,14 +787,14 @@ def suite():
     import cloudsizzle.scrapers.tests as scrapers
     import cloudsizzle.api.tests as api
 
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(UtilsTestCase, 'test'))
-    suite.addTest(api.suite())
-    suite.addTest(scrapers.suite())
-    suite.addTest(
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(unittest.makeSuite(UtilsTestCase, 'test'))
+    test_suite.addTest(api.suite())
+    test_suite.addTest(scrapers.suite())
+    test_suite.addTest(
         doctest.DocTestSuite(utils, optionflags=doctest.NORMALIZE_WHITESPACE))
-    suite.addTest(doctest.DocTestSuite(kp))
-    return suite
+    test_suite.addTest(doctest.DocTestSuite(kp))
+    return test_suite
 
 if __name__ == '__main__':
     unittest.main(defaultTest='suite')

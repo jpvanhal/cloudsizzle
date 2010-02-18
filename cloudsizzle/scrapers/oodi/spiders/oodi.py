@@ -1,11 +1,12 @@
 import urllib
 import urlparse
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.http import Request, FormRequest
+from scrapy.http import Request
 from scrapy.selector import HtmlXPathSelector
 from cloudsizzle.scrapers.spiders.weblogin import WebloginSpider
 from cloudsizzle.scrapers.oodi.items import CompletedCourseItem, ModuleItem
 from cloudsizzle.scrapers.items import ItemLoader
+
 
 class OodiSpider(WebloginSpider):
     domain_name = 'oodi.tkk.fi'
@@ -19,11 +20,14 @@ class OodiSpider(WebloginSpider):
             'NaytSuor': 1,
             'exvalittu': 1
         })
-        completed_studies_url = 'https://oodi.tkk.fi/w/omatopinn.jsp?{0}'.format(params)
-        yield Request(url=completed_studies_url, callback=self.parse_completed_studies)
+        completed_studies_url = 'https://oodi.tkk.fi/w/omatopinn.jsp?' + params
+        yield Request(
+            url=completed_studies_url,
+            callback=self.parse_completed_studies)
 
     def parse_session_hash(self, response):
-        extractor = SgmlLinkExtractor(allow=r'/w/valikko\.jsp', tags='frame', attrs=('src', ))
+        extractor = SgmlLinkExtractor(
+            allow=r'/w/valikko\.jsp', tags='frame', attrs=('src', ))
         link = extractor.extract_links(response)[0]
         query = urlparse.urlparse(link.url).query
         params = urlparse.parse_qs(query)
@@ -34,7 +38,8 @@ class OodiSpider(WebloginSpider):
         current_module = None
         for row in hxs.select('//table[@class="eisei"]/tbody/tr[td]'):
             is_module = row.select('td/a/img')
-            is_ungrouped_course = row.select('td[@class="tyyli0" or @class="tyyli1"]')
+            is_ungrouped_course = row.select(
+                'td[@class="tyyli0" or @class="tyyli1"]')
             if is_module:
                 loader = ItemLoader(ModuleItem(), selector=row)
                 loader.add_xpath('code', 'td[1]/a/text()')

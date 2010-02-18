@@ -3,8 +3,10 @@ from scrapy.spider import BaseSpider
 from scrapy.selector import HtmlXPathSelector
 from scrapy.http import Request
 from scrapy.utils.url import urljoin_rfc
-from cloudsizzle.scrapers.noppa.items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem
+from cloudsizzle.scrapers.noppa.items import FacultyItem, DepartmentItem, \
+    CourseItem, CourseOverviewItem
 from cloudsizzle.scrapers.items import ItemLoader
+
 
 class NoppaSpider(BaseSpider):
     domain_name = 'noppa.tkk.fi'
@@ -93,7 +95,6 @@ class NoppaSpider(BaseSpider):
                 urljoin_rfc(response.url, course_url[:-7] + 'esite'),
                 meta={'course': course}, callback=self.parse_course_overview
             )
-
 
     parse = parse_faculty_list
 

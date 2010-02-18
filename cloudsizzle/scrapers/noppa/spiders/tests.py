@@ -3,20 +3,23 @@ import os
 import unittest
 
 from scrapy.http import Request
-from cloudsizzle.scrapers.noppa.items import CourseItem, FacultyItem, DepartmentItem, CourseOverviewItem
+from cloudsizzle.scrapers.noppa.items import CourseItem, FacultyItem, \
+    DepartmentItem
 from cloudsizzle.scrapers.mock import MockResponseFactory
-from noppa import SPIDER
+from cloudsizzle.scrapers.noppa.spiders.noppa import SPIDER
 
-response_factory = MockResponseFactory(os.path.dirname(__file__))
+RESPONSE_FACTORY = MockResponseFactory(os.path.dirname(__file__))
+
 
 class ParseFaculties(unittest.TestCase):
+
     def setUp(self):
-        response = response_factory.create_response(
+        response = RESPONSE_FACTORY.create_response(
             'https://noppa.tkk.fi/noppa/kurssit',
-            'faculty_list.html'
-        )
+            'faculty_list.html')
         items = list(SPIDER.parse_faculty_list(response))
-        self.faculties = [item for item in items if isinstance(item, FacultyItem)]
+        self.faculties = [item for item in items
+                          if isinstance(item, FacultyItem)]
         self.requests = [item for item in items if isinstance(item, Request)]
 
     def test_correct_number_of_faculties_scraped(self):
@@ -35,32 +38,36 @@ class ParseFaculties(unittest.TestCase):
         self.assertTrue(isinstance(self.requests[0], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/eri',
             self.requests[0].url)
-        self.assertEqual(id(self.faculties[0]), id(self.requests[0].meta['faculty']))
+        self.assertTrue(self.faculties[0] is self.requests[0].meta['faculty'])
 
         self.assertTrue(isinstance(self.requests[-1], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/km',
             self.requests[-1].url)
-        self.assertEqual(id(self.faculties[-1]), id(self.requests[-1].meta['faculty']))
+        self.assertTrue(self.faculties[-1] is self.requests[-1].meta['faculty'])
+
 
 class ParseDepartments(unittest.TestCase):
+
     def setUp(self):
         self.faculty = FacultyItem()
         self.faculty['name'] = 'Faculty of Information and Natural Sciences'
 
-        response = response_factory.create_response(
+        response = RESPONSE_FACTORY.create_response(
             'https://noppa.tkk.fi/noppa/kurssit/il',
             'department_list.html')
         response.request.meta['faculty'] = self.faculty
 
         items = list(SPIDER.parse_department_list(response))
-        self.departments = [item for item in items if isinstance(item, DepartmentItem)]
+        self.departments = [item for item in items
+                            if isinstance(item, DepartmentItem)]
         self.requests = [item for item in items if isinstance(item, Request)]
 
     def test_correct_number_of_departments_scraped(self):
         self.assertEqual(10, len(self.departments))
 
     def test_department_names_scraped(self):
-        self.assertEqual(u'Common courses for the faculty', self.departments[0]['name'])
+        self.assertEqual(u'Common courses for the faculty',
+             self.departments[0]['name'])
         self.assertEqual(u'Language Centre', self.departments[-1]['name'])
 
     def test_department_codes_scraped(self):
@@ -74,18 +81,23 @@ class ParseDepartments(unittest.TestCase):
         self.assertTrue(isinstance(self.requests[0], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/il/il-0',
             self.requests[0].url)
-        self.assertEqual(id(self.departments[0]), id(self.requests[0].meta['department']))
+        self.assertTrue(
+            self.departments[0] is self.requests[0].meta['department'])
         self.assertTrue(isinstance(self.requests[-1], Request))
         self.assertEqual('https://noppa.tkk.fi/noppa/kurssit/il/t3090',
             self.requests[-1].url)
-        self.assertEqual(id(self.departments[-1]), id(self.requests[-1].meta['department']))
+        self.assertTrue(
+            self.departments[-1] is self.requests[-1].meta['department'])
+
 
 class ParseCourses(unittest.TestCase):
+
     def setUp(self):
         self.department = DepartmentItem()
-        self.department['name'] = u'Department of Computer Science and Engineering'
+        self.department['name'] = \
+            u'Department of Computer Science and Engineering'
 
-        response = response_factory.create_response(
+        response = RESPONSE_FACTORY.create_response(
             'https://noppa.tkk.fi/noppa/kurssit/il/t3050',
             'course_list.html')
         response.request.meta['department'] = self.department
@@ -102,24 +114,29 @@ class ParseCourses(unittest.TestCase):
         self.assertEqual(u'T-106.3101', self.courses[-1]['code'])
 
     def test_course_names_scraped(self):
-        self.assertEqual(u'Introduction to Postgraduate Studies in Computer Science P', self.courses[0]['name'])
-        self.assertEqual(u'Ohjelmoinnin jatkokurssi T2 (C-kieli)', self.courses[-1]['name'])
+        self.assertEqual(
+            u'Introduction to Postgraduate Studies in Computer Science P',
+            self.courses[0]['name'])
+        self.assertEqual(u'Ohjelmoinnin jatkokurssi T2 (C-kieli)',
+            self.courses[-1]['name'])
 
     def test_courses_have_department_set(self):
-        self.assertEqual(id(self.department), id(self.courses[0]['department']))
+        self.assertTrue(self.department is self.courses[0]['department'])
 
     def test_crawls_to_next_course_list_page(self):
         request = self.requests[0]
         self.assertTrue('linkFwd' in request.url)
-        self.assertEqual(id(request.meta['department']), id(self.department))
+        self.assertTrue(request.meta['department'] is self.department)
+
 
 class ParseCourseOverview(unittest.TestCase):
+
     def setUp(self):
         self.course = CourseItem()
         self.course['code'] = 'T-76.4115'
         self.course['name'] = 'Software Development Project I'
 
-        response = response_factory.create_response(
+        response = RESPONSE_FACTORY.create_response(
             'https://noppa.tkk.fi/noppa/kurssi/t-76.4115/esite',
             'course_overview.html')
         response.request.meta['course'] = self.course
@@ -167,13 +184,15 @@ class ParseCourseOverview(unittest.TestCase):
     def test_overview_has_course_reference_set(self):
         self.assertEqual(id(self.course), id(self.overview['course']))
 
+
 def suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(ParseFaculties, 'test'))
-    suite.addTest(unittest.makeSuite(ParseDepartments, 'test'))
-    suite.addTest(unittest.makeSuite(ParseCourses, 'test'))
-    suite.addTest(unittest.makeSuite(ParseCourseOverview, 'test'))
-    return suite
+    tests_suite = unittest.TestSuite()
+    tests_suite.addTest(unittest.makeSuite(ParseFaculties, 'test'))
+    tests_suite.addTest(unittest.makeSuite(ParseDepartments, 'test'))
+    tests_suite.addTest(unittest.makeSuite(ParseCourses, 'test'))
+    tests_suite.addTest(unittest.makeSuite(ParseCourseOverview, 'test'))
+    return tests_suite
+
 
 if __name__ == '__main__':
     unittest.main(defaultTest='suite')

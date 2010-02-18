@@ -3,26 +3,29 @@ import os
 import unittest
 import datetime
 
-from scrapy.http import Request
 from cloudsizzle.scrapers.oodi.items import CompletedCourseItem, ModuleItem
 from cloudsizzle.scrapers.oodi.spiders.oodi import SPIDER
 from cloudsizzle.scrapers.mock import MockResponseFactory
 
-response_factory = MockResponseFactory(os.path.dirname(__file__))
+RESPONSE_FACTORY = MockResponseFactory(os.path.dirname(__file__))
+
 
 class ParseCompletedStudies(unittest.TestCase):
     def test_empty_completed_studies(self):
-        response = response_factory.create_response('', 'empty_completed_studies.html')
+        response = RESPONSE_FACTORY.create_response('',
+            'empty_completed_studies.html')
         items = list(SPIDER.parse_completed_studies(response))
         self.assertEqual(0, len(items))
 
     def test_single_ungrouped_course_in_completed_studies(self):
-        response = response_factory.create_response('', 'single_ungrouped_course_in_completed_studies.html')
+        response = RESPONSE_FACTORY.create_response('',
+            'single_ungrouped_course_in_completed_studies.html')
         items = list(SPIDER.parse_completed_studies(response))
         self.assertTrue(isinstance(items[0], CompletedCourseItem))
         self.assertEqual(1, len(items))
         self.assertEqual('T-79.3001', items[0]['code'])
-        self.assertEqual('Logic in computer science: foundations', items[0]['name'])
+        self.assertEqual('Logic in computer science: foundations',
+            items[0]['name'])
         self.assertEqual('4', items[0]['cr'])
         self.assertEqual('', items[0]['ocr'])
         self.assertEqual('5', items[0]['grade'])
@@ -30,7 +33,8 @@ class ParseCompletedStudies(unittest.TestCase):
         self.assertEqual('Tomi Janhunen', items[0]['teacher'])
 
     def test_many_ungrouped_courses_in_completed_studies(self):
-        response = response_factory.create_response('', 'many_ungrouped_courses_in_completed_studies.html')
+        response = RESPONSE_FACTORY.create_response('',
+            'many_ungrouped_courses_in_completed_studies.html')
         items = list(SPIDER.parse_completed_studies(response))
         self.assertEqual(3, len(items))
         self.assertEqual('TU-22.1103', items[0]['code'])
@@ -38,12 +42,14 @@ class ParseCompletedStudies(unittest.TestCase):
         self.assertEqual('T-121.2100', items[2]['code'])
 
     def test_one_module_in_completed_studies(self):
-        response = response_factory.create_response('', 'one_module_in_completed_studies.html')
+        response = RESPONSE_FACTORY.create_response('',
+            'one_module_in_completed_studies.html')
         items = list(SPIDER.parse_completed_studies(response))
         self.assertEqual(5, len(items))
         self.assertTrue(isinstance(items[0], ModuleItem))
         self.assertEqual('T220-2', items[0]['code'])
-        self.assertEqual('Intermediate Module in Software Technology', items[0]['name'])
+        self.assertEqual('Intermediate Module in Software Technology',
+            items[0]['name'])
 
         self.assertTrue(isinstance(items[1], CompletedCourseItem))
         self.assertEqual('T-106.4155', items[1]['code'])
@@ -57,10 +63,12 @@ class ParseCompletedStudies(unittest.TestCase):
         self.assertTrue(isinstance(items[4], CompletedCourseItem))
         self.assertEqual('T-106.4200', items[4]['code'])
 
+
 def suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(ParseCompletedStudies, 'test'))
-    return suite
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(unittest.makeSuite(ParseCompletedStudies, 'test'))
+    return test_suite
+
 
 if __name__ == '__main__':
     unittest.main(defaultTest='suite')

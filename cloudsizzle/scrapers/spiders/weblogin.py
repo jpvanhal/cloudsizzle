@@ -1,8 +1,6 @@
 from getpass import getpass
 from scrapy.spider import BaseSpider
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.http import Request, FormRequest
-from scrapy.selector import HtmlXPathSelector
 from scrapy.conf import settings
 from scrapy import log
 

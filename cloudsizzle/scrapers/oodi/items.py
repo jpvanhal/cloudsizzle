@@ -1,10 +1,14 @@
-# Define here the models for your scraped items
-#
-# See documentation in:
-# http://doc.scrapy.org/topics/items.html
-import datetime
+"""
+The models for scraped items.
+
+See documentation in:
+
+http://doc.scrapy.org/topics/items.html
+
+"""
 from scrapy.item import Item, Field
 from cloudsizzle.scrapers.items import DateField
+
 
 class CompletedCourseItem(Item):
     name = Field()
@@ -15,6 +19,7 @@ class CompletedCourseItem(Item):
     date = DateField('%d.%m.%Y')
     teacher = Field()
     module = Field()
+
 
 class ModuleItem(Item):
     name = Field()

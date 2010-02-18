@@ -1,18 +1,21 @@
 # coding=utf-8
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: http://doc.scrapy.org/topics/item-pipeline.html
+"""
+Pipeline for storing scraped triples to SIB.
 
+See: http://doc.scrapy.org/topics/item-pipeline.html
+
+"""
 from cloudsizzle.scrapers.oodi.items import CompletedCourseItem, ModuleItem
-from cloudsizzle.kp import SIBConnection, Triple, literal, uri, bnode
+from cloudsizzle.kp import SIBConnection, Triple, uri
 from scrapy.conf import settings
 from scrapy.core.exceptions import DropItem
 
 CLOUDSIZZLE_RDF_NAMESPACE = 'http://cloudsizzle.cs.hut.fi/ontology/'
 ASI_PEOPLE_RDF_NAMESPACE = 'http://cos.alpha.sizl.org/people'
 
+
 class SIBPipeline(object):
+
     def __init__(self):
         self.asi_user_id = settings['ASI_USER_ID']
         if not self.asi_user_id:
@@ -45,6 +48,7 @@ class SIBPipeline(object):
             raise DropItem("Modules are not needed in SIB: %s" % item)
 
     def process_item(self, spider, item):
-        triples = [triple for triple in self.transform_to_triples(item) if triple.object]
+        triples = [triple for triple in self.transform_to_triples(item)
+                   if triple.object]
         self.sc.insert(triples)
         return item

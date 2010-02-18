@@ -6,6 +6,7 @@ from cloudsizzle import api
 from cloudsizzle.kp import Triple, uri
 from cloudsizzle.tests import SIBTestCase
 
+
 class PeopleAPITestCase(SIBTestCase):
 
     def test_get_friends_of_user_with_friends(self):
@@ -313,14 +314,14 @@ class SessionAPITestCase(SIBTestCase):
 
 
 def suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(PeopleAPITestCase, 'test'))
-    suite.addTest(unittest.makeSuite(CourseAPITestCase, 'test'))
-    suite.addTest(unittest.makeSuite(SessionAPITestCase, 'test'))
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(unittest.makeSuite(PeopleAPITestCase, 'test'))
+    test_suite.addTest(unittest.makeSuite(CourseAPITestCase, 'test'))
+    test_suite.addTest(unittest.makeSuite(SessionAPITestCase, 'test'))
     for module in (api.course, api.people, api.session):
-        suite.addTest(doctest.DocTestSuite(module,
+        test_suite.addTest(doctest.DocTestSuite(module,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS))
-    return suite
+    return test_suite
 
 if __name__ == '__main__':
     unittest.main(defaultTest='suite')

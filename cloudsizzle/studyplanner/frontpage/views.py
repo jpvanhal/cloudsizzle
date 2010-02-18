@@ -13,11 +13,12 @@ from studyplanner.common.planner_session import is_authenticated, authenticate
 from studyplanner.common.planner_session import check_authentication
 from studyplanner.events.event import EventLog
 import api
-from studyplanner.events.models import Event, PlannedCourse as PlannedCourseEvent
+from studyplanner.events.models import PlannedCourse as PlannedCourseEvent
 from studyplanner.frontpage.models import PlannedCourse
 from cloudsizzle.asi.client import TimeOutError
 from studyplanner.courselist import utils
 from cloudsizzle.settings import ASI_BASE_URL
+
 
 def index(request):
     print "Index view requested"
@@ -25,6 +26,7 @@ def index(request):
         return home(request)
     else:
         return login_register(request)
+
 
 def login_register(request):
     # Django standard form processing pattern:
@@ -94,14 +96,23 @@ def login_register(request):
         login_form = LoginForm()
         register_form = RegisterForm()
 
-    return render_to_response('frontpage/login-register.html',
-        {'loginform': login_form, 'registerform': register_form,
-    }, context_instance=RequestContext(request))
+    return render_to_response(
+        'frontpage/login-register.html',
+        {
+            'loginform': login_form,
+            'registerform': register_form
+        },
+        context_instance=RequestContext(request))
+
 
 def welcome(request):
-    return render_to_response('frontpage/welcome.html',
-        {'asi_session': request.session['asi_session'],
-    }, context_instance=RequestContext(request))
+    return render_to_response(
+        'frontpage/welcome.html',
+        {
+            'asi_session': request.session['asi_session']
+        },
+        context_instance=RequestContext(request))
+
 
 def logout(request):
     """Log the user out. Removes ASI connection from session"""
@@ -120,32 +131,21 @@ def logout(request):
 def home(request):
     asi_session = request.session['asi_session']
     user_id = asi_session.user_id
-    friends = api.people.get_friends(user_id)        
-    t = loader.get_template("frontpage/home.html")
+    friends = api.people.get_friends(user_id)
+    template = loader.get_template("frontpage/home.html")
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=friends)
-    c = RequestContext(request, {
-    'asi_session': request.session['asi_session'],
-        'feedurl':feedurl,
-        'feeds':feeds,
+    context = RequestContext(request, {
+        'asi_session': request.session['asi_session'],
+        'feedurl': feedurl,
+        'feeds': feeds,
     })
-    return HttpResponse(t.render(c))
-'''
-discarded
-def feed(request, user_id):
-    t = loader.get_template("frontpage/feeds.html")
-    # example
-    feeds = [EventLog(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb', action="study", object_name='mew', object_scr='http://dict.cn/', update_time='2 hours'),\
-             EventLog(img_scr='http://cos.alpha.sizl.org/people/bHC0t6gwur37J8aaWPEYjL/@avatar', user_name='pb', action="study", object_name='mew', object_scr='http://dict.cn/', update_time='2 hours'),]
-    # All profile sub-pages need to have the template name in Context, this is
-    # used to correctly render the active tab in the common parent template
-    c = RequestContext(request, {'feeds':feeds, 'template':profile})
-    return HttpResponse(t.render(c))
-'''
+    return HttpResponse(template.render(context))
+
 
 @check_authentication
 def profile(request, user_id=None):
-    t = loader.get_template("frontpage/profile.html")
+    template = loader.get_template("frontpage/profile.html")
 
     asi_session = request.session['asi_session']
     user_id = user_id if user_id else asi_session.user_id
@@ -161,13 +161,13 @@ def profile(request, user_id=None):
     except (KeyError, TypeError):
         realname = username
     try:
-        avatar_url = '{0}{1}/large_thumbnail'.format(ASI_BASE_URL, user['avatar']['link']['href'])
+        avatar_url = '{0}{1}/large_thumbnail'.format(
+            ASI_BASE_URL, user['avatar']['link']['href'])
     except (KeyError, TypeError):
         avatar_url = ''
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=user_id)
-    #feeds = EventLog.constructor(user_ids=['cwc2e4f14r362vaaWPEYjL','bHC0t6gwur37J8aaWPEYjL'])
-    c = RequestContext(request, {
+    context = RequestContext(request, {
 	'asi_session': request.session['asi_session'],
         'profile_user': user,
         'username': username,
@@ -177,10 +177,10 @@ def profile(request, user_id=None):
         'feedurl':feedurl,
         'feeds':feeds,
     })
-    return HttpResponse(t.render(c))
+    return HttpResponse(template.render(context))
 
 
-def friends(request, user_id):
+def list_friends(request, user_id):
     asi_session = request.session['asi_session']
 
     profile_user = api.people.get(user_id)
@@ -198,17 +198,21 @@ def friends(request, user_id):
     pending_friend_ids = asi_session.get_pending_friend_requests()
     pending_requests = []
 
-    for id in pending_friend_ids:
-        pending = api.people.get(id)
-        pending['user_id'] = id
-
+    for id_ in pending_friend_ids:
+        pending = api.people.get(id_)
+        pending['user_id'] = id_
         pending_requests.append(pending)
 
-    t = loader.get_template("frontpage/friends.html")
-    c = RequestContext(request, {'asi_session': request.session['asi_session'],
-                 'friends': friends, 'requests': pending_requests,
-                 'profile_user': profile_user, 'template': 'friends'})
-    return HttpResponse(t.render(c))
+    template = loader.get_template("frontpage/friends.html")
+    context = RequestContext(request, {
+        'asi_session': request.session['asi_session'],
+        'friends': friends,
+        'requests': pending_requests,
+        'profile_user': profile_user,
+        'template': 'friends'
+    })
+    return HttpResponse(template.render(context))
+
 
 def add_friend(request, user_id):
     print "add_friend called"
@@ -220,27 +224,30 @@ def add_friend(request, user_id):
 
     return HttpResponseRedirect(reverse("friends", args=[own_id]))
 
+
 def registrations(request):
-    t = loader.get_template("frontpage/registrations.html")
-    c = RequestContext(request, {})
-    return HttpResponse(t.render(c))
+    template = loader.get_template("frontpage/registrations.html")
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
 
 @check_authentication
 def completed_courses(request, user_id):
-    t = loader.get_template("frontpage/profile_courses_completed.html")
+    template = loader.get_template("frontpage/profile_courses_completed.html")
 
     asi_session = request.session['asi_session']
     profile_user = api.people.get(user_id)
     courses = api.people.get_completed_courses(user_id)
 
-    c = RequestContext(request, {
+    context = RequestContext(request, {
         'asi_session': asi_session,
         'profile_user': profile_user,
         'courses': courses,
         'template': 'profile_courses_completed',
     })
 
-    return HttpResponse(t.render(c))
+    return HttpResponse(template.render(context))
+
 
 @check_authentication
 def friends_courses(request, user_id):
@@ -252,11 +259,12 @@ def friends_courses(request, user_id):
         'frontpage/profile_courses_friends.html',
         {
             'profile_user': profile_user,
-            'courses': courses, 
+            'courses': courses,
             'asi_session': asi_session,
             'template': 'profile_courses_friends',
         },
         context_instance=RequestContext(request))
+
 
 @check_authentication
 def planned_courses(request, user_id):
@@ -271,38 +279,41 @@ def planned_courses(request, user_id):
         user = api.people.get(user_id)
     except api.people.UserDoesNotExist:
         raise Http404
-        
+
     coursedb = PlannedCourse.objects.filter(user_id=user_id)
-    planned_courses = []
+    courses = []
 
     for course_entry in coursedb:
         course_code = course_entry.course_code
-        planned_courses.append(api.course.get_course(course_code))
+        courses.append(api.course.get_course(course_code))
 
-    t = loader.get_template("frontpage/profile_courses_planned.html")
-    c = RequestContext(request, {
+    template = loader.get_template("frontpage/profile_courses_planned.html")
+    context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
         'profile_user': user,
-        'planned_courses': planned_courses,
+        'planned_courses': courses,
         'template': 'profile_courses_planned',
     })
-    return HttpResponse(t.render(c))
+    return HttpResponse(template.render(context))
+
 
 def add_to_planned_courses(request):
     if request.method == "POST":
-        cc = request.POST.get('course_code', None)
+        course_code = request.POST.get('course_code', None)
         asi_session = request.session['asi_session']
         uid = asi_session.user_id
 
-        if(cc != None):
-            course = PlannedCourse(course_code=cc, user_id=uid)
+        if(course_code != None):
+            course = PlannedCourse(course_code=course_code, user_id=uid)
             course.save()
-            e = PlannedCourseEvent(course_code=cc, user_id=uid)
-            e.save()
+            event = PlannedCourseEvent(course_code=course_code, user_id=uid)
+            event.save()
             request.method = "GET"
             return HttpResponseRedirect(reverse("plannedcourses", args=[uid]))
         else:
-            return HttpResponseBadRequest("could not add course to planned courses")
+            return HttpResponseBadRequest(
+                "Could not add course to planned courses.")
+
 
 def remove_planned_course(request):
     """
@@ -310,11 +321,12 @@ def remove_planned_course(request):
     we use this method because the AJAX http DELETE does not work
     with all browsers
     """
-    cc = request.POST.get('course_code',None)
+    course_code = request.POST.get('course_code', None)
     asi_session = request.session['asi_session']
     uid = asi_session.user_id
-    PlannedCourse.objects.filter(user_id = uid).filter(course_code = cc).delete()
+    PlannedCourse.objects.filter(user_id=uid, course_code=course_code).delete()
     return HttpResponseRedirect(reverse("plannedcourses", args=[uid]))
+
 
 def recommendcourse(request, coursecode):
     asi_session = request.session['asi_session']
@@ -330,11 +342,14 @@ def recommendcourse(request, coursecode):
 
     course = api.course.get_course(coursecode)
 
-    t = loader.get_template("frontpage/recommend_course.html")
-    c = RequestContext(request, {'asi_session': asi_session,
-                'friends': friends,
-                'course': course})
-    return HttpResponse(t.render(c))
+    template = loader.get_template("frontpage/recommend_course.html")
+    context = RequestContext(request, {
+        'asi_session': asi_session,
+        'friends': friends,
+        'course': course
+    })
+    return HttpResponse(template.render(context))
+
 
 def recommend_to_friends(request, coursecode):
     """
@@ -346,24 +361,39 @@ def recommend_to_friends(request, coursecode):
 
     return HttpResponseRedirect(reverse("home"))
 
+
 def generalinfo(request):
-    t = loader.get_template("frontpage/general_info.html")
-    c = RequestContext(request, {})
-    return HttpResponse(t.render(c))
+    template = loader.get_template("frontpage/general_info.html")
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
 
 def privacy(request):
-    t = loader.get_template("frontpage/privacy.html")
-    c = RequestContext(request, {})
-    return HttpResponse(t.render(c))
+    template = loader.get_template("frontpage/privacy.html")
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
 
 class SearchForm(forms.Form):
     # Required fields have * at the end of label
-    query = forms.CharField(min_length=4, max_length=40, label="Keywords")
-    scope = forms.ChoiceField([('all', 'All content'), ('courses', 'Courses'), ('users', 'Users')], label="Search option")
+    query = forms.CharField(
+        min_length=4,
+        max_length=40,
+        label="Keywords"
+    )
+    scope = forms.ChoiceField(
+        [
+            ('all', 'All content'),
+            ('courses', 'Courses'),
+            ('users', 'Users')
+        ],
+        label="Search option"
+    )
+
 
 @check_authentication
 def search(request):
-    t = loader.get_template("frontpage/search.html")
+    template = loader.get_template("frontpage/search.html")
     searchform = SearchForm(request.GET)
     if searchform.is_valid():
         query = searchform.cleaned_data['query']
@@ -381,19 +411,26 @@ def search(request):
                 details = api.course.get_course(coursecode)
                 courseresults.append(details)
 
-        c = RequestContext(request, {'searchform': searchform, 'userresults': userresults,
-                     'courseresults': courseresults, 'query': query,
-                     'asi_session': request.session['asi_session']
-            })
+        context = RequestContext(request, {
+            'searchform': searchform,
+            'userresults': userresults,
+            'courseresults': courseresults,
+            'query': query,
+            'asi_session': request.session['asi_session']
+        })
     else:
-        c = RequestContext(request, {'searchform': searchform,
-                    'asi_session': request.session['asi_session']})
-    return HttpResponse(t.render(c))
+        context = RequestContext(request, {
+            'searchform': searchform,
+            'asi_session': request.session['asi_session']
+        })
+    return HttpResponse(template.render(context))
+
 
 def notifications(request):
-    t = loader.get_template("frontpage/notifications.html")
-    c = RequestContext(request, {})
-    return HttpResponse(t.render(c))
+    template = loader.get_template("frontpage/notifications.html")
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
 
 def internal_error(request):
     return render_to_response(

@@ -105,7 +105,13 @@ urlpatterns = patterns('',
         'studyplanner.frontpage.views.list_friends',
         name='friends'
     ),
-
+ 
+    url(
+        r'^notifications/$',
+        'studyplanner.frontpage.views.recommendation_notifications',
+        name='notifications'
+    ),
+    
     url(
         r'^registrations/$',
         'studyplanner.frontpage.views.registrations',

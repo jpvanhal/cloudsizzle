@@ -170,6 +170,15 @@ def home(request):
     })
     return HttpResponse(template.render(context))
 
+@check_authentication
+def recommendation_notifications(request):
+    try:
+        print request.META.QUERY_STRING
+    except Exception:
+        pass 
+    template = loader.get_template("frontpage/notifications.html")
+    context = RequestContext(request)
+    return HttpResponse(template.render(context))
 
 @check_authentication
 def profile(request, user_id=None):

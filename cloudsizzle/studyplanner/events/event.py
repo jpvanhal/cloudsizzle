@@ -55,9 +55,9 @@ class EventLog:
             return []
         events = Event.objects.filter(user_id__in=user_ids) \
                               .order_by('-time')[0:10]
-        if len(user_ids) == 1:
+        if len(user_ids) == 1:    # only one id input use builder once.
             return cls.builder(user_id=user_ids[0], events=events)
-        else:
+        else:                     # many ids input give every id a builder.
             result = []
             for event in events:
                 result.extend(cls.builder(event.user_id, events=[event]))
@@ -79,7 +79,8 @@ class EventLog:
 
         for event in events:
             update_time = event.time
-            if hasattr(event, 'plannedcourse'):
+            # plan course event get course name, and department and faculty code
+            if hasattr(event, 'plannedcourse'):    
                 course_code = event.plannedcourse.course_code
                 object_name = course_code
                 action = 'enrolled to'
@@ -87,6 +88,7 @@ class EventLog:
                     user_name=user_name, user_scr=user_scr, action=action,
                     object_name=object_name, update_time=update_time,
                     object_id=course_code))
+            #  new friends event get friend's url and name.
             if hasattr(event, 'newfriendevent'):
                 friend_id = event.newfriendevent.new_friend
                 friend_inf = dict(api.people.get(friend_id))

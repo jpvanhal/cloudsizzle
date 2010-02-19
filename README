@@ -1,5 +1,20 @@
-Several server components need to be running:
+=================
+About CloudSizzle
+=================
 
-ASI<->SIB KP:
-python -m cloudsizzle.asi.server
+CloudSizzle is a social study planner for Aalto University students. Students
+can create a study plan, share it to their friends, enroll to courses, invite
+friends to courses and utilize the social networks to collaboratively work on
+assignments in exercise groups and talk about course related matters in
+discussion channels.
 
+CloudSizzle is created on top of Aalto Social Interface (ASI). It gathers
+course related information from Noppa and WebOodi and aggregates it in order to
+create a mashup service for students. Smart-M3 RDF store is used as a
+middleware for aggregating data and achieving loose coupling between the
+services that are used for the mashup.
+
+CloudSizzle is part of the OtaSizzle research project that is coordinated by
+Helsinki Institute of Information Technology (HIIT).
+
+CloudSizzle is licensed under the MIT open source license.

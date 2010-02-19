@@ -1,4 +1,30 @@
-"""Provides an API for fetching information about courses and their structures.
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2009-2010 CloudSizzle Team
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+"""
+Provides an API for fetching information about courses and their structures.
 
 """
 from cloudsizzle import pool
@@ -54,7 +80,7 @@ def get_course(code):
             msg = 'There is no course with code "{0}".'.format(code)
             raise Exception(msg)
 
-        
+
         course = fetch_rdf_graph(code, dont_follow=['department'])
         course['code'] = code
 
@@ -65,7 +91,7 @@ def get_course(code):
         # is necessarily true.
         triples = sc.query(Triple(course['code'], 'department', None))
         course['department'] = str(triples[0].object)
-        
+
         triples = sc.query(Triple(course['department'], 'faculty', None))
         course['faculty'] = str(triples[0].object)
 

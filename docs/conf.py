@@ -173,7 +173,7 @@ htmlhelp_basename = 'CloudSizzledoc'
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'cloudsizzle-documentation.tex', u'CloudSizzle Documentation',
-   u'CloudSizzle Team', 'manual'),
+   u'Ville Koivunen, Janne Vanhala', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

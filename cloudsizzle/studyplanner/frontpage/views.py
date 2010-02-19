@@ -229,8 +229,6 @@ def add_friend(request, user_id):
     return HttpResponseRedirect(reverse("friends", args=[own_id]))
 
 
-
-
 @check_authentication
 def completed_courses(request, user_id):
     template = loader.get_template("frontpage/profile_courses_completed.html")
@@ -366,14 +364,6 @@ def recommend_to_friends(request, coursecode):
     return HttpResponseRedirect(reverse("home"))
 
 
-
-
-def privacy(request):
-    template = loader.get_template("frontpage/privacy.html")
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
-
-
 class SearchForm(forms.Form):
     # Required fields have * at the end of label
     query = forms.CharField(
@@ -441,5 +431,11 @@ def registrations(request):
 
 def notifications(request):
     template = loader.get_template("frontpage/notifications.html")
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+
+def privacy(request):
+    template = loader.get_template("frontpage/privacy.html")
     context = RequestContext(request, {})
     return HttpResponse(template.render(context))

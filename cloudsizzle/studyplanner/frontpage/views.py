@@ -48,15 +48,8 @@ def login_register(request):
                 authenticate(request, username, password)
                 print 'authenticate returned'
             except api.LoginFailed as message:
-                # There is probably a smarter way for this, perhaps
-                # a separate view?
-                print "LoginFailed message:-----------"
-                print type(message)
-                print message
-                # Some way of passing the login failed message
-                # to user is needed. Maybe it could be done inside
-                # Django form handling?
-                return HttpResponseRedirect(reverse('frontpage'))
+                # assume that this always means bad username/password
+                return HttpResponseRedirect(reverse('login'))
             except TimeOutError:
                 print "Timeout while authenticating"
                 return HttpResponseRedirect(reverse('internalerror'))
@@ -104,6 +97,13 @@ def login_register(request):
         },
         context_instance=RequestContext(request))
 
+"""Login page, only shown when wrong username or pssword is given"""
+def login(request):
+    login_form = LoginForm()
+
+    return render_to_response('frontpage/login.html',
+        {'loginform': login_form}
+    )
 
 def welcome(request):
     return render_to_response(

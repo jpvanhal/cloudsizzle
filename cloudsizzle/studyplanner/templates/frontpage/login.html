@@ -7,19 +7,18 @@
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta name="description" content="CloudSizzle homepage"/>
 	<meta name="keywords" content=""/>
-	<link rel="stylesheet" type="text/css" media="all" href="css/reset.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="css/styles.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="/static/styles/reset.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="/static/styles/styles.css" />
 </head>
 <body id="login-page">
 	<div id="wrapper">
 		<div id="header">
-			<h1><img src="graphics/logo.png" alt="CloudSizzle login" id="logo" /></h1>
+			<h1><img src="/static/graphics/logo.png" alt="CloudSizzle login" id="logo" /></h1>
 			
 			<div id="login">
-				<form method="post" action="#">
-					<div>
-						<input type="text" name="username" />
-						<input type="password" name="password" />
+				<form method="post" action="{% url frontpage %}">
+					<div>{% for field in loginform %}
+						{{ field }}{% endfor %}
 						<input type="submit" name="submit" value="Login" class="button" />
 					</div>
 				</form>
@@ -41,18 +40,16 @@
 				
 				<p class="errors">Your username and password didn't match. Please try again.</p>
 				
-				<form method="post" action="#" id="login-form">
+				<form method="post" action="{% url frontpage %}" id="login-form">
+					{% for field in loginform %}
 					<div>
-						<label for="username">Username</label>
-						<input type="text" name="username" id="username" />
+						{{ field.label_tag }}
+						{{ field }}
 					</div>
-					<div>
-						<label for="password">Password</label>
-						<input type="text" name="password" id="password" />
-					</div>
+					{% endfor %}
 					<div>
 						<input type="submit" name="submit" value="Login" class="button" />
-						<p>or <a href="index.php">register</a></p>
+						<p>or <a href="{% url frontpage %}">register</a></p>
 					</div>
 				</form>
 			</div> <!-- /login -->

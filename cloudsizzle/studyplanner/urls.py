@@ -7,7 +7,8 @@ urlpatterns = patterns('',
         'studyplanner.frontpage.views.index',
         name='frontpage'
     ),
-
+    url(r'^login/?$', 'studyplanner.frontpage.views.login', name='login'),
+    
     url(
         r'^session/logout/$',
         'studyplanner.frontpage.views.logout',

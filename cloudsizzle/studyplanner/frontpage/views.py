@@ -97,15 +97,19 @@ def login_register(request):
         },
         context_instance=RequestContext(request))
 
-"""Login page, only shown when wrong username or pssword is given"""
+
 def login(request):
+    """Login page, only shown when wrong username or password is given."""
     login_form = LoginForm()
 
     return render_to_response('frontpage/login.html',
         {'loginform': login_form}
     )
 
+
+@check_authentication
 def welcome(request):
+    """Welcome page, shown when user has registered."""
     return render_to_response(
         'frontpage/welcome.html',
         {
@@ -114,20 +118,18 @@ def welcome(request):
         context_instance=RequestContext(request))
 
 
+@check_authentication
 def logout(request):
     """Log the user out. Removes ASI connection from session"""
-    # No reason to fail even if no session exists.
-    if 'asi_session' in request.session:
-        print 'Closing session'
-        request.session['asi_session'].close()
-        print 'Session closed'
-        del request.session['asi_session']
+    print 'Closing session'
+    request.session['asi_session'].close()
+    print 'Session closed'
+    del request.session['asi_session']
 
     return HttpResponseRedirect(reverse('frontpage'))
 
-#for the mockups if anyone feels like it they should move this code to the
-# appropriate file and application.
 
+@check_authentication
 def home(request):
     asi_session = request.session['asi_session']
     user_id = asi_session.user_id
@@ -180,6 +182,7 @@ def profile(request, user_id=None):
     return HttpResponse(template.render(context))
 
 
+@check_authentication
 def list_friends(request, user_id):
     asi_session = request.session['asi_session']
 
@@ -214,6 +217,7 @@ def list_friends(request, user_id):
     return HttpResponse(template.render(context))
 
 
+@check_authentication
 def add_friend(request, user_id):
     print "add_friend called"
     session = request.session['asi_session']
@@ -225,10 +229,6 @@ def add_friend(request, user_id):
     return HttpResponseRedirect(reverse("friends", args=[own_id]))
 
 
-def registrations(request):
-    template = loader.get_template("frontpage/registrations.html")
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
 
 
 @check_authentication
@@ -297,6 +297,7 @@ def planned_courses(request, user_id):
     return HttpResponse(template.render(context))
 
 
+@check_authentication
 def add_to_planned_courses(request):
     if request.method == "POST":
         course_code = request.POST.get('course_code', None)
@@ -315,6 +316,7 @@ def add_to_planned_courses(request):
                 "Could not add course to planned courses.")
 
 
+@check_authentication
 def remove_planned_course(request):
     """
     this method removes a course from planned courses
@@ -328,6 +330,7 @@ def remove_planned_course(request):
     return HttpResponseRedirect(reverse("plannedcourses", args=[uid]))
 
 
+@check_authentication
 def recommendcourse(request, coursecode):
     asi_session = request.session['asi_session']
 
@@ -351,6 +354,7 @@ def recommendcourse(request, coursecode):
     return HttpResponse(template.render(context))
 
 
+@check_authentication
 def recommend_to_friends(request, coursecode):
     """
     This method takes a post form with friend id's and
@@ -362,10 +366,6 @@ def recommend_to_friends(request, coursecode):
     return HttpResponseRedirect(reverse("home"))
 
 
-def generalinfo(request):
-    template = loader.get_template("frontpage/general_info.html")
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
 
 
 def privacy(request):
@@ -426,13 +426,20 @@ def search(request):
     return HttpResponse(template.render(context))
 
 
-def notifications(request):
-    template = loader.get_template("frontpage/notifications.html")
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
-
-
 def internal_error(request):
     return render_to_response(
         'frontpage/internal_error.html',
         context_instance=RequestContext(request))
+
+# Below this line are only mockups
+
+def registrations(request):
+    template = loader.get_template("frontpage/registrations.html")
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+
+def notifications(request):
+    template = loader.get_template("frontpage/notifications.html")
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))

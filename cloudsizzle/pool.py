@@ -69,10 +69,12 @@ class ObjectPool(object):
             while self._unlocked:
                 obj = self._unlocked.pop()
                 if self._validate(obj):
+                    print "Reusing old connection"
                     self._locked.add(obj)
                     return obj
                 else:
                     self._expire(obj)
+            print "Creating new connection"
             obj = self._create()
             self._locked.add(obj)
             return obj
@@ -92,8 +94,24 @@ class ObjectPool(object):
 class ConnectionPool(ObjectPool):
     """A cache for SIB connections so that they can be reused."""
 
+    def __init__(self):
+        super(ConnectionPool, self).__init__()
+        self._smart_space_id = 0
+
+    def _generate_unique_name(self):
+        """
+        Generate a "unique" smart space name.
+
+        You cannot open two SIB connections with the same smart space name.
+
+        """
+        name = 'Node{0}'.format(self._smart_space_id)
+        self._smart_space_id += 1
+        return name
+
     def _create(self):
-        conn = SIBConnection(method='preconfigured')
+        name = self._generate_unique_name()
+        conn = SIBConnection(name, method='preconfigured')
         conn.open()
         return conn
 

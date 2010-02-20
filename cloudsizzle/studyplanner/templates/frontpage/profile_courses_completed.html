@@ -18,8 +18,8 @@
         <tbody
             {% for course in courses %}>
             <tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
-                <td><a href="{% url show_course course.faculty course.department course.code %}">{{ course.code }}</a></td>
-                <td><a href="{% url show_course course.faculty course.department course.code %}">{{ course.name }}</a></td>
+                <td>{{ course.code }}</td>
+                <td>{{ course.name }}</td>
                 <td>{% if course.cr %}{{ course.cr }} cr{% else %}{{course.ocr}} ocr{% endif %}</td>
                 <td>{{ course.grade }}</td>
                 <td>{{ course.date }}</td>

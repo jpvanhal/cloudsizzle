@@ -1,8 +1,8 @@
 
 {% for feed in feeds %}
-	<div class="feed-item{% if forloop.last %} last{% endif %}">
+    <div class="feed-item{% if forloop.last %} last{% endif %}">
         <a href="#"><img src="{{feed.img_scr}}" alt="{{feed.user_name}}"></a>
         <p><a href="{{feed.user_scr}}">{{feed.user_name}}</a> {{feed.action}} <a href="{{feed.object_scr}}">{{feed.object_name}}</a></p>
         <p class="date">{{feed.update_time|timesince}} ago</p>
-	</div> <!-- /feed-item -->
+    </div> <!-- /feed-item -->
 {% endfor %}

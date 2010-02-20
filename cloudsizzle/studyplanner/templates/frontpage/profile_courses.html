@@ -4,7 +4,7 @@
 
 {% block profile-content %}
         <h1>{{ profile_user.username }}'s courses</h1>
-        
+    
         <ul id="courses-sub-menu">
             <li{% ifequal template 'profile_courses_planned' %} class="selected"{% endifequal %}>
                 <a href="{% url plannedcourses profile_user.user_id %}">Planned courses</a>
@@ -16,7 +16,7 @@
                 <a href="{% url friendscourses profile_user.user_id %}">Friends' courses</a>
             </li>
         </ul>
-        
+    
         <div class="right-col-courses">
             {% block profile-courses-content %}
             {% endblock profile-courses-content %}

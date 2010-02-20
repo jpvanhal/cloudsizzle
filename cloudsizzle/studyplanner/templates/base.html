@@ -2,28 +2,28 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>{% block title %}CloudSizzle - Social study planner{% endblock %}</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="imagetoolbar" content="no" />
-	<meta name="description" content="SITE DESCRIPTION"/>
-	<meta name="keywords" content=""/>
-	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/reset.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/tablesorter/style.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/styles.css" />
+    <title>{% block title %}CloudSizzle - Social study planner{% endblock %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta name="description" content="SITE DESCRIPTION"/>
+    <meta name="keywords" content=""/>
+    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/reset.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/tablesorter/style.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/styles.css" />
 </head>
 <body>
-	<div id="wrapper">
-		<div id="header">
-			<a href="{% url home %}"><img src="/static/graphics/logo_small.png" alt="" id="logo" /></a>
+    <div id="wrapper">
+        <div id="header">
+            <a href="{% url home %}"><img src="/static/graphics/logo_small.png" alt="" id="logo" /></a>
 
-			<p id="username-text">Hello, {{ asi_session.username }}</p>
+            <p id="username-text">Hello, {{ asi_session.username }}</p>
 
-			<ul>
-				<li><a href="{% url home %}">Home</a></li>
-				<li><a href="{% url profile %}">Profile</a></li>
-				<li><a href="{% url courses %}">Courses</a></li>
-			</ul>
-            
+            <ul>
+                <li><a href="{% url home %}">Home</a></li>
+                <li><a href="{% url profile %}">Profile</a></li>
+                <li><a href="{% url courses %}">Courses</a></li>
+            </ul>
+    
             <form method="get" action="{% url search %}" id="search">
                 <div>
                     <input type="text" name="query" id="query" />
@@ -32,24 +32,24 @@
                 </div>
             </form>
 
-			<ul id="sub-nav">
-				<!--li><a href="#">Settings</a></li-->
-				<li><a href="{% url logout_user %}">Logout</a></li>
-			</ul> <!-- /sub-nav -->
+            <ul id="sub-nav">
+                <!--li><a href="#">Settings</a></li-->
+                <li><a href="{% url logout_user %}">Logout</a></li>
+            </ul> <!-- /sub-nav -->
 
-            
-		</div> <!-- /header -->
-        
+    
+        </div> <!-- /header -->
+    
         {% block content %}
         {% endblock content %}
-	</div><!-- /wrapper -->
+    </div><!-- /wrapper -->
 
-	<div id="footer">
-		<p>&copy; CloudSizzle 2010</p>
-	</div> <!-- /footer -->
+    <div id="footer">
+        <p>&copy; CloudSizzle 2010</p>
+    </div> <!-- /footer -->
     
-	<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.4.1.min.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}js/cloudsizzle.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.4.1.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/cloudsizzle.js"></script>
 </body>
 </html>

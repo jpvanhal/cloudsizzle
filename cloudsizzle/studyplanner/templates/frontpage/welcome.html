@@ -2,53 +2,53 @@
 
 {% block content %}
 
-	
+    
 <div id="content">
-	<ul id="breadcrumb">
-		<li>Home &gt; Welcome</li>
-	</ul>
+    <ul id="breadcrumb">
+        <li>Home &gt; Welcome</li>
+    </ul>
 
-	<div id="welcome" class="rounded-corners">
-		<div class="top-left"></div>
-		<div class="top-right"></div>
-		<div class="bottom-left"></div>
-		<div class="bottom-right"></div>
-		<div class="bottom-border"></div>
-		<div class="left-border"></div>
-		<div class="right-border"></div>
-		
-		<h1>Welcome to CloudSizzle {{ asi_session.username }}</h1>
-        
+    <div id="welcome" class="rounded-corners">
+        <div class="top-left"></div>
+        <div class="top-right"></div>
+        <div class="bottom-left"></div>
+        <div class="bottom-right"></div>
+        <div class="bottom-border"></div>
+        <div class="left-border"></div>
+        <div class="right-border"></div>
+    
+        <h1>Welcome to CloudSizzle {{ asi_session.username }}</h1>
+    
         <p>CloudSizzle is a social study planner where you can among other things discover what courses your friends are currently planning to take. Here is a quick introduction to some of the features in CloudSizzle to get you started:</p>
-        
+    
         <h2>The 'Home' page</h2>
-        
+    
         <p>The <a href="{% url home %}">home page</a> displays a news feed of what courses your friends have planned to take. It also shows you when your friends befriend with other users.</p>
-        
+    
         <p>In addition to the news feed, the home page also displays your notifications. You will get notifications when your friends recommend courses to you. You can access and see your current notifications by clicking on one of the notifications on the home page.</p>
-        
+    
         <h2>Your profile</h2>
-        
+    
         <p>You can access <a href="{% url profile %}">your profile</a> by clicking on the 'Profile' link in the main menu. When you go to your profile, you will see your main profile page that displays your real name, your profile picture and your personal news feed. Your personal news feed displays what courses you have planned to take and with whom you have befriended.</p>
-        
+    
         <p>You can also see that your profile page displays a <a href="{% url friends asi_session.user_id %}">'Friends'</a> and a <a href="{% url plannedcourses asi_session.user_id %}">'Courses'</a> tab. The 'Friends' tab allows you to see a list of your friends in CloudSizzle. If you wish, you can access your friends' profiles by clicking on their names on the list. Also, when another user in CloudSizzle wishes to become your friend, you will see a pending friend request at the bottom of the page. From here you can accept or reject friend requests.</p>
-        
+    
         <p>The 'Courses' tab allows you to see your planned courses, your completed studies and the courses your friends are currently planning to take. You can also click on one of the course names in order to see more detailed information about the respective course. Whenever you plan to take a course, it will show up on the planned courses list.</p>
-		
+    
         <h2>Courses</h2>
-        
+    
         <p>You can find all the courses arranged in HUT from the <a href="{% url courses %}">'Courses'</a> link in main menu. The list will allow you to search for courses by faculties and departments. When you access the course list of a department, you will be able to see and sort the courses by the amount of friends that have planned to take the courses.</p>
-        
+    
         <p>If you click on one of the courses, you will be able to see more information about the particular course. You will also be able to see the friends who are currently planning to take the course. In addition, if you are interested to take the course in the future, you can press the 'Plan to take course' button, which will add the course to your planned courses. You can even recommend a course to your friends by clicking on the 'Recommend course' button.</p>
-        
+    
         <h2>Searching for courses and other users</h2>
-        
+    
         <p>Sometimes you may wish to <a href="{% url search %}">search</a> for courses or other users. You can accomplish this by writing your search keywords in the search input box on the top right hand side of the page. You will be redirected to a search results page that displays the results that matched your keyword sorted by courses and users. From here you will also be able to find and add new friends.</p>
-        
+    
         <h2>That's it!</h2>
-        
+    
         <p>You can now start to explore the features of CloudSizzle on your own. We hope you enjoy CloudSizzle as much as we enjoyed creating it!</p>
-	</div>
+    </div>
 </div> <!-- /content -->
-		
+    
 {% endblock content %}

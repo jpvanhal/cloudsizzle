@@ -12,7 +12,7 @@
     {% endif %}
     
     <div class="friends">
-        
+    
         {% for friend in friends %}
             <div class="friend{% if forloop.last %} last{% endif %}">
                 <form method="post" action="#">
@@ -21,12 +21,12 @@
                         <input name="remove" value="Remove" class="button" type="submit">
                     </div>
                 </form>
-                
+    
                 <a href="{% url profile friend.user_id %}"><img src="{{ ASI_BASE_URL }}{{ friend.avatar.link.href }}/small_thumbnail" alt=""></a>
                 <h2><a href="{% url profile friend.user_id %}">{{ friend.username }}</a></h2>
                 <p>FIXME mutual courses</p>
                 <p>FIXME mutual friends</p>
-                
+    
             </div> <!-- /friend -->
         {% endfor %}
     </div> <!-- /friends -->
@@ -43,12 +43,12 @@
                         <input name="remove" value="Accept" class="button" type="submit">
                     </div>
                 </form>
-                
+    
                 <a href="{% url profile request.user_id %}"><img src="{{ ASI_BASE_URL }}{{ request.avatar.link.href }}/small_thumbnail" alt=""></a>
                 <h2><a href="{% url profile request.user_id %}">{{ request.username }}</a></h2>
                 <p>FIXME mutual courses</p>
                 <p>FIXME mutual friends</p>
-                
+    
             </div> <!-- /friend -->
         {% endfor %}
     </div> <!-- /friends -->

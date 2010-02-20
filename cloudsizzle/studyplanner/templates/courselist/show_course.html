@@ -3,95 +3,95 @@
 {% block title %}CloudSizzle | Course | {{ course.code }} {{ course.name }}{% endblock title %}
 
 {% block content %}
-	<div id="content">
-		<ul id="breadcrumb">
-			<li><a href="{% url home %}">Home</a> &gt;</li>
-			<li><a href="{% url courselist.views.list_faculties %}">Courses</a> &gt;</li>
-			<li><a href="{% url courselist.views.list_departments faculty.code %}">{{ faculty.name }}</a> &gt;</li>
-			<li><a href="{% url courselist.views.list_courses faculty.code department.code %}">{{ department.name }}</a> &gt;</li>
-			<li>{{ course.code }} {{ course.name }}</li>
-		</ul>
-		
-		<div class="rounded-corners">
-			<div class="top-left"></div>
-			<div class="top-right"></div>
-			<div class="bottom-left"></div>
-			<div class="bottom-right"></div>
-			<div class="bottom-border"></div>
-			<div class="left-border"></div>
-			<div class="right-border"></div>
-			
-			<h1>{{ course.code }} {{ course.name }}</h1>
-            
-			<table id="course">
-				<tr>
-					<th>Credits</th>
-					<td>{% if course.extent %}{{ course.extent }} cr {% endif %}</td>
-				</tr>
-				<tr>
-					<th>Teaching period</th>
-					<td>{{ course.teaching_period }}</td>
-				</tr>
-				<tr>
-					<th>Learning outcomes</th>
-					<td>{{ course.learning_outcomes }}</td>
-				</tr>
-				<tr>
-					<th>Content</th>
-					<td>{{ course.content }}</td>
-				</tr>
-				<tr>
-					<th>Prerequisites</th>
-					<td>{{ course.prerequisites }}</td>
-				</tr>
-				<tr>
-					<th>Study materials</th>
-					<td>{{ course.study_materials }}</td>
-				</tr>
-			</table>
-			
-			<div id="options">
-			    {% if not iscompleted %}
-				    {% if isplanned %}
-				    <form method="post" action="{% url remove_from_planned_courses %}">
-				    {% else %}
-				    <form method="post" action="{% url add_to_planned_courses %}">
-				    {% endif %}
-					    <div>
-						    <input type="hidden" name="course_code" value="{{ course.code }}" />
-						    {% if isplanned %}
-							    <input type="submit" name="submit" value="Remove from planned courses" class="button" />
-						    {% else %}
-						    <input type="submit" name="submit" value="Plan to take course" class="button" />
-						    {% endif %}
-					    </div>
-				    </form>
-				{% endif %}
-				
+    <div id="content">
+        <ul id="breadcrumb">
+            <li><a href="{% url home %}">Home</a> &gt;</li>
+            <li><a href="{% url courselist.views.list_faculties %}">Courses</a> &gt;</li>
+            <li><a href="{% url courselist.views.list_departments faculty.code %}">{{ faculty.name }}</a> &gt;</li>
+            <li><a href="{% url courselist.views.list_courses faculty.code department.code %}">{{ department.name }}</a> &gt;</li>
+            <li>{{ course.code }} {{ course.name }}</li>
+        </ul>
+    
+        <div class="rounded-corners">
+            <div class="top-left"></div>
+            <div class="top-right"></div>
+            <div class="bottom-left"></div>
+            <div class="bottom-right"></div>
+            <div class="bottom-border"></div>
+            <div class="left-border"></div>
+            <div class="right-border"></div>
+    
+            <h1>{{ course.code }} {{ course.name }}</h1>
+    
+            <table id="course">
+                <tr>
+                    <th>Credits</th>
+                    <td>{% if course.extent %}{{ course.extent }} cr {% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Teaching period</th>
+                    <td>{{ course.teaching_period }}</td>
+                </tr>
+                <tr>
+                    <th>Learning outcomes</th>
+                    <td>{{ course.learning_outcomes }}</td>
+                </tr>
+                <tr>
+                    <th>Content</th>
+                    <td>{{ course.content }}</td>
+                </tr>
+                <tr>
+                    <th>Prerequisites</th>
+                    <td>{{ course.prerequisites }}</td>
+                </tr>
+                <tr>
+                    <th>Study materials</th>
+                    <td>{{ course.study_materials }}</td>
+                </tr>
+            </table>
+    
+            <div id="options">
+                {% if not iscompleted %}
+                    {% if isplanned %}
+                    <form method="post" action="{% url remove_from_planned_courses %}">
+                    {% else %}
+                    <form method="post" action="{% url add_to_planned_courses %}">
+                    {% endif %}
+                        <div>
+                            <input type="hidden" name="course_code" value="{{ course.code }}" />
+                            {% if isplanned %}
+                                <input type="submit" name="submit" value="Remove from planned courses" class="button" />
+                            {% else %}
+                            <input type="submit" name="submit" value="Plan to take course" class="button" />
+                            {% endif %}
+                        </div>
+                    </form>
+                {% endif %}
+    
                 <form method="get" action="{% url recommendcourse course.code %}">
                     <div>
                         <input type="submit" name="submit" value="Recommend course" class="button" />
                     </div>
                 </form>
-				
-			</div> <!-- /options -->
-			
-			<h2>Friends taking this course</h2>
-			
+    
+            </div> <!-- /options -->
+    
+            <h2>Friends taking this course</h2>
+    
             {% if friends %}
                 <p class="results">{{ friends|length }} friend{{ friends|pluralize }} {% if friends|length_is:"1" %}is{% else %}are{% endif %} currently planning to take this course</p>
             {% else %}
                 <p class="results">No friends are currently planning to take this course</p>
             {% endif %}
-            
+    
             {% if friends %}
-			<ul id="friend-list">
-				{% for friend in friends %}
-				<li><a href="{% url profile friend.user_id %}"><img src="{{ ASI_BASE_URL }}{{ friend.avatar.link.href }}/small_thumbnail" alt="" />{{ friend.username }}</a></li>
-				{% endfor %}
-			</ul> <!-- /friend-list -->
+            <ul id="friend-list">
+                {% for friend in friends %}
+                <li><a href="{% url profile friend.user_id %}"><img src="{{ ASI_BASE_URL }}{{ friend.avatar.link.href }}/small_thumbnail" alt="" />{{ friend.username }}</a></li>
+                {% endfor %}
+            </ul> <!-- /friend-list -->
             {% endif %}
-			
-		</div>
-	</div> <!-- /content -->
+    
+        </div>
+    </div> <!-- /content -->
 {% endblock %}

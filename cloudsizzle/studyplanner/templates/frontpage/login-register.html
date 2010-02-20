@@ -2,19 +2,19 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>CloudSizzle | Social study planner</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="imagetoolbar" content="no" />
-	<meta name="description" content="SITE DESCRIPTION"/>
-	<meta name="keywords" content=""/>
-	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/reset.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/styles.css" />
+    <title>CloudSizzle | Social study planner</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta name="description" content="SITE DESCRIPTION"/>
+    <meta name="keywords" content=""/>
+    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/reset.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}styles/styles.css" />
 </head>
 <body id="login-page">
-	<div id="wrapper">
-		<div id="header">
-			<h1><span>CloudSizzle social study planner</span></h1>
-			
+    <div id="wrapper">
+        <div id="header">
+            <h1><span>CloudSizzle social study planner</span></h1>
+    
             <form method="post" action="{% url frontpage %}" id="login">
                 <div>
                     {% for field in loginform %}
@@ -23,54 +23,54 @@
                     <input type="submit" name="submit" value="Login" class="button" />
                 </div>
             </form>
-		</div> <!-- /header -->
+        </div> <!-- /header -->
 
-		<div id="content">
-			<div class="rounded-corners">
-				<div class="top-left"></div>
-				<div class="top-right"></div>
-				<div class="bottom-left"></div>
-				<div class="bottom-right"></div>
-				<div class="bottom-border"></div>
-				<div class="left-border"></div>
-				<div class="right-border"></div>
+        <div id="content">
+            <div class="rounded-corners">
+                <div class="top-left"></div>
+                <div class="top-right"></div>
+                <div class="bottom-left"></div>
+                <div class="bottom-right"></div>
+                <div class="bottom-border"></div>
+                <div class="left-border"></div>
+                <div class="right-border"></div>
 
-				<h2>Sign up</h2>
-                
-				<p class="mandatory-info">Fields marked with * are mandatory</p>
+                <h2>Sign up</h2>
+    
+                <p class="mandatory-info">Fields marked with * are mandatory</p>
 
-				{% if registerform.errors %}
-					<p class="errors">
-					{% for field in registerform %}
-						{% if field.errors %}
-							{% for error in field.errors %}
-								{{ error|escape }}<br />
-							{% endfor %}
-						{% endif %}
-					{% endfor %}
-					</p>
-				{% endif %}
+                {% if registerform.errors %}
+                    <p class="errors">
+                    {% for field in registerform %}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                {{ error|escape }}<br />
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                    </p>
+                {% endif %}
 
-				<form method="post" action="{% url frontpage %}" id="sign-up">
-					{% for field in registerform %}
+                <form method="post" action="{% url frontpage %}" id="sign-up">
+                    {% for field in registerform %}
                         <div>
                             {{ field.label_tag }}
                             {{ field }}
                         </div>
-					{% endfor %}
-					<div>
-						<input type="submit" name="submit" value="Sign up" class="button" />
-					</div>
-				</form>
-			</div>
-		</div> <!-- /content -->
-	</div><!-- /wrapper -->
+                    {% endfor %}
+                    <div>
+                        <input type="submit" name="submit" value="Sign up" class="button" />
+                    </div>
+                </form>
+            </div>
+        </div> <!-- /content -->
+    </div><!-- /wrapper -->
 
-	<div id="footer">
-		<p>&copy; CloudSizzle 2010</p>
-	</div> <!-- /footer -->
+    <div id="footer">
+        <p>&copy; CloudSizzle 2010</p>
+    </div> <!-- /footer -->
 
-	<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.4.1.min.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}js/cloudsizzle.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.4.1.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/cloudsizzle.js"></script>
 </body>
 </html>

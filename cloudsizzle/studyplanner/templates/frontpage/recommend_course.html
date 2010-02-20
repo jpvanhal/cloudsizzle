@@ -3,36 +3,36 @@
 {% block title %}CloudSizzle | Course | {{ course.code }} {{ course.name }} | Recommend{% endblock title %}
 
 {% block content %}
-		<div id="content">
+        <div id="content">
 
-	<div id="recommend-course" class="rounded-corners">
-		<div class="top-left"></div>
-		<div class="top-right"></div>
-		<div class="bottom-left"></div>
-		<div class="bottom-right"></div>
-		<div class="bottom-border"></div>
-		<div class="left-border"></div>
-		<div class="right-border"></div>
-		
-		<h1>{{ course.code }} {{ course.name }}</h1>
-		
-		<div id="recommend-friend-list">
-			<form method="post" action="{% url recommendtofriends course.code %}">
-			    {% for friend in friends %}
-				<div>
-					<label for="{{ friend.user_id }}">
-						<img src="{{ ASI_BASE_URL }}{{ friend.avatar.link.href }}/small_thumbnail" alt="">
-						{{ friend.username }}
-					</label>
-					<input name="{{ friend.user_id }}" id="{{ friend.user_id }}" type="checkbox">
-				</div>
-				{% endfor %}
-				<div class="button">
-					<input name="submit" value="Recommend course" class="button" type="submit">
-				</div>
-			</form>
-		</div>
-		
-	</div> <!-- /recommend-course -->
-		</div> <!-- /content -->
+    <div id="recommend-course" class="rounded-corners">
+        <div class="top-left"></div>
+        <div class="top-right"></div>
+        <div class="bottom-left"></div>
+        <div class="bottom-right"></div>
+        <div class="bottom-border"></div>
+        <div class="left-border"></div>
+        <div class="right-border"></div>
+    
+        <h1>{{ course.code }} {{ course.name }}</h1>
+    
+        <div id="recommend-friend-list">
+            <form method="post" action="{% url recommendtofriends course.code %}">
+                {% for friend in friends %}
+                <div>
+                    <label for="{{ friend.user_id }}">
+                        <img src="{{ ASI_BASE_URL }}{{ friend.avatar.link.href }}/small_thumbnail" alt="">
+                        {{ friend.username }}
+                    </label>
+                    <input name="{{ friend.user_id }}" id="{{ friend.user_id }}" type="checkbox">
+                </div>
+                {% endfor %}
+                <div class="button">
+                    <input name="submit" value="Recommend course" class="button" type="submit">
+                </div>
+            </form>
+        </div>
+    
+    </div> <!-- /recommend-course -->
+        </div> <!-- /content -->
 {% endblock content %}

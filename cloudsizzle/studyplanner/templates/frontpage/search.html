@@ -3,13 +3,13 @@
 {% block title %}CloudSizzle | Search{% endblock title %}
 
 {% block content %}
-		
-	<div id="content">	
+    
+    <div id="content">    
         <ul id="breadcrumb">
             <li><a href="{% url frontpage %}">Home</a> &gt;</li>
             <li>Search</li>
         </ul>
-        
+    
         <div id="advanced-search" class="rounded-corners">
             <div class="top-left"></div>
             <div class="top-right"></div>
@@ -18,9 +18,9 @@
             <div class="bottom-border"></div>
             <div class="left-border"></div>
             <div class="right-border"></div>
-            
+    
             <h1>Search</h1>
-            
+    
             <form method="get" action="{% url search %}">
                 {% for field in searchform %}
                     <div>
@@ -33,14 +33,14 @@
                     <input name="search" value="Search" class="button" type="submit" />
                 </div>
             </form>
-            	
+    
             {% if courseresults or userresults %}
             <h2>Search results</h2>
             {% else %}
             <h2>No results</h2>
             {% endif %}
 
-	    {# The mess below prints out the amount of different types of hits #}
+        {# The mess below prints out the amount of different types of hits #}
 
             {# Amount of course results #}
             {% if courseresults %}
@@ -53,8 +53,8 @@
             {{ userresults|length }} user hits
             {% endif %}
             for the keyword "{{ query }}"</p>
-            
-    <!--		
+    
+    <!--    
             <ul class="pagination">
                 <li><a href="#">&lt; Previous</a></li>
                 <li><a href="#">1</a></li>
@@ -71,7 +71,7 @@
                 <li><a href="#">Next &gt;</a></li>
             </ul>
     -->
-            
+    
             {% if courseresults %}
             <h3>Courses</h3>
                 <table class="courses">
@@ -93,7 +93,7 @@
                     </tbody>
                 </table>
             {% endif %}
-            
+    
             {% if userresults %}
             <h3>Users</h3>
                 <table class="users">
@@ -142,9 +142,9 @@
                 <li><a href="#">Next &gt;</a></li>
             </ul>
     -->
-            
+    
         </div> <!-- /advanced-search -->
     </div> <!-- /content -->
-		
-		
+    
+    
 {% endblock content %}

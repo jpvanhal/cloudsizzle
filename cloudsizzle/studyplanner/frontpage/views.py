@@ -223,7 +223,7 @@ def profile(request, user_id=None):
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=user_id)
     context = RequestContext(request, {
-	'asi_session': request.session['asi_session'],
+        'asi_session': request.session['asi_session'],
         'profile_user': user,
         'username': username,
         'realname': realname,

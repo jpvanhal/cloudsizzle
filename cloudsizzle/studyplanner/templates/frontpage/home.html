@@ -4,50 +4,50 @@
 
 {% block content %}
 
-		
-		<div id="content">	<ul id="breadcrumb">
-		<li>Home &gt;</li>
-	</ul>
+    
+        <div id="content">    <ul id="breadcrumb">
+        <li>Home &gt;</li>
+    </ul>
 
-	<div id="news-feed" class="rounded-corners">
-		<div class="top-left"></div>
-		<div class="top-right"></div>
-		<div class="bottom-left"></div>
-		<div class="bottom-right"></div>
-		<div class="bottom-border"></div>
-		<div class="left-border"></div>
-		<div class="right-border"></div>
-		
-		<h2>News feed</h2>
-		
-		{% include feedurl %}
-	</div> <!-- /news-feed -->
-	
-	<div id="notifications" class="rounded-corners">
-		<div class="top-left"></div>
-		<div class="top-right"></div>
-		<div class="bottom-left"></div>
-		<div class="bottom-right"></div>
-		<div class="bottom-border"></div>
-		<div class="left-border"></div>
-		<div class="right-border"></div>
-		
-		<h2>Notifications</h2>
-		
+    <div id="news-feed" class="rounded-corners">
+        <div class="top-left"></div>
+        <div class="top-right"></div>
+        <div class="bottom-left"></div>
+        <div class="bottom-right"></div>
+        <div class="bottom-border"></div>
+        <div class="left-border"></div>
+        <div class="right-border"></div>
+    
+        <h2>News feed</h2>
+    
+        {% include feedurl %}
+    </div> <!-- /news-feed -->
+    
+    <div id="notifications" class="rounded-corners">
+        <div class="top-left"></div>
+        <div class="top-right"></div>
+        <div class="bottom-left"></div>
+        <div class="bottom-right"></div>
+        <div class="bottom-border"></div>
+        <div class="left-border"></div>
+        <div class="right-border"></div>
+    
+        <h2>Notifications</h2>
+    
         {% if friend_requests_num %}
             <p><a href="{% url notifications %}">{{ friend_requests_num }} new friend request{{ friend_requests_num|pluralize }}</a></p>
         {% endif %}
-        
+    
         {% if notification_num %}
             <p><a href="{% url notifications %}">{{notification_num}} new course recommendation{{ notification_num|pluralize }}</a></p>
         {% endif %}
-        
+    
         {% if not notification_num and not friend_requests_num %}
             <p>No notifications</p>
         {% endif %}
-		
-	</div> <!-- /notifications -->
-		</div> <!-- /content -->
-		
+    
+    </div> <!-- /notifications -->
+        </div> <!-- /content -->
+    
 {% endblock content %}
 

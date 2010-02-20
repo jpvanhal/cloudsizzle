@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-    <div id="content">	
+    <div id="content">    
         <ul id="breadcrumb">
             <li><a href="{% url home %}">Home</a> &gt;</li>
             <li><a href="{% url courselist.views.list_faculties %}">Courses</a> &gt;</li>
             {% if faculty.code %}<li><a href="{% url courselist.views.list_departments faculty.code %}">{{ faculty.name }}</a> &gt;</li>{% endif %}
             {% if department.code %}<li><a href="{% url courselist.views.list_courses faculty.code department.code %}">{{ department.name }}</a> &gt;</li>{% endif %}
         </ul>
-	
+    
         <div class="rounded-corners">
             <div class="top-left"></div>
             <div class="top-right"></div>
@@ -16,9 +16,9 @@
             <div class="bottom-border"></div>
             <div class="left-border"></div>
             <div class="right-border"></div>
-            
+    
             {% block courselistings %}
             {% endblock %}
         </div> <!-- /courses -->
-	</div> <!-- /content -->
+    </div> <!-- /content -->
 {% endblock %}

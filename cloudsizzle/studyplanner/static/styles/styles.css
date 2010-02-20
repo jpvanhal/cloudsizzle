@@ -187,14 +187,9 @@ table.courses a {
 
 /* Images */
 
-.feed-item img {
-	float: left;
-	margin-right: 10px;
+.friend img {
     width: 50px;
     height: 50px;
-}
-
-.friend img {
 	float: left;
 	margin-right: 15px;
 }
@@ -214,6 +209,18 @@ form#info img {
 }
 
 .notification-item  img {
+	float: left;
+	margin-right: 10px;
+}
+
+.left-col img {
+    width: 200px;
+    height: 232px;
+}
+
+.feed-item img {
+    width: 50px;
+    height: 50px;
 	float: left;
 	margin-right: 10px;
 }
@@ -324,6 +331,10 @@ table, th, td {
     border: none;
 }
 
+table thead tr th {
+    font-weight: bold;
+}
+
 table.profile-courses, table.profile-courses thead tr th, table.profile-courses tbody tr td {
     border: 1px solid #507dd6;
 }
@@ -331,7 +342,6 @@ table.profile-courses, table.profile-courses thead tr th, table.profile-courses 
 table.profile-courses thead tr th {
 	background-color: #5586e9;
 	color: #fff;
-	font-weight: bold;
 	font-size: 108%;
 	padding: 5px;
     border: none;
@@ -350,10 +360,6 @@ table#course tr th {
 
 table#course tr th, table#course tr td {
 	vertical-align: top;
-}
-
-td {
-	padding: 5px;
 }
 
 table.profile-courses tbody tr.odd td {

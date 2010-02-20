@@ -69,12 +69,10 @@ class ObjectPool(object):
             while self._unlocked:
                 obj = self._unlocked.pop()
                 if self._validate(obj):
-                    print "Reusing old connection"
                     self._locked.add(obj)
                     return obj
                 else:
                     self._expire(obj)
-            print "Creating new connection"
             obj = self._create()
             self._locked.add(obj)
             return obj

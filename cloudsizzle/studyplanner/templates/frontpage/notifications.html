@@ -28,15 +28,20 @@
 				<div class="notification-item{% if forloop.last %} last{% endif %}">
 					<a href="#"><img src="{{notification.img_scr}}" alt="{{notification.user_name}}"></a>
 					<p><a href="{{notification.user_scr}}">{{notification.user_name}}</a> {{notification.action}} <a href="{{notification.object_scr}}">{{notification.object_name}}</a></p>
-					<p class="date">{{notification.update_time}}</p>
-						<div>
-							<form method="post" action="{% url delete_notifications %}">
-								<input type="hidden" value="{{notification.object_scr}}" name="plan course"/>
-								<input name="plan_to_take" value="plan to take" class="button" type="submit">
-								<input name="ignore" value="Ignore" class="button" type="submit" >
-							</form>
-						</div>
-					</form>
+					<p class="date">{{notification.update_time|timesince}} ago</p>
+                    
+                    <form method="post" action="#">
+                        <div>
+                            <input type="hidden" value="{{notification.object_scr}}" name="plan course"/>
+                            <input name="plan_to_take" value="Plan to take" class="button" type="submit">
+                        </div>
+                    </form>
+                    <form method="post" action="{% url delete_notifications %}">
+                        <div>
+                            <input type="hidden" value="{{notification.object_scr}}" name="plan course"/>
+                            <input name="ignore" value="Ignore" class="button" type="submit" >
+                        </div>
+                    </form>
 				</div>
 			{% endfor %}
             

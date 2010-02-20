@@ -47,6 +47,10 @@ class PlannedCourse(models.Model):
 
     def __unicode__(self):
         return self.course_code + "/" + self.user_id
+    
+    class Meta:
+        #the user can plan one course only once
+        unique_together = ("user_id","course_code")
         
 class RecommendedCourse(models.Model):
     """

@@ -40,10 +40,11 @@ from studyplanner.common.planner_session import check_authentication
 from studyplanner.events.event import EventLog
 import api
 from studyplanner.events.models import PlannedCourse as PlannedCourseEvent
-from studyplanner.frontpage.models import PlannedCourse
+from studyplanner.frontpage.models import PlannedCourse, RecommendedCourse
 from cloudsizzle.asi.client import TimeOutError
 from studyplanner.courselist import utils
 from cloudsizzle.settings import ASI_BASE_URL
+from django.db import IntegrityError
 
 
 def index(request):
@@ -307,6 +308,8 @@ def planned_courses(request, user_id):
 
     If the request is POST this function will
     add a course to the planned courses.
+    
+    this comment seems to be not valid anymore,, wonder why it is changed?
     """
     try:
         user = api.people.get(user_id)
@@ -339,7 +342,15 @@ def add_to_planned_courses(request):
 
         if(course_code != None):
             course = PlannedCourse(course_code=course_code, user_id=uid)
-            course.save()
+            #course_code and user_id is unique together so this might throw
+            # an integrity error, the check should be handled by the userinterface 
+            #too
+            try:
+                course.save()
+            except IntegrityError:
+                return HttpResponseBadRequest(
+                    "The course is already in planned courses")
+                 
             event = PlannedCourseEvent(course_code=course_code, user_id=uid)
             event.save()
             request.method = "GET"
@@ -364,7 +375,7 @@ def remove_planned_course(request):
 
 
 @check_authentication
-def recommendcourse(request, coursecode):
+def recommendcourse(request, course_code):
     asi_session = request.session['asi_session']
 
     friend_ids = api.people.get_friends(asi_session.user_id)
@@ -376,7 +387,7 @@ def recommendcourse(request, coursecode):
 
         friends.append(friend)
 
-    course = api.course.get_course(coursecode)
+    course = api.course.get_course(course_code)
 
     template = loader.get_template("frontpage/recommend_course.html")
     context = RequestContext(request, {
@@ -388,14 +399,26 @@ def recommendcourse(request, coursecode):
 
 
 @check_authentication
-def recommend_to_friends(request, coursecode):
+def recommend_to_friends(request, course_code):
     """
     This method takes a post form with friend id's and
     adds to their recommended courses.
     """
-    res = request.POST
-    print res
-
+    asi_session = request.session['asi_session']
+    user_id = asi_session.user_id
+    
+    for friend_id, value in request.POST.iteritems():
+        if value == "on":
+            recommended_course = RecommendedCourse(
+                                    user_recommending = user_id, 
+                                    user_recommended = friend_id,
+                                    course_code = course_code
+                                    )
+            try:
+                recommended_course.save()
+            except IntegrityError:
+                pass
+                
     return HttpResponseRedirect(reverse("home"))
 
 

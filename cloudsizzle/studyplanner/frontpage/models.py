@@ -66,5 +66,8 @@ class RecommendedCourse(models.Model):
         return RecommendedCourse.objects.filter(user_recommended=user_id).order_by("-time")[0:10]
     @staticmethod
     def delete_course(user_id, course_code):
-        return RecommendedCourse.objects.get(user_recommended=user_id, course_code=course_code).delete()
+        return RecommendedCourse.objects.filter(user_recommended=user_id, course_code=course_code).delete()
+    @staticmethod
+    def get_notification_num(user_id):
+        return len(RecommendedCourse.objects.filter(user_recommended=user_id))
 

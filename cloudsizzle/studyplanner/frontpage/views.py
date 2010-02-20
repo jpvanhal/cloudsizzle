@@ -164,10 +164,12 @@ def home(request):
     template = loader.get_template("frontpage/home.html")
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=friends)
+    notification_num = RecommendedCourse.get_notification_num(user_id=user_id)
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
         'feedurl': feedurl,
         'feeds': feeds,
+        'notification_num':notification_num,
     })
     return HttpResponse(template.render(context))
 

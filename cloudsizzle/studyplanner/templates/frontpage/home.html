@@ -35,8 +35,11 @@
 		<h2>Notifications</h2>
 		  
 		<p><a href="http://lyrion.net/cloudsizzle/notifications.php">2 new friend requests</a></p>
-		<p><a href="/notifications/">3 new course recommendations</a></p>
+		<!--  if notification_num  > 0 %}-->
+			<p><a href="/notifications/">{{notification_num}} new course recommendations</a></p>
+		<!--  endif %} -->
 	</div> <!-- /notifications -->
 		</div> <!-- /content -->
 		
 {% endblock content %}
+

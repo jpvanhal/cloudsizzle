@@ -15,16 +15,16 @@
                 <th>Date</th>
             </tr>
         </thead>
-        <tbody
-            {% for course in courses %}>
+        <tbody>
+            {% for course in courses %}
             <tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
                 <td>{{ course.code }}</td>
                 <td>{{ course.name }}</td>
                 <td>{% if course.cr %}{{ course.cr }} cr{% else %}{{course.ocr}} ocr{% endif %}</td>
                 <td>{{ course.grade }}</td>
                 <td>{{ course.date }}</td>
-            </tr
-            {% endfor %}>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 

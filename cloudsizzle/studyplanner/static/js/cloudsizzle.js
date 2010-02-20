@@ -25,22 +25,40 @@ $(document).ready(function(){
         // set a unique id 
         id: 'codes', 
         is: function(s) { 
-			var match = /^[a-z]+\-[0-9]+\.[0-9]+$/i.test(s);
+			var match = /^[a-z]+(?:\-[0-9]+)?\.[a-z0-9]+$/i.test(s);
 			
             return match; 
         }, 
         format: function(s) { 
+			var pattern = /^([a-z]+)(?:\-|\.)/i;
+            var matches = s.match(pattern);
+            
+            var str = '';
+            for (var i = 0; i < matches[1].length; i++) {
+                var letter = matches[1].charCodeAt(i);
+                str += letter + '';
+            }
+            
+            str += s.toLowerCase().replace(/^[a-z]+\-/i, '').replace(/\./, '') + '';
+          
+            // format your data for normalization 
+            return str;
+        }, 
+        // set type, either numeric or text 
+        type: 'numeric' 
+    });
+    
+     $.tablesorter.addParser({ 
+        // set a unique id 
+        id: 'credits', 
+        is: function(s) { 
+			var match = /^[0-9]+\so?cr$/i.test(s);
+            
+            return match; 
+        }, 
+        format: function(s) { 
 			
-			var pattern = /^([a-z]+)\-/i;
-			var matches = s.match(pattern);
-			
-			var str = '';
-			for (var i = 0; i < matches[1].length; i++) {
-				var letter = matches[1].charCodeAt(i);
-				str += letter + '';
-			}
-			
-			str += s.toLowerCase().replace(/^[a-z]+\-/i, '').replace(/\./, '') + '';
+			str = s.toLowerCase().replace(/\so?cr/i, '');
 			
             // format your data for normalization 
             return str;

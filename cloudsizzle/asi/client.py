@@ -26,7 +26,7 @@
 import logging
 import threading
 import time
-from cloudsizzle.asi.service import AbstractService
+from cloudsizzle.asi.service import AbstractService, IgnoreData
 from cloudsizzle.kp import Triple, bnode
 
 LOG = logging.getLogger('cloudsizzle.asi.client')
@@ -50,6 +50,7 @@ class AbstractClient(AbstractService):
     """
     def __init__(self, sc, timeout=30):
         super(AbstractClient, self).__init__(sc)
+        self.requests = set()
         self.responses = {}
         self.condition = threading.Condition()
         self.timeout = timeout
@@ -68,7 +69,10 @@ class AbstractClient(AbstractService):
 
     def process(self, id_, data):
         with self.condition:
+            if data['response_to'] not in self.requests:
+                raise IgnoreData
             self.responses[data['response_to']] = data
+            self.requests.remove(data['response_to'])
             self.condition.notify_all()
 
     def request(self, **params):
@@ -84,13 +88,16 @@ class AbstractClient(AbstractService):
         LOG.debug('Making a {0} with parameters {1}.'.format(
             self.request_type, request))
 
-        triples = []
-        for key, value in request.iteritems():
-            triples.append(Triple(bnode('id'), key, value))
+        with self.condition:
+            triples = []
+            for key, value in request.iteritems():
+                triples.append(Triple(bnode('id'), key, value))
+            self.sc.insert(triples)
 
-        self.sc.insert(triples)
+            request_id = self.sc.last_result[1]['id']
+            if self.needs_response:
+                self.requests.add(request_id)
 
-        request_id = self.sc.last_result[1]['id']
         if self.needs_response:
             return self._get_response(request_id)
 

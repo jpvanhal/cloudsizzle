@@ -30,6 +30,11 @@ from cloudsizzle.utils import make_graph
 
 LOG = logging.getLogger('cloudsizzle.asi.service')
 
+
+class IgnoreData(Exception):
+    pass
+
+
 class AbstractService(object):
     """Abstract base class for building request-response type services through
     SIB.
@@ -76,6 +81,11 @@ class AbstractService(object):
         data -- A dict containing the data of the response or request that was
                 made.
 
+        Exceptions:
+        IgnoreData -- Raise this exception, if you want to ignore the data. If
+                      raised, the triples corresponding to data will not be
+                      removed from SIB.
+
         """
         pass
 
@@ -91,14 +101,20 @@ class AbstractService(object):
         for triple in added:
             id_ = str(triple.subject)
             triples = self.sc.query(Triple(id_, None, None))
-            self.sc.remove(triples)
             data = make_graph(triples)
             if 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' in data[id_]:
                 del data[id_]['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']
             LOG.debug('Received data with id {0} containing {1}.'.format(
                 id_, data))
 
-            self.process(id_, data[id_])
+            try:
+                LOG.debug('Processing data with id {0}.'.format(id_))
+                self.process(id_, data[id_])
+                LOG.debug('Removing data with id {0} from SIB.'.format(id_))
+                self.sc.remove(triples)
+            except IgnoreData:
+                # Don't remove triples from SIB if ignored.
+                LOG.debug('Data with id {0} ignored.'.format(id_))
 
     def subscribe(self):
         """Subscribes this service to the query_triple."""

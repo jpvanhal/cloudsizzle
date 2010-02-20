@@ -35,8 +35,25 @@ from django.forms.util import ErrorList
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(min_length=4, max_length=20)
-    password = forms.CharField(min_length=4, widget=forms.PasswordInput)
+    login_username = forms.CharField(
+        label="Username",
+        min_length=4,
+        max_length=20,
+        error_messages={
+            'required': 'Please enter a username',
+            'min_length': 'The username must be at least 4 characters',
+            'max_length': 'The username must be less than 21 characters'
+        }
+    )
+    login_password = forms.CharField(
+        label="Password",
+        min_length=4,
+        widget=forms.PasswordInput,
+        error_messages={
+            'required': 'Please enter a password',
+            'min_length': 'Password must be at least 4 characters'
+        }
+    )
 
 
 class RegisterForm(forms.Form):

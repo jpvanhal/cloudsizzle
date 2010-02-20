@@ -63,30 +63,10 @@ def login_register(request):
     # Django standard form processing pattern:
     # User submitted form by POST
     if request.method == 'POST':
-        print "login_register view posted"
-        login_form = LoginForm(request.POST, prefix='login')
-        register_form = RegisterForm(request.POST, prefix='register')
+        print "register view posted"
+        register_form = RegisterForm(request.POST)
 
-        if login_form.is_valid() and request.POST['submit'] == 'Login':
-            # Use API to try to login
-            # Write results to form if failed
-            # Otherwise show home here
-            print "login form was valid"
-            username = login_form.cleaned_data['username']
-            password = login_form.cleaned_data['password']
-            try:
-                print 'calling authenticate'
-                authenticate(request, username, password)
-                print 'authenticate returned'
-            except api.LoginFailed as message:
-                # assume that this always means bad username/password
-                return HttpResponseRedirect(reverse('login'))
-            except TimeOutError:
-                print "Timeout while authenticating"
-                return HttpResponseRedirect(reverse('internalerror'))
-            return HttpResponseRedirect(reverse('home'))
-
-        elif register_form.is_valid():
+        if register_form.is_valid():
             # Use API to try and register
             # If fails write errors to form
             # Otherwise login and show home here
@@ -102,8 +82,9 @@ def login_register(request):
             print "Calling api people.create"
             try:
                 api.people.create(username, password, email)
-            except ValueError as error:
-                register_form._errors['username'] = ErrorList(error.args)
+            except ValueError:
+                message = u'Your username is already taken. Please choose another.'
+                register_form._errors['username'] = ErrorList([message])
                 # And fall down to render_to_response
             else:
                 try:
@@ -119,9 +100,9 @@ def login_register(request):
                 return HttpResponseRedirect(reverse(welcome))
     # User loaded page with form
     else:
-        print "login-request view getted"
-        login_form = LoginForm(prefix='login')
-        register_form = RegisterForm(prefix='register')
+        print "register view getted"
+        login_form = LoginForm()
+        register_form = RegisterForm()
 
     return render_to_response(
         'frontpage/login-register.html',
@@ -133,8 +114,36 @@ def login_register(request):
 
 
 def login(request):
-    """Login page, only shown when wrong username or password is given."""
-    login_form = LoginForm(prefix='login')
+    # Django standard form processing pattern:
+    # User submitted form by POST
+    if request.method == 'POST':
+        print "login view posted"
+        login_form = LoginForm(request.POST)
+        
+        if login_form.is_valid() and request.POST['submit'] == 'Login':
+            # Use API to try to login
+            # Write results to form if failed
+            # Otherwise show home here
+            print "login form was valid"
+            username = login_form.cleaned_data['login_username']
+            password = login_form.cleaned_data['login_password']
+            try:
+                print 'calling authenticate'
+                authenticate(request, username, password)
+                print 'authenticate returned'
+            except api.LoginFailed as message:
+                # assume that this always means bad username/password
+                message = u'Please check your username and password'
+                login_form._errors['login_username'] = ErrorList([message])
+            except TimeOutError:
+                print "Timeout while authenticating"
+                message = u'A timeout occurred. Please try again.'
+                login_form._errors['login_username'] = ErrorList([message])
+            else:
+                return HttpResponseRedirect(reverse('home'))
+    else:
+        print "login view getted"
+        login_form = LoginForm()
 
     return render_to_response('frontpage/login.html',
         {'loginform': login_form}
@@ -223,7 +232,7 @@ def profile(request, user_id=None):
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=user_id)
     context = RequestContext(request, {
-        'asi_session': request.session['asi_session'],
+	'asi_session': request.session['asi_session'],
         'profile_user': user,
         'username': username,
         'realname': realname,

@@ -14,7 +14,7 @@
 <body>
     <div id="wrapper">
         <div id="header">
-            <a href="{% url home %}"><img src="/static/graphics/logo_small.png" alt="" id="logo" /></a>
+            <a href="{% url home %}"><img src="{{ MEDIA_URL }}graphics/logo_small.png" alt="" id="logo" /></a>
 
             <p id="username-text">Hello, {{ asi_session.username }}</p>
 
@@ -28,7 +28,7 @@
                 <div>
                     <input type="text" name="query" id="query" />
                     <input type="hidden" name="scope" value="all" id="scope" />
-                    <input type="image" src="/static/graphics/search_btn.png" name="submit_btn" class="search-button" />
+                    <input type="image" src="{{ MEDIA_URL }}graphics/search_btn.png" name="submit_btn" class="search-button" />
                 </div>
             </form>
 

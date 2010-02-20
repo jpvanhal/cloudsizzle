@@ -40,6 +40,7 @@ from studyplanner.common.planner_session import check_authentication
 from studyplanner.events.event import EventLog
 import api
 from studyplanner.events.models import PlannedCourse as PlannedCourseEvent
+from studyplanner.events.models import NewFriendEvent as NewFriendEventEvent
 from studyplanner.frontpage.models import PlannedCourse, RecommendedCourse
 from cloudsizzle.asi.client import TimeOutError
 from studyplanner.courselist import utils
@@ -281,7 +282,8 @@ def add_friend(request, user_id):
     print "adding friend: " + user_id
     session.add_friend(user_id)
     print "add returned"
-
+    event = NewFriendEventEvent(new_friend=user_id, user_id=own_id)
+    event.save()
     return HttpResponseRedirect(reverse("friends", args=[own_id]))
 
 

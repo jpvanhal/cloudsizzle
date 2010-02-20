@@ -102,9 +102,8 @@ def login_register(request):
             print "Calling api people.create"
             try:
                 api.people.create(username, password, email)
-            except ValueError:
-                message = u'Your username is already taken. Please choose another.'
-                register_form._errors['username'] = ErrorList([message])
+            except ValueError as error:
+                register_form._errors['username'] = ErrorList(error.args)
                 # And fall down to render_to_response
             else:
                 try:

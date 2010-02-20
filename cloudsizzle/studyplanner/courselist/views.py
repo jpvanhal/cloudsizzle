@@ -45,6 +45,7 @@ def list_faculties(request):
 
 @check_authentication
 def list_departments(request, faculty):
+    # Faculty is needed for breadcrumbs
     faculty = api.course.get_faculty_info(faculty)
     departments = api.course.get_departments_by_faculty(faculty['code'])
 
@@ -56,7 +57,7 @@ def list_departments(request, faculty):
 
 @check_authentication
 def list_courses(request, faculty, department):
-    # Faculty information is neeed for breadcrumbs
+    # Faculty & department information is needed for breadcrumbs
     faculty = api.course.get_faculty_info(faculty)
     department = api.course.get_department_info(department)
     courses = api.course.get_courses_by_department(department['code'])
@@ -78,17 +79,15 @@ def list_courses(request, faculty, department):
 
 @check_authentication
 def show_course(request, faculty, department, course):
+    # Faculty & department for breadcrumbs
     faculty = api.course.get_faculty_info(faculty)
     department = api.course.get_department_info(department)
 
     course = api.course.get_course(course)
 
-    #check if user has planned to take the course
     asi_session = request.session['asi_session']
     uid = asi_session.user_id
 
-    # Standard database stuff, check for existence by counting
-    # This should be made a function and moved to utils
     isplanned = PlannedCourse.objects.filter(user_id=uid,
                                      course_code=course['code']).count() > 0
 

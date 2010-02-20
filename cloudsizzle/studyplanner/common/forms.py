@@ -101,6 +101,7 @@ class RegisterForm(forms.Form):
         }
     )
 
+
     def clean(self):
         cleaned_data = self.cleaned_data
         password = cleaned_data.get("password")

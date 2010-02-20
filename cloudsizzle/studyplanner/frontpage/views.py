@@ -46,6 +46,9 @@ from cloudsizzle.asi.client import TimeOutError
 from studyplanner.courselist import utils
 from cloudsizzle.settings import ASI_BASE_URL
 from django.db import IntegrityError
+# For injecting error messages to registration form if registration failed
+# This is generally forms internal API.
+from django.forms.util import ErrorList
 
 
 def index(request):
@@ -95,22 +98,26 @@ def login_register(request):
             # Django has verified password
             email = register_form.cleaned_data['email']
             # Django has verified that consent is checked
-
+            
             print "Calling api people.create"
-            api.people.create(username, password, email)
-
-            print "Calling authenticate after register"
             try:
-                authenticate(request, username, password)
-            except api.LoginFailed:
-                # This means that the user who was succesfully
-                # registered could not authenticate.
-                print "Successful register -> failed auth"
-                return HttpResponseRedirect(reverse('internalerror'))
-            except TimeOutError:
-                print "Timeout while authenticating"
-                return HttpResponseRedirect(reverse('internalerror'))
-            return HttpResponseRedirect(reverse(welcome))
+                api.people.create(username, password, email)
+            except ValueError:
+                message = u'Your username is already taken. Please choose another.'
+                register_form._errors['username'] = ErrorList([message])
+                # And fall down to render_to_response
+            else:
+                try:
+                    authenticate(request, username, password)
+                except api.LoginFailed:
+                    # This means that the user who was succesfully
+                    # registered could not authenticate.
+                    print "Successful register -> failed auth"
+                    return HttpResponseRedirect(reverse('internalerror'))
+                except TimeOutError:
+                    print "Timeout while authenticating"
+                    return HttpResponseRedirect(reverse('internalerror'))
+                return HttpResponseRedirect(reverse(welcome))
     # User loaded page with form
     else:
         print "login-request view getted"
@@ -452,9 +459,11 @@ class SearchForm(forms.Form):
 def search(request):
     template = loader.get_template("frontpage/search.html")
     searchform = SearchForm(request.GET)
+    asi_session = request.session['asi_session']
     if searchform.is_valid():
         query = searchform.cleaned_data['query']
         scope = searchform.cleaned_data['scope']
+        session = request.session['asi_session']
         userresults = []
         courseresults = []
 
@@ -466,6 +475,8 @@ def search(request):
         if scope == 'all' or scope == 'courses':
             for coursecode in api.course.search(query):
                 details = api.course.get_course(coursecode)
+                details['friendcount'] = utils. \
+                    count_friends_taking_course(session.user_id, coursecode)
                 courseresults.append(details)
 
         context = RequestContext(request, {

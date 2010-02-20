@@ -33,13 +33,27 @@
                     <input name="search" value="Search" class="button" type="submit" />
                 </div>
             </form>
-            
-            {% if results %}
+            	
+            {% if courseresults or userresults %}
             <h2>Search results</h2>
-            <p>{{ results|length }} hits for the keyword "{{ query }}"</p>
             {% else %}
             <h2>No results</h2>
             {% endif %}
+
+	    {# The mess below prints out the amount of different types of hits #}
+
+            {# Amount of course results #}
+            {% if courseresults %}
+            <p>{{ courseresults|length }} course hits
+            {% endif %}
+            {# Amount of userresults #}
+            {% if userresults %}
+            {# Fixes the sentence if there were courseresults already #}
+            {% if courseresults %}and{% else %}<p>{% endif %}
+            {{ userresults|length }} user hits
+            {% endif %}
+            for the keyword "{{ query }}"</p>
+            
     <!--		
             <ul class="pagination">
                 <li><a href="#">&lt; Previous</a></li>
@@ -59,6 +73,7 @@
     -->
             
             {% if courseresults %}
+            <h3>Courses</h3>
                 <table class="courses">
                     <thead>
                         <tr>
@@ -72,7 +87,7 @@
                             <tr>
                                 <td><a href="{% url show_course result.faculty result.department result.code %}">{{ result.code }}</a></td>
                                 <td><a href="{% url show_course result.faculty result.department result.code %}">{{ result.name }}</a></td>
-                                <td>fix this</td>
+                                <td>{{ result.friendcount }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -80,6 +95,7 @@
             {% endif %}
             
             {% if userresults %}
+            <h3>Users</h3>
                 <table class="users">
                     <thead>
                         <tr>

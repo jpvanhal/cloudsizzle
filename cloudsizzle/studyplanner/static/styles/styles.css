@@ -98,6 +98,11 @@ h2 {
 	margin-top: 20px;
 }
 
+#welcome h2 {
+    font-size: 85%;
+    margin: 20px 0 10px 0;
+}
+
 /* /Headings */
 
 /* Text */
@@ -152,6 +157,11 @@ span.success {
 
 span.error {
     
+}
+
+#welcome p {
+    margin-bottom: 10px;
+    font-size: 93%;
 }
 
 /* /Text */

@@ -108,7 +108,7 @@ urlpatterns = patterns('',
  
     url(
         r'^notifications/$',
-        'studyplanner.frontpage.views.recommendation_notifications',
+        'studyplanner.frontpage.views.notifications',
         name='notifications'
     ),
     

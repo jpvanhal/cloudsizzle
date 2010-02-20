@@ -166,6 +166,8 @@ def home(request):
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=friends)
     notification_num = RecommendedCourse.get_notification_num(user_id=user_id)
+    pending_friend_ids = asi_session.get_pending_friend_requests()
+    
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
         'feedurl': feedurl,
@@ -254,20 +256,11 @@ def list_friends(request, user_id):
 
         friends.append(friend)
 
-    pending_friend_ids = asi_session.get_pending_friend_requests()
-    pending_requests = []
-
-    for id_ in pending_friend_ids:
-        pending = api.people.get(id_)
-        pending['user_id'] = id_
-        pending_requests.append(pending)
-
     template = loader.get_template("frontpage/friends.html")
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
         'ASI_BASE_URL': ASI_BASE_URL,
         'friends': friends,
-        'requests': pending_requests,
         'profile_user': profile_user,
         'template': 'friends'
     })
@@ -503,8 +496,28 @@ def registrations(request):
 
 
 def notifications(request):
+    asi_session = request.session['asi_session']
+    
+    asi_session = request.session['asi_session']
+    user_id = asi_session.user_id
+    notifications = EventLog.get_notifications(user_id)    
+    
+    pending_friend_ids = asi_session.get_pending_friend_requests()
+    pending_requests = []
+
+    for id_ in pending_friend_ids:
+        pending = api.people.get(id_)
+        pending['user_id'] = id_
+        pending_requests.append(pending)
+
+
     template = loader.get_template("frontpage/notifications.html")
-    context = RequestContext(request, {})
+    context = RequestContext(request, {
+                'ASI_BASE_URL': ASI_BASE_URL,
+                'asi_session': asi_session,
+                'requests': pending_requests,
+                'notifications': notifications
+    })
     return HttpResponse(template.render(context))
 
 

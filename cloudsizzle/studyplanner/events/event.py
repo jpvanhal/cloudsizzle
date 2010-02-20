@@ -123,7 +123,7 @@ class EventLog:
                 except (KeyError, TypeError):
                     friend_name = 'Unknown'
                 object_name = friend_name
-                action = 'became a friend of'
+                action = 'became friend with'
                 feeds.append(NewFriendEventLog(img_scr=img_scr,
                     user_name=user_name, user_scr=user_scr, action=action,
                     object_name=object_name, update_time=update_time,

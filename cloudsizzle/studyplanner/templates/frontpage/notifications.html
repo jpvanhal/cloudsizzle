@@ -18,10 +18,14 @@
 		
 		<h1>Notifications</h1>
 		
-		<div id="notification-list">
+		<div class="notification-list">
 			
+            {% if notifications %}
+                <h2>Course recommendations</h2>
+            {% endif %}
+            
 			{% for notification in notifications %}
-				<div class="notification-item">
+				<div class="notification-item{% if forloop.last %} last{% endif %}">
 					<a href="#"><img src="{{notification.img_scr}}" alt="{{notification.user_name}}"></a>
 					<p><a href="{{notification.user_scr}}">{{notification.user_name}}</a> {{notification.action}} <a href="{{notification.object_scr}}">{{notification.object_name}}</a></p>
 					<p class="date">{{notification.update_time}}</p>
@@ -35,6 +39,27 @@
 					</form>
 				</div>
 			{% endfor %}
+            
+		</div> <!-- /notifications -->
+        
+        <div class="notification-list">
+			
+            {% if requests %}
+                <h2>Pending friend requests</h2>
+            {% endif %}
+       
+            {% for request in requests %}
+                <div class="notification-item{% if forloop.last %} last{% endif %}">
+                    <a href="{% url profile request.user_id %}"><img src="{{ ASI_BASE_URL }}{{ request.avatar.link.href }}/small_thumbnail" alt="" /></a>
+                    <p><a href="{% url profile request.user_id %}">{{ request.username }}</a> has requested you as a friend</p>
+                    <form method="post" action="{% url addfriend request.user_id %}">
+                        <div>
+                            <input name="friend_id" value="{{ request.user_id }}" type="hidden">
+                            <input name="remove" value="Accept" class="button" type="submit">
+                        </div>
+                    </form>
+                </div>
+            {% endfor %}
 
 		</div> <!-- /notifications -->
 		

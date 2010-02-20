@@ -855,6 +855,10 @@ ul.tabs li.selected a {
 	overflow: hidden;
 }
 
+.notification-list {
+    margin-bottom: 20px;
+}
+
 .notification-item {
 	margin-bottom: 10px;
 	padding-bottom: 10px;

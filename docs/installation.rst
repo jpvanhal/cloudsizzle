@@ -12,8 +12,10 @@ CloudSizzle has the following software requirements:
 
 * Linux operating system
 * `Python`_ 2.6 (other versions are not supported)
-* `Smart-M3`_ 0.9.2 beta
+* `Smart-M3`_ 0.9.2 beta (note that only libwhiteboard, piglet and SIB daemon
+  are used)
 * `setuptools`_
+* `libxml2` typically available as libxml2-python or python-libxml2 package
 * `virtualenv`_ (optional, but recommended)
 
 Install this software in to your system by following their installation
@@ -46,12 +48,15 @@ Step 2. Change Python's default character encoding
 ==================================================
 
 By default, when converting unicode strings to regular strings, Python uses
-ASCII to encode the unicode string. This causes problems when the unicode
-string contains characters not in ASCII. In order to work around this, Python's
-default encoding needs to be changed. This can be done by creating a script
-called ``sitecustomize.py``. It's a special script Python will try to run on
-startup. It can be placed anywhere in Python's search path. A good place is in
-the ``site-packages`` directory within your Python ``lib`` directory.
+ASCII to encode the unicode string.  This causes problems when the unicode
+string contains characters not in ASCII. In order to work around this,
+Python's default encoding needs to be changed. This can be done by creating
+a script called ``sitecustomize.py``.  It's a special script Python will try
+to run on startup. It can be placed anywhere in Python's search path.  When
+using virtualenv (see below), ``lib/python2.6`` inside the environment is a
+good place and avoids breaking applications depending on the default. 
+Otherwise you can use the ``site-packages`` directory within your Python
+``lib`` directory.
 
 CloudSizzle uses UTF-8 encoding internally, so you should put this code in the
 ``sitecustomize.py`` script::

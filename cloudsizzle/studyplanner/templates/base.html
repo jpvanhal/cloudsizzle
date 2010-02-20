@@ -23,12 +23,7 @@
 				<li><a href="{% url profile %}">Profile</a></li>
 				<li><a href="{% url courses %}">Courses</a></li>
 			</ul>
-
-			<ul id="sub-nav">
-				<li><a href="#">Settings</a></li>
-				<li><a href="{% url logout_user %}">Logout</a></li>
-			</ul> <!-- /sub-nav -->
-
+            
             <form method="get" action="{% url search %}" id="search">
                 <div>
                     <input type="text" name="query" id="query" />
@@ -36,6 +31,13 @@
                     <input type="image" src="/static/graphics/search_btn.png" name="submit_btn" class="search-button" />
                 </div>
             </form>
+
+			<ul id="sub-nav">
+				<!--li><a href="#">Settings</a></li-->
+				<li><a href="{% url logout_user %}">Logout</a></li>
+			</ul> <!-- /sub-nav -->
+
+            
 		</div> <!-- /header -->
         
         {% block content %}

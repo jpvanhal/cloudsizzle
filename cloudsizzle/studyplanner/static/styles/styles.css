@@ -258,7 +258,10 @@ form#info img {
 }
 
 ul#sub-nav {
-	margin-left: 230px;
+    clear: none;
+	margin-right: 70px;
+    xborder: 1px solid #000;
+    float: right;
 }
 
 ul#sub-nav li {

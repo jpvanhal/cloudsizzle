@@ -13,16 +13,14 @@
 <body id="login-page">
 	<div id="wrapper">
 		<div id="header">
-			<h1><img src="/static/graphics/logo.png" alt="CloudSizzle login" id="logo" /></h1>
+			<h1><span>CloudSizzle social study planner login</span></h1>
 			
-			<div id="login">
-				<form method="post" action="{% url frontpage %}">
-					<div>{% for field in loginform %}
-						{{ field }}{% endfor %}
-						<input type="submit" name="submit" value="Login" class="button" />
-					</div>
-				</form>
-			</div> <!-- /login -->
+            <!--form method="post" action="{% url frontpage %}" id="login">
+                <div>{% for field in loginform %}
+                    {{ field }}{% endfor %}
+                    <input type="submit" name="submit" value="Login" class="button" />
+                </div>
+            </form-->
 		</div> <!-- /header -->
 		
 		<div id="content">
@@ -37,8 +35,18 @@
 				<div class="right-border"></div>
 				
 				<h2>CloudSizzle login</h2>
-				
-				<p class="errors">Your username and password didn't match. Please try again.</p>
+                
+                {% if loginform.errors %}
+					<p class="errors">
+					{% for field in loginform %}
+						{% if field.errors %}
+							{% for error in field.errors %}
+								{{ error|escape }}<br />
+							{% endfor %}
+						{% endif %}
+					{% endfor %}
+					</p>
+				{% endif %}
 				
 				<form method="post" action="{% url frontpage %}" id="login-form">
 					{% for field in loginform %}

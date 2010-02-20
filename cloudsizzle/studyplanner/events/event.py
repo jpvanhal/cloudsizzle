@@ -83,7 +83,7 @@ class EventLog:
             if hasattr(event, 'plannedcourse'):    
                 course_code = event.plannedcourse.course_code
                 object_name = course_code
-                action = 'enrolled to'
+                action = 'plans to take'
                 feeds.append(PlanCourseEventLog(img_scr=img_scr,
                     user_name=user_name, user_scr=user_scr, action=action,
                     object_name=object_name, update_time=update_time,

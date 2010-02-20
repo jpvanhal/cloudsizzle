@@ -101,6 +101,11 @@ class AbstractService(object):
         for triple in added:
             id_ = str(triple.subject)
             triples = self.sc.query(Triple(id_, None, None))
+
+            if not triples:
+                # Another process has already processed and removed triples
+                continue
+
             data = make_graph(triples)
             if 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' in data[id_]:
                 del data[id_]['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']

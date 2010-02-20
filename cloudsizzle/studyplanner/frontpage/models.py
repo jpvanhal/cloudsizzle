@@ -47,3 +47,13 @@ class PlannedCourse(models.Model):
 
     def __unicode__(self):
         return self.course_code + "/" + self.user_id
+        
+class RecommendedCourse(models.Model):
+    """
+    This is the model where we keep the courses
+    that has been recommended.
+    """
+    user_recommending = models.CharField(max_length=22)
+    user_recommended = models.CharField(max_length=22)
+    course_code = models.CharField(max_length=20)
+    time = models.DateTimeField(auto_now_add=True)

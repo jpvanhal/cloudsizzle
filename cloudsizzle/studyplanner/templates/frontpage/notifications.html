@@ -26,7 +26,7 @@
             
 			{% for notification in notifications %}
 				<div class="notification-item{% if forloop.last %} last{% endif %}">
-					<a href="#"><img src="{{notification.img_scr}}" alt="{{notification.user_name}}"></a>
+					<a href="{{notification.user_scr}}"><img src="{{notification.img_scr}}/small_thumbnail" alt=""></a>
 					<p><a href="{{notification.user_scr}}">{{notification.user_name}}</a> {{notification.action}} <a href="{{notification.object_scr}}">{{notification.object_name}}</a></p>
 					<p class="date">{{notification.update_time|timesince}} ago</p>
                     

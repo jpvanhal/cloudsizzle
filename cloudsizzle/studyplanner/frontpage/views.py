@@ -262,6 +262,7 @@ def list_friends(request, user_id):
     template = loader.get_template("frontpage/friends.html")
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
+        'ASI_BASE_URL': ASI_BASE_URL,
         'friends': friends,
         'requests': pending_requests,
         'profile_user': profile_user,
@@ -399,6 +400,7 @@ def recommendcourse(request, course_code):
 
     template = loader.get_template("frontpage/recommend_course.html")
     context = RequestContext(request, {
+        'ASI_BASE_URL': ASI_BASE_URL,
         'asi_session': asi_session,
         'friends': friends,
         'course': course
@@ -468,6 +470,7 @@ def search(request):
                 courseresults.append(details)
 
         context = RequestContext(request, {
+            'ASI_BASE_URL': ASI_BASE_URL,
             'searchform': searchform,
             'userresults': userresults,
             'courseresults': courseresults,

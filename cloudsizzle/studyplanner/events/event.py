@@ -91,7 +91,8 @@ class EventLog:
     @classmethod
     def builder(cls, user_id, events):
         feeds = []
-        img_scr = ASI_BASE_URL + '/people/' + user_id + '/@avatar'
+        img_scr = ASI_BASE_URL + '/people/' + user_id \
+                + '/@avatar/small_thumbnail'
         user_scr = reverse('profile', args=[user_id])
         user_inf = dict(api.people.get(user_id))
         try:

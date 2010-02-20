@@ -30,6 +30,7 @@ from django.shortcuts import render_to_response
 from studyplanner.common.planner_session import check_authentication
 from studyplanner.frontpage.models import PlannedCourse
 from studyplanner.courselist import utils
+from cloudsizzle.settings import ASI_BASE_URL
 import api
 
 
@@ -65,9 +66,13 @@ def list_courses(request, faculty, department):
         course['friendcount'] = utils.count_friends_taking_course(
                                     asi_session.user_id, course['code'])
 
-    return render_to_response('courselist/list_courses.html',
-        {'asi_session': asi_session,
-        'faculty': faculty, 'department': department, 'courses': courses},
+    return render_to_response('courselist/list_courses.html', 
+        {
+            'asi_session': asi_session,
+            'faculty': faculty, 
+            'department': department, 
+            'courses': courses
+        },
         context_instance=RequestContext(request))
 
 
@@ -99,7 +104,14 @@ def show_course(request, faculty, department, course):
     print friends
 
     return render_to_response('courselist/show_course.html',
-        {'asi_session': request.session['asi_session'],
-        'faculty': faculty, 'department': department, 'course': course,
-        'isplanned': isplanned, 'friends': friends, 'iscompleted': iscompleted},
+        {
+            'ASI_BASE_URL': ASI_BASE_URL,
+            'asi_session': request.session['asi_session'],
+            'faculty': faculty, 
+            'department': department, 
+            'course': course,
+            'isplanned': isplanned, 
+            'friends': friends, 
+            'iscompleted': iscompleted
+        },
         context_instance=RequestContext(request))

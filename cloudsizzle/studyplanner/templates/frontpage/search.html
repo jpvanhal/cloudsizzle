@@ -93,7 +93,7 @@
                     <tbody>
                         {% for result in userresults %}
                             <tr>
-                                <td><a href="{% url profile result.userid %}"><img src="{{ MEDIA_URL }}graphics/profile_picture_small.jpg" alt="" /></a></td>
+                                <td><a href="{% url profile result.userid %}"><img src="{{ ASI_BASE_URL }}{{ result.avatar.link.href }}/small_thumbnail" alt="" /></a></td>
                                 <td><a href="{% url profile result.userid %}">{{ result.username }}</a></td>
                                 <td>0</td>
                                 <td>0</td>

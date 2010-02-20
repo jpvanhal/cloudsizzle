@@ -125,13 +125,13 @@ urlpatterns = patterns('',
     ),
 
     url(
-        r'^recommendcourse/(?P<coursecode>[a-zA-Z0-9-\.]+)$',
+        r'^recommendcourse/(?P<course_code>[a-zA-Z0-9-\.]+)$',
         'studyplanner.frontpage.views.recommendcourse',
         name='recommendcourse'
     ),
 
     url(
-        r'^recommendtofriends/(?P<coursecode>[a-zA-Z0-9-\.]+)$',
+        r'^recommendtofriends/(?P<course_code>[a-zA-Z0-9-\.]+)$',
         'studyplanner.frontpage.views.recommend_to_friends',
         name='recommendtofriends'
     ),

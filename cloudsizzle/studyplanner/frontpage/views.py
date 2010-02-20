@@ -64,8 +64,8 @@ def login_register(request):
     # User submitted form by POST
     if request.method == 'POST':
         print "login_register view posted"
-        login_form = LoginForm(request.POST)
-        register_form = RegisterForm(request.POST)
+        login_form = LoginForm(request.POST, prefix='login')
+        register_form = RegisterForm(request.POST, prefix='register')
 
         if login_form.is_valid() and request.POST['submit'] == 'Login':
             # Use API to try to login
@@ -120,8 +120,8 @@ def login_register(request):
     # User loaded page with form
     else:
         print "login-request view getted"
-        login_form = LoginForm()
-        register_form = RegisterForm()
+        login_form = LoginForm(prefix='login')
+        register_form = RegisterForm(prefix='register')
 
     return render_to_response(
         'frontpage/login-register.html',
@@ -134,7 +134,7 @@ def login_register(request):
 
 def login(request):
     """Login page, only shown when wrong username or password is given."""
-    login_form = LoginForm()
+    login_form = LoginForm(prefix='login')
 
     return render_to_response('frontpage/login.html',
         {'loginform': login_form}

@@ -42,7 +42,7 @@
             <p><a href="{% url notifications %}">{{notification_num}} new course recommendation{{ notification_num|pluralize }}</a></p>
         {% endif %}
         
-        {% if not notification_num and not friend_requests %}
+        {% if not notification_num and not friend_requests_num %}
             <p>No notifications</p>
         {% endif %}
 		

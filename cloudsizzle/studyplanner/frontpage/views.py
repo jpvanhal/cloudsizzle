@@ -186,19 +186,6 @@ def home(request):
     return HttpResponse(template.render(context))
 
 @check_authentication
-def recommendation_notifications(request):
-    asi_session = request.session['asi_session']
-    user_id = asi_session.user_id
-    notifications = EventLog.get_notifications(user_id)    
-    template = loader.get_template("frontpage/notifications.html")
-    context = RequestContext(request,{
-        'asi_session': request.session['asi_session'],
-        'user_id': user_id,
-        'notifications': notifications,
-    })
-    return HttpResponse(template.render(context))
-
-@check_authentication
 def delete_notifications(request):
     asi_session = request.session['asi_session']
     user_id = asi_session.user_id
@@ -264,12 +251,22 @@ def list_friends(request, user_id):
         friend['user_id'] = friend_id
 
         friends.append(friend)
+    
+    pending_requests = []
+    if asi_session.user_id == user_id:
+        pending_friend_ids = asi_session.get_pending_friend_requests()
+
+        for id_ in pending_friend_ids:
+            pending = api.people.get(id_)
+            pending['user_id'] = id_
+            pending_requests.append(pending)
 
     template = loader.get_template("frontpage/friends.html")
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
         'ASI_BASE_URL': ASI_BASE_URL,
         'friends': friends,
+        'requests': pending_requests,
         'profile_user': profile_user,
         'template': 'friends'
     })

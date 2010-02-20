@@ -31,4 +31,25 @@
         {% endfor %}
     </div> <!-- /friends -->
     
+    {% if requests %}
+        <h2>Pending friend requests</h2>
+    {% endif %}
+    <div class="friends">
+        {% for request in requests %}
+            <div class="friend{% if forloop.last %} last{% endif %}">
+                <form method="post" action="{% url addfriend request.user_id %}">
+                    <div>
+                        <input name="friend_id" value="{{ request.user_id }}" type="hidden">
+                        <input name="remove" value="Accept" class="button" type="submit">
+                    </div>
+                </form>
+                
+                <a href="{% url profile request.user_id %}"><img src="{{ ASI_BASE_URL }}{{ request.avatar.link.href }}/small_thumbnail" alt=""></a>
+                <h2><a href="{% url profile request.user_id %}">{{ request.username }}</a></h2>
+                <p>FIXME mutual courses</p>
+                <p>FIXME mutual friends</p>
+                
+            </div> <!-- /friend -->
+        {% endfor %}
+    </div> <!-- /friends -->
 {% endblock profile-content %}

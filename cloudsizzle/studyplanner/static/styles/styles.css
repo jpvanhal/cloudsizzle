@@ -306,6 +306,7 @@ ul#breadcrumb li {
 
 ul#friend-list {
 	width: 600px;
+    margin-top: 20px;
 	overflow: hidden;
 }
 

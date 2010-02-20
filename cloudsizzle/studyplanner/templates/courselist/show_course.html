@@ -78,11 +78,19 @@
 			
 			<h2>Friends taking this course</h2>
 			
+            {% if friends %}
+                <p class="results">{{ friends|length }} friend{{ friends|pluralize }} {% if friends|length_is:"1" %}is{% else %}are{% endif %} currently planning to take this course</p>
+            {% else %}
+                <p class="results">No friends are currently planning to take this course</p>
+            {% endif %}
+            
+            {% if friends %}
 			<ul id="friend-list">
 				{% for friend in friends %}
 				<li><a href="{% url profile friend.user_id %}"><img src="{{ ASI_BASE_URL }}{{ friend.avatar.link.href }}/small_thumbnail" alt="" />{{ friend.username }}</a></li>
 				{% endfor %}
 			</ul> <!-- /friend-list -->
+            {% endif %}
 			
 		</div>
 	</div> <!-- /content -->

@@ -167,12 +167,14 @@ def home(request):
     feeds = EventLog.constructor(user_ids=friends)
     notification_num = RecommendedCourse.get_notification_num(user_id=user_id)
     pending_friend_ids = asi_session.get_pending_friend_requests()
+    friend_requests_num = len(pending_friend_ids)
     
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
         'feedurl': feedurl,
         'feeds': feeds,
         'notification_num':notification_num,
+        'friend_requests_num': friend_requests_num
     })
     return HttpResponse(template.render(context))
 

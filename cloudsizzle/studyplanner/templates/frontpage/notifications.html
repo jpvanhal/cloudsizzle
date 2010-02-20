@@ -3,7 +3,7 @@
 {% block content %}
 		
 		<div id="content">	<ul id="breadcrumb">
-		<li><a href="http://lyrion.net/cloudsizzle/home.php">Home</a> &gt;</li>
+		<li><a href="{% url home %}">Home</a> &gt;</li>
 		<li>Notifications</li>
 	</ul>
  
@@ -20,18 +20,21 @@
 		
 		<div id="notification-list">
 			
-			<div class="notification-item">
-				<a href="#"><img src="notifications_files/profile_picture_small.jpg" alt=""></a>
-				<p><a href="#">Matti Meik�l�inen</a> recommends T-76.5115 Software Development Project II to you</p>
-				<p class="date">2 hours ago</p>
-				<form method="post" action="#">
-					<div>
-						<input name="plan_to_take" value="Plan to take" class="button" type="submit">
-						<input name="ignore" value="Ignore" class="button" type="submit">
-					</div>
-				</form>
-			</div>
-			
+			{% for notification in notifications %}
+				<div class="notification-item">
+					<a href="#"><img src="{{notification.img_scr}}" alt="{{notification.user_name}}"></a>
+					<p><a href="{{notification.user_scr}}">{{notification.user_name}}</a> {{notification.action}} <a href="{{notification.object_scr}}">{{notification.object_name}}</a></p>
+					<p class="date">{{notification.update_time}}</p>
+						<div>
+							<form method="post" action="{% url delete_notifications %}">
+								<input type="hidden" value="{{notification.object_scr}}" name="plan course"/>
+								<input name="plan_to_take" value="plan to take" class="button" type="submit">
+								<input name="ignore" value="Ignore" class="button" type="submit" >
+							</form>
+						</div>
+					</form>
+				</div>
+			{% endfor %}
 
 		</div> <!-- /notifications -->
 		

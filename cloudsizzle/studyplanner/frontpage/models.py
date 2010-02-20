@@ -61,3 +61,10 @@ class RecommendedCourse(models.Model):
     user_recommended = models.CharField(max_length=22)
     course_code = models.CharField(max_length=20)
     time = models.DateTimeField(auto_now_add=True)
+    @staticmethod
+    def get_all_recommended_courses(user_id):
+        return RecommendedCourse.objects.filter(user_recommended=user_id).order_by("-time")[0:10]
+    @staticmethod
+    def delete_course(user_id, course_code):
+        return RecommendedCourse.objects.get(user_recommended=user_id, course_code=course_code).delete()
+

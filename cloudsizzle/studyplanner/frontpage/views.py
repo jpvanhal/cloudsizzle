@@ -173,13 +173,30 @@ def home(request):
 
 @check_authentication
 def recommendation_notifications(request):
-    try:
-        print request.META.QUERY_STRING
-    except Exception:
-        pass
+    asi_session = request.session['asi_session']
+    user_id = asi_session.user_id
+    notifications = EventLog.get_notifications(user_id)    
     template = loader.get_template("frontpage/notifications.html")
-    context = RequestContext(request)
+    context = RequestContext(request,{
+        'asi_session': request.session['asi_session'],
+        'user_id': user_id,
+        'notifications': notifications,
+    })
     return HttpResponse(template.render(context))
+
+@check_authentication
+def delete_notifications(request):
+    asi_session = request.session['asi_session']
+    user_id = asi_session.user_id
+    course_name = request.POST["plan course"]
+    course_code = str(course_name).split('/')[-1]
+    RecommendedCourse.delete_course(user_id=user_id, course_code=course_code)
+    
+    if "plan_to_take" in request.POST: 
+        forward_url = request.POST["plan course"]             
+    elif "ignore" in request.POST:
+        forward_url =  reverse("notifications")
+    return HttpResponseRedirect(forward_url)
 
 @check_authentication
 def profile(request, user_id=None):

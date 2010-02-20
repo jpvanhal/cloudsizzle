@@ -33,7 +33,7 @@ from django.core.urlresolvers import reverse
 from studyplanner.events.models import Event
 import api
 from cloudsizzle.settings import ASI_BASE_URL
-
+from studyplanner.frontpage.models import RecommendedCourse
 
 class EventLog:
 
@@ -46,6 +46,31 @@ class EventLog:
         self.object_name = object_name
         self.object_scr = object_scr
         self.update_time = update_time
+
+    @classmethod
+    def get_notifications(cls, user_id):
+        if user_id == None:
+            return []
+        result = []
+        notifications = RecommendedCourse.get_all_recommended_courses(user_id)
+        for notification in notifications:
+            user_id = notification.user_recommending
+            img_scr = ASI_BASE_URL + '/people/' + user_id + '/@avatar'
+            user_scr = reverse('profile', args=[user_id])
+            user_inf = dict(api.people.get(user_id))
+            try:
+                user_name = user_inf['username']
+            except (KeyError, TypeError):
+                user_name = 'Unknown'
+            course_code = notification.course_code
+            object_name = course_code
+            action = 'recommends'
+            update_time = notification.time
+            result.append(PlanCourseEventLog(img_scr=img_scr,
+                user_name=user_name, user_scr=user_scr, action=action,
+                object_name=object_name, update_time=update_time,
+                object_id=course_code)) 
+        return result 
 
     @classmethod
     def constructor(cls, user_ids):

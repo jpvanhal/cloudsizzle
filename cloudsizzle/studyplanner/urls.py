@@ -113,6 +113,12 @@ urlpatterns = patterns('',
     ),
     
     url(
+        r'^deletenotifications/$',
+        'studyplanner.frontpage.views.delete_notifications',
+        name='delete_notifications'
+    ),
+    
+    url(
         r'^registrations/$',
         'studyplanner.frontpage.views.registrations',
         name='registrations'

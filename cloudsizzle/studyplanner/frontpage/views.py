@@ -176,7 +176,7 @@ def recommendation_notifications(request):
     try:
         print request.META.QUERY_STRING
     except Exception:
-        pass 
+        pass
     template = loader.get_template("frontpage/notifications.html")
     context = RequestContext(request)
     return HttpResponse(template.render(context))
@@ -302,15 +302,6 @@ def friends_courses(request, user_id):
 
 @check_authentication
 def planned_courses(request, user_id):
-    """
-    If the request is GET this function returns
-    a list of all planned courses.
-
-    If the request is POST this function will
-    add a course to the planned courses.
-    
-    this comment seems to be not valid anymore,, wonder why it is changed?
-    """
     try:
         user = api.people.get(user_id)
     except api.people.UserDoesNotExist:
@@ -343,14 +334,14 @@ def add_to_planned_courses(request):
         if(course_code != None):
             course = PlannedCourse(course_code=course_code, user_id=uid)
             #course_code and user_id is unique together so this might throw
-            # an integrity error, the check should be handled by the userinterface 
+            # an integrity error, the check should be handled by the userinterface
             #too
             try:
                 course.save()
             except IntegrityError:
                 return HttpResponseBadRequest(
                     "The course is already in planned courses")
-                 
+
             event = PlannedCourseEvent(course_code=course_code, user_id=uid)
             event.save()
             request.method = "GET"
@@ -406,11 +397,11 @@ def recommend_to_friends(request, course_code):
     """
     asi_session = request.session['asi_session']
     user_id = asi_session.user_id
-    
+
     for friend_id, value in request.POST.iteritems():
         if value == "on":
             recommended_course = RecommendedCourse(
-                                    user_recommending = user_id, 
+                                    user_recommending = user_id,
                                     user_recommended = friend_id,
                                     course_code = course_code
                                     )
@@ -418,7 +409,7 @@ def recommend_to_friends(request, course_code):
                 recommended_course.save()
             except IntegrityError:
                 pass
-                
+
     return HttpResponseRedirect(reverse("home"))
 
 

@@ -98,6 +98,10 @@ h2 {
 	margin-top: 20px;
 }
 
+#advanced-search h3 {
+    margin-top: 20px;
+}
+
 #welcome h2 {
     font-size: 85%;
     margin: 20px 0 10px 0;
@@ -391,7 +395,7 @@ table.profile-courses {
     width: 100%;
 }
 
-table.courses thead tr th, #advanced-search th {
+.rounded-corners table.courses thead tr th, #advanced-search th {
 	background-color: #fff;
 	color: #0252c0;
 }

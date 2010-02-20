@@ -93,6 +93,15 @@ $(document).ready(function(){
         widgets: ['zebra']
     });
     
+    $('table#planned-courses').tablesorter({
+        widgets: ['zebra'],
+        headers: {
+            4: {
+                sorter: false
+            }
+        }
+    });
+    
     $('#advanced-search table.users form').submit(function () {
         
         var actionURL = $(this).attr('action');

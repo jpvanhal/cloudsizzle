@@ -5,7 +5,7 @@
 {% block profile-courses-content %}
     <h2>Planned courses</h2>
     
-    <table class="profile-courses">
+    <table class="profile-courses" id="planned-courses">
         <thead>
             <tr>
                 <th>Course code</th>
@@ -13,6 +13,7 @@
                 <th>Credits</th>
                 <!-- <th>Timing</th> -->
                 <th>Friends</th>
+                <th>Remove</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +33,9 @@
                 </td>
                 -->
                 <td>{{ course.friends }}</td>
+                <td>
+                    <a href="{% url remove_from_planned_courses %}?course_code={{ course.code }}">Remove</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

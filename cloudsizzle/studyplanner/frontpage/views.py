@@ -386,7 +386,10 @@ def remove_planned_course(request):
     we use this method because the AJAX http DELETE does not work
     with all browsers
     """
-    course_code = request.POST.get('course_code', None)
+    if request.method == "POST":
+        course_code = request.POST.get('course_code', None)
+    elif request.method == "GET":
+        course_code = request.GET.get('course_code', None)
     asi_session = request.session['asi_session']
     uid = asi_session.user_id
     PlannedCourse.objects.filter(user_id=uid, course_code=course_code).delete()

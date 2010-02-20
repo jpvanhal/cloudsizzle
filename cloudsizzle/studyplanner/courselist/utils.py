@@ -127,3 +127,29 @@ def count_friends_taking_course(user_id, course_code):
         .count()
 
     return count_of_friends
+
+def mutual_courses(user_id1, user_id2):
+    """Get list of mutual courses between two users
+    
+    Arguments:
+    user_id1, user_id2 --- ASI users between whom the common courses
+                           should be searched
+    
+    """
+    from django.db import connection
+    
+    query = """
+        SELECT a1.course_code
+        FROM frontpage_plannedcourse as a1, frontpage_plannedcourse as a2
+        WHERE a1.user_id = %s AND
+              a2.user_id = %s AND
+              a1.course_code = a2.course_code"""
+    
+    cursor = connection.cursor()
+    cursor.execute(query, [user_id1, user_id2])
+    
+    course_select = cursor.fetchall()
+    
+    courses = [code[0] for code in course_select]
+    
+    return courses

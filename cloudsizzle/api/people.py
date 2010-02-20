@@ -121,7 +121,20 @@ def get_friends(user_id):
 
     return friend_ids
 
-
+def get_mutual_friends(user_id1, user_id2):
+    """Get list of mutual friends between two users
+    
+    Arguments:
+    user_id1, user_id2: ASI ids for the people whose mutual friends are wanted
+    
+    """
+    friend_ids1 = get_friends(user_id1)
+    friend_ids2 = get_friends(user_id2)
+    
+    # According to Python docs, I should not need to cast the lists to sets
+    # still I do.
+    return set.intersection(set(friend_ids1), set(friend_ids2))
+    
 def search(query):
     """Return users based on their real names and usernames.
 

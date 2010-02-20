@@ -83,7 +83,6 @@ def login_register(request):
             try:
                 api.people.create(username, password, email)
             except ValueError:
-                message = u'Your username is already taken. Please choose another.'
                 register_form._errors['username'] = ErrorList([message])
                 # And fall down to render_to_response
             else:
@@ -476,12 +475,17 @@ def search(request):
             for userid in api.people.search(query):
                 details = api.people.get(userid)
                 details['userid'] = userid
+                # Note that is a set, template gets to count them
+                details['mutual_friends'] = api.people.get_mutual_friends(
+                                            asi_session.user_id, userid)
+                details['mutual_courses'] = utils.mutual_courses(
+                                            asi_session.user_id, userid)
                 userresults.append(details)
         if scope == 'all' or scope == 'courses':
             for coursecode in api.course.search(query):
                 details = api.course.get_course(coursecode)
                 details['friendcount'] = utils. \
-                    count_friends_taking_course(session.user_id, coursecode)
+                    count_friends_taking_course(asi_session.user_id, coursecode)
                 courseresults.append(details)
 
         context = RequestContext(request, {

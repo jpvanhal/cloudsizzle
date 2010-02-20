@@ -2,22 +2,22 @@ $(document).ready(function(){
     $('form#login').attr('autocomplete', 'off');
     $('form#sign-up').attr('autocomplete', 'off');
     
-    $('#login input#id_username').addClass('form-input-desc');
-    $('#login input#id_username').val('Username');
-    $('#login input#id_password').before('<input type="text" value="Password" id="password-clear" class="form-input-desc" />');
-    $('#login input#id_password').hide();
+    $('#login input#id_login-username').addClass('form-input-desc');
+    $('#login input#id_login-username').val('Username');
+    $('#login input#id_login-password').before('<input type="text" value="Password" id="password-clear" class="form-input-desc" />');
+    $('#login input#id_login-password').hide();
     
-    $('#login input#id_username').focus(function () {
-        if ($('#login input#id_username').val() == 'Username') {
-            $('#login input#id_username').removeClass('form-input-desc');
-            $('#login input#id_username').val('');
+    $('#login input#id_login-username').focus(function () {
+        if ($('#login input#id_login-username').val() == 'Username') {
+            $('#login input#id_login-username').removeClass('form-input-desc');
+            $('#login input#id_login-username').val('');
         }
     });
     
     $('#login input#password-clear').focus(function () {
         $('#login input#password-clear').remove();
-        $('#login input#id_password').show();
-        $('#login input#id_password').focus();
+        $('#login input#id_login-password').show();
+        $('#login input#id_login-password').focus();
     });
 	
 	// add parser through the tablesorter addParser method 

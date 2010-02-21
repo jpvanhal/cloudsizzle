@@ -138,11 +138,17 @@ $(document).ready(function(){
     
     $('#recommend-friend-list form input[type=checkbox]').hide();
     
-    $('#recommend-friend-list form input[type=checkbox]:checked').each(function () {
-        $(this).parent('div').css('border', '2px solid #0252C0');
-        $(this).parent('div').css('background-color', '#e8eafe');
-        $(this).parent('div').css('margin-right', '6px');
-        $(this).parent('div').css('margin-bottom', '11px');
+    $('#recommend-friend-list form input[type=checkbox]').each(function () {
+        if ($(this).attr('checked')) {
+            $(this).parent('div').css('border', '2px solid #0252C0');
+            $(this).parent('div').css('background-color', '#e8eafe');
+            $(this).parent('div').css('margin-right', '6px');
+            $(this).parent('div').css('margin-bottom', '11px');
+        }
+        
+        $(this).parent('div').children().each(function () {
+            $(this).css('cursor', 'pointer');
+        });
     });
     
     $('#recommend-friend-list form div').click(function () {

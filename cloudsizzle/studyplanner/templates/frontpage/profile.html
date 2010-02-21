@@ -8,29 +8,39 @@
         <img src="{{ avatar_url }}" alt="" id="profile-picture" />
         
         <h3>Mutual friends</h3>
+        {% if mutual_friends %}
+            <p>{{ mutual_friends|length }} mutual friend{{ mutual_friends|pluralize }}</p>
+        {% else %}
+            <p>No mutual friends</p>
+        {% endif %}
         
-        <ul class="friend-list" id="mutual-friends">
-            {% for mutual_friend in mutual_friends %}
-                <li{% if forloop.counter0|divisibleby:4 %} class="first"{% endif %}>
-                    <a href="{% url profile mutual_friend.user_id %}"><img src="{{ ASI_BASE_URL }}{{ mutual_friend.avatar.link.href }}/small_thumbnail" alt=""></a>
-                    <a href="{% url profile mutual_friend.user_id %}">{{ mutual_friend.username }}</a>
-                </li>
-            {% endfor %}
-        </ul>
+        {% if mutual_friends %}
+            <ul class="friend-list" id="mutual-friends">
+                {% for mutual_friend in mutual_friends %}
+                    <li{% if forloop.counter0|divisibleby:4 %} class="first"{% endif %}>
+                        <a href="{% url profile mutual_friend.user_id %}"><img src="{{ ASI_BASE_URL }}{{ mutual_friend.avatar.link.href }}/small_thumbnail" alt=""></a>
+                        <a href="{% url profile mutual_friend.user_id %}">{{ mutual_friend.username }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         
         <h3>Mutual courses</h3>
+        {% if mutual_courses %}
+            <p>{{ mutual_courses|length }} mutual course{{ mutual_courses|pluralize }}</p>
+        {% else %}
+            <p>No mutual courses</p>
+        {% endif %}
         
-        <ul id="mutual-courses">
-            {% for mutual_course in mutual_courses %}
-                <li>
-                    <a href="{% url show_course mutual_course.faculty mutual_course.department mutual_course.code %}">{{ mutual_course.code }} {{ mutual_course.name }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-        {% ifnotequal asi_session.user_id profile_user.user_id %}
-            <!--p><a href="#">{{ num_mutual_friends }} mutual friend{{ num_mutual_friends|pluralize }}</a></p>
-            <p><a href="#">{{ num_mutual_courses }} mutual course{{ num_mutual_courses|pluralize }}</a></p-->
-        {% endifnotequal %}
+        {% if mutual_courses %}
+            <ul id="mutual-courses">
+                {% for mutual_course in mutual_courses %}
+                    <li>
+                        <a href="{% url show_course mutual_course.faculty mutual_course.department mutual_course.code %}">{{ mutual_course.code }} {{ mutual_course.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
     
     <div class="right-col">

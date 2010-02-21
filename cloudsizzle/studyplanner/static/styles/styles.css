@@ -108,11 +108,12 @@ h2 {
 }
 
 .left-col h3 {
+    width: 236px;
+    padding: 5px;
     border-top: 1px solid #ccc;
     background-color: #e8eafe;
     font-size: 93%;
-    padding: 5px;
-    width: 236px;
+    margin-bottom: 5px;
 }
 
 /* /Headings */
@@ -174,6 +175,12 @@ span.error {
 #welcome p {
     margin-bottom: 10px;
     font-size: 93%;
+}
+
+.left-col p {
+    font-size: 77%;
+    margin-bottom: 10px;
+    color: #555;
 }
 
 /* /Text */
@@ -860,7 +867,7 @@ ul.tabs li.selected a {
 }
 
 .right-col {
-	width: 500px;
+	width: 590px;
     float: right;
 }
 

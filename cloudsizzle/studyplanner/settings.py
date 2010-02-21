@@ -1,11 +1,6 @@
 import os
 import sys
 
-## Include the directory for API in path
-
-sys.path.insert(0, os.path.normpath(os.path.join(os.path.dirname(__file__), "..")))
-sys.path.insert(0, os.path.normpath(os.path.join(os.path.dirname(__file__), "../..")))
-
 # Django settings for cloudsizzle project.
 
 DEBUG = True
@@ -18,7 +13,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = '/srv/cloudsizzle/djangodb/db.sqlite'             # Or path to database file if using sqlite3.
+DATABASE_NAME = 'db.sqlite'             # Or path to database file if using sqlite3.
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

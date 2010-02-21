@@ -29,23 +29,24 @@ split into individual applications or files.
 
 """
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, \
     HttpResponseBadRequest, Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django import forms
-from studyplanner.common.forms import LoginForm, RegisterForm
-from studyplanner.common.planner_session import is_authenticated, authenticate
-from studyplanner.common.planner_session import check_authentication
-from studyplanner.events.event import EventLog
-import api
-from studyplanner.events.models import PlannedCourse as PlannedCourseEvent
-from studyplanner.events.models import NewFriendEvent as NewFriendEventEvent
-from studyplanner.frontpage.models import PlannedCourse, RecommendedCourse
+from cloudsizzle.studyplanner.common.forms import LoginForm, RegisterForm
+from cloudsizzle.studyplanner.common.planner_session import \
+    is_authenticated, authenticate, check_authentication
+from cloudsizzle.studyplanner.events.event import EventLog
+from cloudsizzle import api
+from cloudsizzle.studyplanner.events.models import \
+    PlannedCourse as PlannedCourseEvent, NewFriendEvent
+from cloudsizzle.studyplanner.frontpage.models import \
+    PlannedCourse, RecommendedCourse
 from cloudsizzle.asi.client import TimeOutError
-from studyplanner.courselist import utils
+from cloudsizzle.studyplanner.courselist import utils
 from cloudsizzle.settings import ASI_BASE_URL
-from django.db import IntegrityError
 
 # For injecting error messages to registration form if registration failed
 # This is generally forms internal API.
@@ -328,7 +329,7 @@ def add_friend(request, user_id):
     print "adding friend: " + user_id
     session.add_friend(user_id)
     print "add returned"
-    event = NewFriendEventEvent(new_friend=user_id, user_id=own_id)
+    event = NewFriendEvent(new_friend=user_id, user_id=own_id)
     event.save()
     return HttpResponseRedirect(reverse("friends", args=[own_id]))
 

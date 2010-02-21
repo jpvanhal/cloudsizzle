@@ -30,10 +30,10 @@ Created on Feb 14, 2010
 '''
 
 from django.core.urlresolvers import reverse
-from studyplanner.events.models import Event
-import api
+from cloudsizzle.studyplanner.events.models import Event
+from cloudsizzle import api
 from cloudsizzle.settings import ASI_BASE_URL
-from studyplanner.frontpage.models import RecommendedCourse
+from cloudsizzle.studyplanner.frontpage.models import RecommendedCourse
 
 class EventLog:
 

@@ -28,11 +28,12 @@
 from django.http import Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from studyplanner.common.planner_session import check_authentication
-from studyplanner.frontpage.models import PlannedCourse
-from studyplanner.courselist import utils
+from cloudsizzle.studyplanner.common.planner_session import \
+    check_authentication
+from cloudsizzle.studyplanner.frontpage.models import PlannedCourse
+from cloudsizzle.studyplanner.courselist import utils
 from cloudsizzle.settings import ASI_BASE_URL
-import api
+from cloudsizzle import api
 
 
 @check_authentication

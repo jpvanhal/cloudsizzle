@@ -25,8 +25,8 @@
 
 """Utility functions related to courses."""
 
-from studyplanner.frontpage.models import PlannedCourse
-import api
+from cloudsizzle.studyplanner.frontpage.models import PlannedCourse
+from cloudsizzle import api
 
 
 def courses_taken_by_friends(user_id):

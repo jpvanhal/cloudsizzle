@@ -29,7 +29,7 @@ Classes/functions related to global session management in the studyplanner.
 """
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from api import Session
+from cloudsizzle import api
 
 
 def check_authentication(func):
@@ -60,7 +60,7 @@ def authenticate(request, username, password):
 
     """
     # Call the ASI authentication functions here
-    asi_session = Session(username, password)
+    asi_session = api.Session(username, password)
     # This will throw exception for invalid username
     # Let's say the caller will handle it.
     asi_session.open()

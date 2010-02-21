@@ -35,24 +35,26 @@
             </form>
     
             {% if courseresults or userresults %}
-            <h2>Search results</h2>
+                <h2>Search results</h2>
             {% else %}
-            <h2>No results</h2>
+                <h2>No results</h2>
             {% endif %}
 
         {# The mess below prints out the amount of different types of hits #}
 
             {# Amount of course results #}
-            {% if courseresults %}
-            <p>{{ courseresults|length }} course hits
+            {% if courseresults or userresults %}
+                {% if courseresults %}
+                    <p>{{ courseresults|length }} course hits
+                {% endif %}
+                {# Amount of userresults #}
+                {% if userresults %}
+                    {# Fixes the sentence if there were courseresults already #}
+                    {% if courseresults %}and{% else %}<p>{% endif %}
+                    {{ userresults|length }} user hits
+                {% endif %}
+                for the keyword "{{ query }}"</p>
             {% endif %}
-            {# Amount of userresults #}
-            {% if userresults %}
-            {# Fixes the sentence if there were courseresults already #}
-            {% if courseresults %}and{% else %}<p>{% endif %}
-            {{ userresults|length }} user hits
-            {% endif %}
-            for the keyword "{{ query }}"</p>
     
     <!--    
             <ul class="pagination">

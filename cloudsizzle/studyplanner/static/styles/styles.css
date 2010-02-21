@@ -425,6 +425,7 @@ table#course tr th {
 
 table#course tr th, table#course tr td {
 	vertical-align: top;
+    padding: 5px;
 }
 
 table.profile-courses tbody tr.odd td {

@@ -5,18 +5,22 @@
 {% block courselistings %}
     <h1>Courses by unit</h1>
     
-    <table class="courses">
-        <thead>
-            <tr>
-                <th>Unit</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for faculty in faculties %}
-                <tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
-                    <td><a href="{% url courselist.views.list_departments faculty.code %}">{{ faculty.name }}</a></td>
+    {% if departments %}
+        <table class="courses">
+            <thead>
+                <tr>
+                    <th>Unit</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for faculty in faculties %}
+                    <tr{% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>
+                        <td><a href="{% url courselist.views.list_departments faculty.code %}">{{ faculty.name }}</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No units</p>
+    {% endif %}
 {% endblock %}

@@ -26,7 +26,7 @@
     
             {% for notification in notifications %}
                 <div class="notification-item{% if forloop.last %} last{% endif %}">
-                    <a href="{{notification.user_scr}}"><img src="{{notification.img_scr}}" alt=""></a>
+                    <a href="{{notification.user_scr}}"><img src="{{notification.img_scr}}" alt="" /></a>
                     <p><a href="{{notification.user_scr}}">{{notification.user_name}}</a> {{notification.action}} <a href="{{notification.object_scr}}">{{notification.object_name}}</a></p>
                     <p class="date">{{notification.update_time|timesince}} ago</p>
     
@@ -38,8 +38,8 @@
                     </form-->
                     <form method="post" action="{% url delete_notifications %}">
                         <div>
-                            <input type="hidden" value="{{notification.object_scr}}" name="plan course"/>
-                            <input name="ignore" value="Delete" class="button" type="submit" >
+                            <input type="hidden" value="{{notification.object_scr}}" name="plan course" />
+                            <input name="ignore" value="Delete" class="button" type="submit" />
                         </div>
                     </form>
                 </div>
@@ -59,8 +59,8 @@
                     <p><a href="{% url profile request.user_id %}">{{ request.username }}</a> has requested you as a friend</p>
                     <form method="post" action="{% url addfriend request.user_id %}">
                         <div>
-                            <input name="friend_id" value="{{ request.user_id }}" type="hidden">
-                            <input name="remove" value="Accept" class="button" type="submit">
+                            <input name="friend_id" value="{{ request.user_id }}" type="hidden" />
+                            <input name="remove" value="Accept" class="button" type="submit" />
                         </div>
                     </form>
                 </div>

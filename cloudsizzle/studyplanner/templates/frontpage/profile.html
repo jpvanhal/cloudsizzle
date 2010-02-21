@@ -19,7 +19,9 @@
 	            <ul class="friend-list" id="mutual-friends">
 	                {% for mutual_friend in mutual_friends %}
 	                    <li{% if forloop.counter0|divisibleby:4 %} class="first"{% endif %}>
-	                        <a href="{% url profile mutual_friend.user_id %}"><img src="{{ ASI_BASE_URL }}{{ mutual_friend.avatar.link.href }}/small_thumbnail" alt=""></a>
+	                        <a href="{% url profile mutual_friend.user_id %}">
+                                <img src="{{ ASI_BASE_URL }}{{ mutual_friend.avatar.link.href }}/small_thumbnail" alt="" />
+                            </a>
 	                        <a href="{% url profile mutual_friend.user_id %}">{{ mutual_friend.username }}</a>
 	                    </li>
 	                {% endfor %}

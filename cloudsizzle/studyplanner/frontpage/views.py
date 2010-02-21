@@ -209,7 +209,6 @@ def delete_notifications(request):
 @check_authentication
 def profile(request, user_id=None):
     template = loader.get_template("frontpage/profile.html")
-    self_profile_flag = False if user_id else True  #see myself
     asi_session = request.session['asi_session']
     user_id = user_id if user_id else asi_session.user_id
 
@@ -230,28 +229,26 @@ def profile(request, user_id=None):
         avatar_url = ''
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=user_id)
-    if not self_profile_flag:
-        # mutual friends
-        mutual_friends = []
-        mutual_friend_ids = api.people.get_mutual_friends(
-                                                    asi_session.user_id, user_id)
-        for mutual_friend_id in mutual_friend_ids:
-            mutual_friends.append(api.people.get(mutual_friend_id))
-    
-        # mutual courses
-        mutual_courses = []
-        mutual_course_ids = utils.mutual_courses(
-                                            asi_session.user_id, user_id)
-    
-        for mutual_course_id in mutual_course_ids:
-            try:
-                mutual_courses.append(api.course.get_course(mutual_course_id))
-            except Exception:
-                # Just ignore invalid course codes
-                pass
-    else:
-        mutual_friends = []
-        mutual_courses = []
+
+    # mutual friends
+    mutual_friends = []
+    mutual_friend_ids = api.people.get_mutual_friends(
+                                                asi_session.user_id, user_id)
+    for mutual_friend_id in mutual_friend_ids:
+        mutual_friends.append(api.people.get(mutual_friend_id))
+
+    # mutual courses
+    mutual_courses = []
+    mutual_course_ids = utils.mutual_courses(
+                                        asi_session.user_id, user_id)
+
+    for mutual_course_id in mutual_course_ids:
+        try:
+            mutual_courses.append(api.course.get_course(mutual_course_id))
+        except Exception:
+            # Just ignore invalid course codes
+            pass
+
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
         'ASI_BASE_URL': ASI_BASE_URL,
@@ -262,7 +259,6 @@ def profile(request, user_id=None):
         'template': 'profile',
         'feedurl': feedurl,
         'feeds': feeds,
-        'self_flag': self_profile_flag,
         'mutual_friends': mutual_friends,
         'mutual_courses': mutual_courses
     })
@@ -293,7 +289,7 @@ def list_friends(request, user_id):
         except api.people.UserDoesNotExist:
             # Invalid friend relationship where friend does not exist in ASI
             pass
-    
+
     pending_requests = []
     if asi_session.user_id == user_id:
         pending_friend_ids = asi_session.get_pending_friend_requests()

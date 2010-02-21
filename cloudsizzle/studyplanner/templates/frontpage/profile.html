@@ -6,14 +6,15 @@
     <div class="left-col">
         <h2>{{ username }}</h2>
         <img src="{{ avatar_url }}" alt="" id="profile-picture" />
-        {% if not self_flag %}
+
+        {% ifnotequal asi_session.user_id profile_user.user_id %}
 	        <h3>Mutual friends</h3>
 	        {% if mutual_friends %}
 	            <p>{{ mutual_friends|length }} mutual friend{{ mutual_friends|pluralize }}</p>
 	        {% else %}
 	            <p>No mutual friends</p>
 	        {% endif %}
-	        
+
 	        {% if mutual_friends %}
 	            <ul class="friend-list" id="mutual-friends">
 	                {% for mutual_friend in mutual_friends %}
@@ -24,14 +25,14 @@
 	                {% endfor %}
 	            </ul>
 	        {% endif %}
-	        
+
 	        <h3>Mutual courses</h3>
 	        {% if mutual_courses %}
 	            <p>{{ mutual_courses|length }} mutual course{{ mutual_courses|pluralize }}</p>
 	        {% else %}
 	            <p>No mutual courses</p>
 	        {% endif %}
-	        
+
 	        {% if mutual_courses %}
 	            <ul id="mutual-courses">
 	                {% for mutual_course in mutual_courses %}
@@ -41,16 +42,16 @@
 	                {% endfor %}
 	            </ul>
 	        {% endif %}
-		{% endif %}
+		{% endifnotequal %}
     </div>
-    
+
     <div class="right-col">
         <h3>{{ realname }}</h3>
-    
+
         <div id="personal-news-feed">
             <h3>News feed</h3>
-    
-            {% include feedurl %}    
+
+            {% include feedurl %}
         </div>
     </div> <!-- right-col -->
 {% endblock profile-content %}

@@ -68,7 +68,7 @@
                     </form>
                 {% endif %}
     
-                <form method="get" action="{% url recommendcourse course.code %}">
+                <form method="post" action="{% url recommendcourse course.code %}">
                     <div>
                         <input type="submit" name="submit" value="Recommend course" class="button" />
                     </div>

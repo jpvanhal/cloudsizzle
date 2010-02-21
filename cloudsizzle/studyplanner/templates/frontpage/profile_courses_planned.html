@@ -13,7 +13,9 @@
                 <th>Credits</th>
                 <!-- <th>Timing</th> -->
                 <th>Friends</th>
-                <th>Remove</th>
+                {% ifequal asi_session.user_id profile_user.user_id %}
+                    <th>Remove</th>
+                {% endifequal %}
             </tr>
         </thead>
         <tbody>
@@ -33,9 +35,11 @@
                 </td>
                 -->
                 <td>{{ course.friends }}</td>
-                <td>
-                    <a href="{% url remove_from_planned_courses %}?course_code={{ course.code }}">Remove</a>
-                </td>
+                {% ifequal asi_session.user_id profile_user.user_id %}
+                    <td>
+                        <a href="{% url remove_from_planned_courses %}?course_code={{ course.code }}">Remove</a>
+                    </td>
+                {% endifequal %}
             </tr>
             {% endfor %}
         </tbody>

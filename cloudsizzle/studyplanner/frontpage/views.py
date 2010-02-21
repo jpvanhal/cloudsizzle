@@ -282,11 +282,15 @@ def list_friends(request, user_id):
     for friend_id in friend_ids:
         try:
             friend = api.people.get(friend_id)
+            friend['num_mutual_friends'] = len(api.people.get_mutual_friends(
+                                                asi_session.user_id, friend_id))
+            friend['num_mutual_courses'] = len(utils.mutual_courses(
+                                                asi_session.user_id, friend_id))
             friends.append(friend)
         except api.people.UserDoesNotExist:
             # Invalid friend relationship where friend does not exist in ASI
             pass
-
+    
     pending_requests = []
     if asi_session.user_id == user_id:
         pending_friend_ids = asi_session.get_pending_friend_requests()
@@ -294,6 +298,10 @@ def list_friends(request, user_id):
         for id_ in pending_friend_ids:
             try:
                 pending = api.people.get(id_)
+                pending['num_mutual_friends'] = len(api.people.get_mutual_friends(
+                                                    asi_session.user_id, friend_id))
+                pending['num_mutual_courses'] = len(utils.mutual_courses(
+                                                    asi_session.user_id, friend_id))
                 pending_requests.append(pending)
             except api.people.UserDoesNotExist:
                 # Invalid friend relationship where friend does not exist in ASI

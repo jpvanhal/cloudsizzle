@@ -230,15 +230,44 @@ def profile(request, user_id=None):
         avatar_url = ''
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=user_id)
+    
+    mutual_friends = []
+    mutual_friend_ids = api.people.get_mutual_friends(
+                                                asi_session.user_id, user_id)
+    for mutual_friend_id in mutual_friend_ids:
+        mutual_friends.append(api.people.get(mutual_friend_id))
+    
+    mutual_courses = []
+    mutual_course_ids = utils.mutual_courses(
+                                        asi_session.user_id, user_id)
+    
+    for mutual_course_id in mutual_course_ids:
+        mutual_courses.append(api.course.get_course(mutual_course_id))
+    
+    #mutual friends and mutual courses
+    if asi_session.user_id != user_id:
+        num_mutual_friends = len(api.people.get_mutual_friends(
+                                                asi_session.user_id, user_id))
+        num_mutual_courses = len(utils.mutual_courses(
+                                                asi_session.user_id, user_id))
+    else:
+        num_mutual_friends = 0
+        num_mutual_courses = 0
+    
     context = RequestContext(request, {
-	'asi_session': request.session['asi_session'],
+        'asi_session': request.session['asi_session'],
+        'ASI_BASE_URL': ASI_BASE_URL,
         'profile_user': user,
         'username': username,
         'realname': realname,
         'avatar_url': avatar_url,
-        'template':'profile',
-        'feedurl':feedurl,
-        'feeds':feeds,
+        'template': 'profile',
+        'feedurl': feedurl,
+        'feeds': feeds,
+        'mutual_friends': mutual_friends,
+        'mutual_courses': mutual_courses,
+        'num_mutual_friends': num_mutual_friends,
+        'num_mutual_courses': num_mutual_courses
     })
     return HttpResponse(template.render(context))
 

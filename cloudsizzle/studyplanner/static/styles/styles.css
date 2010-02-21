@@ -107,6 +107,14 @@ h2 {
     margin: 20px 0 10px 0;
 }
 
+.left-col h3 {
+    border-top: 1px solid #ccc;
+    background-color: #e8eafe;
+    font-size: 93%;
+    padding: 5px;
+    width: 236px;
+}
+
 /* /Headings */
 
 /* Text */
@@ -177,6 +185,10 @@ a {
 	text-decoration: none;
 }
 
+a:hover {
+    text-decoration: underline;
+}
+
 ul#courses-sub-menu li a {
 	color: #fff;
 }
@@ -185,7 +197,7 @@ ul#courses-sub-menu li.selected a {
 	font-weight: bold;
 }
 
-ul#friend-list li a {
+ul.friend-list li a {
 	font-size: 85%;
 }
 
@@ -208,7 +220,7 @@ table.courses a {
 	margin-right: 15px;
 }
 
-ul#friend-list li img {
+ul.friend-list li img {
 	display: block;
 }
 
@@ -227,9 +239,10 @@ form#info img {
 	margin-right: 10px;
 }
 
-.left-col img {
+img#profile-picture {
     width: 200px;
     height: 232px;
+    margin-bottom: 20px;
 }
 
 .feed-item img {
@@ -321,18 +334,44 @@ ul#breadcrumb li {
 	font-size: 85%;
 }
 
-ul#friend-list {
+ul#course-friend-list {
 	width: 600px;
     margin-top: 20px;
 	overflow: hidden;
 }
 
-ul#friend-list li {
+.friend-list li {
 	float: left;
 	margin-right: 15px;
 	margin-bottom: 10px;
 	width: 50px;
 	word-wrap: break-word;
+}
+
+.friend-list li.first {
+    clear: left;
+}
+
+.friend-list li.last {
+    margin-right: 0;
+}
+
+ul#mutual-friends {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+ul#mutual-friends li {
+    float: left;
+}
+
+ul#mutual-courses {
+    width: 246px;
+    font-size: 85%;
+}
+
+ul#mutual-courses li {
+    margin-bottom: 10px;
 }
 
 /* /Lists */
@@ -525,6 +564,10 @@ form div.checkbox input {
 	clear: none;
 	margin-right: 10px;
 	margin-bottom: 15px;
+}
+
+#recommend-friend-list form div.first {
+    clear: left;
 }
 
 #recommend-friend-list input {
@@ -812,13 +855,13 @@ ul.tabs li.selected a {
 }
 
 .left-col {
-	width: 250px;
+	width: 270px;
 	float: left;
 }
 
 .right-col {
 	width: 500px;
-    float: left;
+    float: right;
 }
 
 .right-col-courses {

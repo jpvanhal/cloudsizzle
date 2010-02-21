@@ -5,7 +5,32 @@
 {% block profile-content %}
     <div class="left-col">
         <h2>{{ username }}</h2>
-        <img src="{{ avatar_url }}" alt="">
+        <img src="{{ avatar_url }}" alt="" id="profile-picture" />
+        
+        <h3>Mutual friends</h3>
+        
+        <ul class="friend-list" id="mutual-friends">
+            {% for mutual_friend in mutual_friends %}
+                <li{% if forloop.counter0|divisibleby:4 %} class="first"{% endif %}>
+                    <a href="{% url profile mutual_friend.user_id %}"><img src="{{ ASI_BASE_URL }}{{ mutual_friend.avatar.link.href }}/small_thumbnail" alt=""></a>
+                    <a href="{% url profile mutual_friend.user_id %}">{{ mutual_friend.username }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <h3>Mutual courses</h3>
+        
+        <ul id="mutual-courses">
+            {% for mutual_course in mutual_courses %}
+                <li>
+                    <a href="{% url show_course mutual_course.faculty mutual_course.department mutual_course.code %}">{{ mutual_course.code }} {{ mutual_course.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        {% ifnotequal asi_session.user_id profile_user.user_id %}
+            <!--p><a href="#">{{ num_mutual_friends }} mutual friend{{ num_mutual_friends|pluralize }}</a></p>
+            <p><a href="#">{{ num_mutual_courses }} mutual course{{ num_mutual_courses|pluralize }}</a></p-->
+        {% endifnotequal %}
     </div>
     
     <div class="right-col">

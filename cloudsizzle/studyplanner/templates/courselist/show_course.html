@@ -85,9 +85,13 @@
             {% endif %}
     
             {% if friends %}
-            <ul id="friend-list">
+            <ul class="friend-list" id="course-friend-list">
                 {% for friend in friends %}
-                <li><a href="{% url profile friend.user_id %}"><img src="{{ ASI_BASE_URL }}{{ friend.avatar.link.href }}/small_thumbnail" alt="" />{{ friend.username }}</a></li>
+                    <li{% if forloop.counter0|divisibleby:9 %} class="first"{% endif %}>
+                        <a href="{% url profile friend.user_id %}">
+                            <img src="{{ ASI_BASE_URL }}{{ friend.avatar.link.href }}/small_thumbnail" alt="" />{{ friend.username }}
+                        </a>
+                    </li>
                 {% endfor %}
             </ul> <!-- /friend-list -->
             {% endif %}

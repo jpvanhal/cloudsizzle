@@ -388,6 +388,10 @@ table {
 	font-size: 85%;
 }
 
+.rounded-corners table {
+    background-color: #fff;
+}
+
 table, th, td {
     border: none;
 }

@@ -101,8 +101,9 @@ def login_register(request):
     # User loaded page with form
     else:
         print "register view getted"
-        login_form = LoginForm()
         register_form = RegisterForm()
+        
+    login_form = LoginForm()
 
     return render_to_response(
         'frontpage/login-register.html',

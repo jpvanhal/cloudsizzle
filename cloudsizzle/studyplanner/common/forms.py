@@ -112,6 +112,7 @@ class RegisterForm(forms.Form):
     consent = forms.BooleanField(
         label="I give my consent to the research study*",
         required=True,
+        widget=forms.CheckboxInput(attrs={'class':'checkbox'}),
         error_messages={
             'required': 'You must give your consent to research study in '
                         'order to register'

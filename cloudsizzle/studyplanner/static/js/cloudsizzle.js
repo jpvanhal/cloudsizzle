@@ -89,7 +89,7 @@ $(document).ready(function(){
     });
     
     $('table.profile-courses').addClass('tablesorter');
-    $('table.profile-courses').tablesorter({
+    $('table.profile-courses:not(table#planned-courses)').tablesorter({
         widgets: ['zebra']
     });
     

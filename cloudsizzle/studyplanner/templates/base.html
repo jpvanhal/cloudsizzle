@@ -15,9 +15,9 @@
     <div id="wrapper">
         <div id="header">
             <a href="{% url home %}"><img src="{{ MEDIA_URL }}graphics/logo_small.png" alt="" id="logo" /></a>
-
+            <div>
             <p id="username-text">Hello, {{ asi_session.username }}</p>
-
+</div>
             <ul>
                 <li><a href="{% url home %}">Home</a></li>
                 <li><a href="{% url profile %}">Profile</a></li>

@@ -151,9 +151,9 @@ p.errors {
 }
 
 p#username-text {
+    width: 200px;
 	float: right;
 	margin: 3px 216px 0 0;
-	margin-right: 216px;
 	text-align: right;
 	font-size: 85%;
 	font-style: oblique;
@@ -279,9 +279,9 @@ img#profile-picture {
 }
 
 ul#sub-nav {
+    width: auto;
     clear: none;
-	margin-right: 70px;
-    xborder: 1px solid #000;
+	margin-right: 72px;
     float: right;
 }
 
@@ -345,15 +345,15 @@ ul#course-friend-list {
 }
 
 .friend-list li {
+	width: 50px;
 	float: left;
 	margin-right: 15px;
 	margin-bottom: 10px;
-	width: 50px;
 	word-wrap: break-word;
 }
 
 .friend-list li.first {
-    clear: left;
+    clear: both;
 }
 
 .friend-list li.last {
@@ -361,6 +361,7 @@ ul#course-friend-list {
 }
 
 ul#mutual-friends {
+    width: 100%;
     overflow: hidden;
     margin-bottom: 10px;
 }
@@ -549,11 +550,9 @@ label {
 	margin-right: 10px;
 }
 
-form div.checkbox label {
-	width: 200px;
-}
-
-form div.checkbox input {
+form div input.checkbox {
+    width: auto;
+    height: auto;
 	border: none;
 }
 

@@ -46,6 +46,7 @@ from cloudsizzle.asi.client import TimeOutError
 from studyplanner.courselist import utils
 from cloudsizzle.settings import ASI_BASE_URL
 from django.db import IntegrityError
+
 # For injecting error messages to registration form if registration failed
 # This is generally forms internal API.
 from django.forms.util import ErrorList
@@ -385,7 +386,9 @@ def planned_courses(request, user_id):
     for course_entry in coursedb:
         course_code = course_entry.course_code
         try:
-            courses.append(api.course.get_course(course_code))
+            course_info = api.course.get_course(course_code)
+            course_info['friends'] = utils.count_friends_taking_course(user_id, course_code)
+            courses.append(course_info)
         except Exception:
             # Just ignore invalid course codes.
             pass

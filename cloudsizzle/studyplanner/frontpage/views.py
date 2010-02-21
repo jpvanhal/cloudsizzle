@@ -78,7 +78,7 @@ def login_register(request):
             # Django has verified password
             email = register_form.cleaned_data['email']
             # Django has verified that consent is checked
-            
+
             print "Calling api people.create"
             try:
                 api.people.create(username, password, email)
@@ -118,7 +118,7 @@ def login(request):
     if request.method == 'POST':
         print "login view posted"
         login_form = LoginForm(request.POST)
-        
+
         if login_form.is_valid() and request.POST['submit'] == 'Login':
             # Use API to try to login
             # Write results to form if failed
@@ -182,7 +182,7 @@ def home(request):
     notification_num = RecommendedCourse.get_notification_num(user_id=user_id)
     pending_friend_ids = asi_session.get_pending_friend_requests()
     friend_requests_num = len(pending_friend_ids)
-    
+
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
         'feedurl': feedurl,
@@ -199,9 +199,9 @@ def delete_notifications(request):
     course_name = request.POST["plan course"]
     course_code = str(course_name).split('/')[-1]
     RecommendedCourse.delete_course(user_id=user_id, course_code=course_code)
-    
-    if "plan_to_take" in request.POST: 
-        forward_url = request.POST["plan course"]             
+
+    if "plan_to_take" in request.POST:
+        forward_url = request.POST["plan course"]
     elif "ignore" in request.POST:
         forward_url =  reverse("notifications")
     return HttpResponseRedirect(forward_url)
@@ -230,22 +230,22 @@ def profile(request, user_id=None):
         avatar_url = ''
     feedurl = 'frontpage/feeds.html'
     feeds = EventLog.constructor(user_ids=user_id)
-    
+
     # mutual friends
     mutual_friends = []
     mutual_friend_ids = api.people.get_mutual_friends(
                                                 asi_session.user_id, user_id)
     for mutual_friend_id in mutual_friend_ids:
         mutual_friends.append(api.people.get(mutual_friend_id))
-    
+
     # mutual courses
     mutual_courses = []
     mutual_course_ids = utils.mutual_courses(
                                         asi_session.user_id, user_id)
-    
+
     for mutual_course_id in mutual_course_ids:
         mutual_courses.append(api.course.get_course(mutual_course_id))
-    
+
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
         'ASI_BASE_URL': ASI_BASE_URL,
@@ -266,26 +266,34 @@ def profile(request, user_id=None):
 def list_friends(request, user_id):
     asi_session = request.session['asi_session']
 
-    profile_user = api.people.get(user_id)
-    profile_user['user_id'] = user_id
+    try:
+        profile_user = api.people.get(user_id)
+    except api.people.UserDoesNotExist:
+        raise Http404
+
 
     friend_ids = api.people.get_friends(user_id)
     friends = []
 
     for friend_id in friend_ids:
-        friend = api.people.get(friend_id)
-        friend['user_id'] = friend_id
+        try:
+            friend = api.people.get(friend_id)
+            friends.append(friend)
+        except api.people.UserDoesNotExist:
+            # Invalid friend relationship where friend does not exist in ASI
+            pass
 
-        friends.append(friend)
-    
     pending_requests = []
     if asi_session.user_id == user_id:
         pending_friend_ids = asi_session.get_pending_friend_requests()
 
         for id_ in pending_friend_ids:
-            pending = api.people.get(id_)
-            pending['user_id'] = id_
-            pending_requests.append(pending)
+            try:
+                pending = api.people.get(id_)
+                pending_requests.append(pending)
+            except api.people.UserDoesNotExist:
+                # Invalid friend relationship where friend does not exist in ASI
+                pass
 
     template = loader.get_template("frontpage/friends.html")
     context = RequestContext(request, {
@@ -316,12 +324,15 @@ def add_friend(request, user_id):
 def completed_courses(request, user_id):
     template = loader.get_template("frontpage/profile_courses_completed.html")
 
-    asi_session = request.session['asi_session']
-    profile_user = api.people.get(user_id)
+    try:
+        profile_user = api.people.get(user_id)
+    except api.people.UserDoesNotExist:
+        raise Http404
+
     courses = api.people.get_completed_courses(user_id)
 
     context = RequestContext(request, {
-        'asi_session': asi_session,
+        'asi_session': request.session['asi_session'],
         'profile_user': profile_user,
         'courses': courses,
         'template': 'profile_courses_completed',
@@ -332,8 +343,11 @@ def completed_courses(request, user_id):
 
 @check_authentication
 def friends_courses(request, user_id):
-    asi_session = request.session['asi_session']
-    profile_user = api.people.get(user_id)
+    try:
+        profile_user = api.people.get(user_id)
+    except api.people.UserDoesNotExist:
+        raise Http404
+
     courses = utils.courses_taken_by_friends(user_id)
 
     return render_to_response(
@@ -341,7 +355,7 @@ def friends_courses(request, user_id):
         {
             'profile_user': profile_user,
             'courses': courses,
-            'asi_session': asi_session,
+            'asi_session': request.session['asi_session'],
             'template': 'profile_courses_friends',
         },
         context_instance=RequestContext(request))
@@ -423,10 +437,11 @@ def recommendcourse(request, course_code):
     friends = []
 
     for friend_id in friend_ids:
-        friend = api.people.get(friend_id)
-        friend['user_id'] = friend_id
-
-        friends.append(friend)
+        try:
+            friend = api.people.get(friend_id)
+            friends.append(friend)
+        except api.people.UserDoesNotExist:
+            pass
 
     course = api.course.get_course(course_code)
 
@@ -495,8 +510,10 @@ def search(request):
 
         if scope == 'all' or scope == 'users':
             for userid in api.people.search(query):
-                details = api.people.get(userid)
-                details['userid'] = userid
+                try:
+                    details = api.people.get(userid)
+                except api.people.UserDoesNotExist:
+                    continue
                 # Note that is a set, template gets to count them
                 details['mutual_friends'] = api.people.get_mutual_friends(
                                             asi_session.user_id, userid)
@@ -541,19 +558,20 @@ def registrations(request):
 
 def notifications(request):
     asi_session = request.session['asi_session']
-    
+
     asi_session = request.session['asi_session']
     user_id = asi_session.user_id
-    notifications = EventLog.get_notifications(user_id)    
-    
+    notifications = EventLog.get_notifications(user_id)
+
     pending_friend_ids = asi_session.get_pending_friend_requests()
     pending_requests = []
 
     for id_ in pending_friend_ids:
-        pending = api.people.get(id_)
-        pending['user_id'] = id_
-        pending_requests.append(pending)
-
+        try:
+            pending = api.people.get(id_)
+            pending_requests.append(pending)
+        except api.people.UserDoesNotExist:
+            pass
 
     template = loader.get_template("frontpage/notifications.html")
     context = RequestContext(request, {

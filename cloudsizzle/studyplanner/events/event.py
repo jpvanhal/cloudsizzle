@@ -55,9 +55,13 @@ class EventLog:
         notifications = RecommendedCourse.get_all_recommended_courses(user_id)
         for notification in notifications:
             user_id = notification.user_recommending
-            img_scr = ASI_BASE_URL + '/people/' + user_id + '/@avatar'
+            img_scr = ASI_BASE_URL + '/people/' + user_id \
+                    + '/@avatar/small_thumbnail'
             user_scr = reverse('profile', args=[user_id])
-            user_inf = dict(api.people.get(user_id))
+            try:
+                user_inf = api.people.get(user_id)
+            except api.people.UserDoesNotExist:
+                continue
             try:
                 user_name = user_inf['username']
             except (KeyError, TypeError):
@@ -69,8 +73,8 @@ class EventLog:
             result.append(PlanCourseEventLog(img_scr=img_scr,
                 user_name=user_name, user_scr=user_scr, action=action,
                 object_name=object_name, update_time=update_time,
-                object_id=course_code)) 
-        return result 
+                object_id=course_code))
+        return result
 
     @classmethod
     def constructor(cls, user_ids):
@@ -94,7 +98,12 @@ class EventLog:
         img_scr = ASI_BASE_URL + '/people/' + user_id \
                 + '/@avatar/small_thumbnail'
         user_scr = reverse('profile', args=[user_id])
-        user_inf = dict(api.people.get(user_id))
+
+        try:
+            user_inf = api.people.get(user_id)
+        except api.people.UserDoesNotExist:
+            return []
+
         try:
             user_name = user_inf['username']
         except (KeyError, TypeError):
@@ -106,7 +115,7 @@ class EventLog:
         for event in events:
             update_time = event.time
             # plan course event get course name, and department and faculty code
-            if hasattr(event, 'plannedcourse'):    
+            if hasattr(event, 'plannedcourse'):
                 course_code = event.plannedcourse.course_code
                 object_name = course_code
                 action = 'plans to take'
@@ -117,7 +126,10 @@ class EventLog:
             #  new friends event get friend's url and name.
             if hasattr(event, 'newfriendevent'):
                 friend_id = event.newfriendevent.new_friend
-                friend_inf = dict(api.people.get(friend_id))
+                try:
+                    friend_inf = api.people.get(friend_id)
+                except api.people.UserDoesNotExist:
+                    continue
                 try:
                     friend_name = friend_inf['username']
                 except (KeyError, TypeError):

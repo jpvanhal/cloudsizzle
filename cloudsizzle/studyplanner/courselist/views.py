@@ -50,8 +50,11 @@ def list_departments(request, faculty):
     departments = api.course.get_departments_by_faculty(faculty['code'])
 
     return render_to_response('courselist/list_departments.html',
-        {'asi_session': request.session['asi_session'],
-        'faculty': faculty, 'departments': departments},
+        {
+            'asi_session': request.session['asi_session'],
+            'faculty': faculty,
+            'departments': departments
+        },
         context_instance=RequestContext(request))
 
 
@@ -67,11 +70,11 @@ def list_courses(request, faculty, department):
         course['friendcount'] = utils.count_friends_taking_course(
                                     asi_session.user_id, course['code'])
 
-    return render_to_response('courselist/list_courses.html', 
+    return render_to_response('courselist/list_courses.html',
         {
             'asi_session': asi_session,
-            'faculty': faculty, 
-            'department': department, 
+            'faculty': faculty,
+            'department': department,
             'courses': courses
         },
         context_instance=RequestContext(request))
@@ -96,9 +99,12 @@ def show_course(request, faculty, department, course):
     fids = utils.friends_taking_course(uid, course['code'])
     friends = []
     for fid in fids:
-        friend = api.people.get(fid)
-        friend['user_id'] = fid
-        friends.append(friend)
+        try:
+            friend = api.people.get(fid)
+            friends.append(friend)
+        except api.people.UserDoesNotExist:
+            # Invalid friend relationship where friend does not exist in ASI
+            pass
 
     print friends
 
@@ -106,11 +112,11 @@ def show_course(request, faculty, department, course):
         {
             'ASI_BASE_URL': ASI_BASE_URL,
             'asi_session': request.session['asi_session'],
-            'faculty': faculty, 
-            'department': department, 
+            'faculty': faculty,
+            'department': department,
             'course': course,
-            'isplanned': isplanned, 
-            'friends': friends, 
+            'isplanned': isplanned,
+            'friends': friends,
             'iscompleted': iscompleted
         },
         context_instance=RequestContext(request))

@@ -335,6 +335,15 @@ def add_friend(request, user_id):
 
 
 @check_authentication
+def remove_friend(request, user_id):
+    session = request.session['asi_session']
+    own_id = session.user_id
+    session.remove_friend(user_id)
+    # No event for this is defined
+    return HttpResponseRedirect(reverse("friends", args=[own_id]))
+
+
+@check_authentication
 def completed_courses(request, user_id):
     template = loader.get_template("frontpage/profile_courses_completed.html")
 

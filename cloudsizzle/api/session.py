@@ -79,11 +79,11 @@ class Session(object):
         friend_id -- The user id of the friend being broken up with.
 
         """
-        service = get_service('RemoveFriendsRequest')
+        service = get_service('RemoveFriends')
         result = service.request(user_id=self.user_id, friend_id=friend_id)
         try:
             return result['result']
-        except KeyError:
+        except TypeError:
             return None
 
     def get_pending_friend_requests(self):

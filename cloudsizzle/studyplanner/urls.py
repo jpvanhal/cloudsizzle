@@ -61,6 +61,12 @@ urlpatterns = patterns('',
         'studyplanner.frontpage.views.add_friend',
         name='addfriend'
     ),
+    
+    url(
+        r'^profile/remove_friend/(?P<user_id>[a-zA-Z0-9-_]+)/$',
+        'studyplanner.frontpage.views.remove_friend',
+        name='removefriend'
+    ),
 
     url(
         r'^profile/(?P<user_id>[a-zA-Z0-9-_]+)/courses/completed/$',

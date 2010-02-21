@@ -17,7 +17,7 @@
             <div class="friend{% if forloop.last %} last{% endif %}">
                 
                 {% ifequal asi_session.user_id profile_user.user_id %}
-                    <form method="post" action="#">
+                    <form method="post" action="{% url removefriend friend.user_id %}">
                         <div>
                             <input name="friend_id" value="{{ friend.user_id }}" type="hidden" />
                             <input name="remove" value="Remove" class="button" type="submit" />

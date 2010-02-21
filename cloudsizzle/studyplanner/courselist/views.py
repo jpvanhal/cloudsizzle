@@ -25,6 +25,7 @@
 
 """Views for browsing through available courses."""
 
+from django.http import Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from studyplanner.common.planner_session import check_authentication
@@ -38,16 +39,21 @@ import api
 def list_faculties(request):
     faculties = api.course.get_faculties()
     return render_to_response('courselist/list_faculties.html',
-        {'asi_session': request.session['asi_session'],
-        'faculties': faculties},
+        {
+            'asi_session': request.session['asi_session'],
+            'faculties': faculties
+        },
         context_instance=RequestContext(request))
 
 
 @check_authentication
 def list_departments(request, faculty):
-    # Faculty is needed for breadcrumbs
-    faculty = api.course.get_faculty_info(faculty)
-    departments = api.course.get_departments_by_faculty(faculty['code'])
+    try:
+        # Faculty is needed for breadcrumbs
+        faculty = api.course.get_faculty_info(faculty)
+        departments = api.course.get_departments_by_faculty(faculty['code'])
+    except Exception:
+        raise Http404
 
     return render_to_response('courselist/list_departments.html',
         {
@@ -60,9 +66,12 @@ def list_departments(request, faculty):
 
 @check_authentication
 def list_courses(request, faculty, department):
-    # Faculty & department information is needed for breadcrumbs
-    faculty = api.course.get_faculty_info(faculty)
-    department = api.course.get_department_info(department)
+    try:
+        # Faculty & department information is needed for breadcrumbs
+        faculty = api.course.get_faculty_info(faculty)
+        department = api.course.get_department_info(department)
+    except Exception:
+        raise Http404
     courses = api.course.get_courses_by_department(department['code'])
     asi_session = request.session['asi_session']
 
@@ -82,11 +91,13 @@ def list_courses(request, faculty, department):
 
 @check_authentication
 def show_course(request, faculty, department, course):
-    # Faculty & department for breadcrumbs
-    faculty = api.course.get_faculty_info(faculty)
-    department = api.course.get_department_info(department)
-
-    course = api.course.get_course(course)
+    try:
+        # Faculty & department for breadcrumbs
+        faculty = api.course.get_faculty_info(faculty)
+        department = api.course.get_department_info(department)
+        course = api.course.get_course(course)
+    except Exception:
+        raise Http404
 
     asi_session = request.session['asi_session']
     uid = asi_session.user_id

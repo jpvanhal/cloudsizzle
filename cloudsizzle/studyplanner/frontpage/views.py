@@ -244,7 +244,11 @@ def profile(request, user_id=None):
                                         asi_session.user_id, user_id)
 
     for mutual_course_id in mutual_course_ids:
-        mutual_courses.append(api.course.get_course(mutual_course_id))
+        try:
+            mutual_courses.append(api.course.get_course(mutual_course_id))
+        except Exception:
+            # Just ignore invalid course codes
+            pass
 
     context = RequestContext(request, {
         'asi_session': request.session['asi_session'],
@@ -373,7 +377,11 @@ def planned_courses(request, user_id):
 
     for course_entry in coursedb:
         course_code = course_entry.course_code
-        courses.append(api.course.get_course(course_code))
+        try:
+            courses.append(api.course.get_course(course_code))
+        except Exception:
+            # Just ignore invalid course codes.
+            pass
 
     template = loader.get_template("frontpage/profile_courses_planned.html")
     context = RequestContext(request, {
@@ -443,7 +451,10 @@ def recommendcourse(request, course_code):
         except api.people.UserDoesNotExist:
             pass
 
-    course = api.course.get_course(course_code)
+    try:
+        course = api.course.get_course(course_code)
+    except Exception:
+        raise Http404
 
     template = loader.get_template("frontpage/recommend_course.html")
     context = RequestContext(request, {
@@ -522,7 +533,11 @@ def search(request):
                 userresults.append(details)
         if scope == 'all' or scope == 'courses':
             for coursecode in api.course.search(query):
-                details = api.course.get_course(coursecode)
+                try:
+                    details = api.course.get_course(coursecode)
+                except Exception:
+                    # Just ignore invalid course codes.
+                    continue
                 details['friendcount'] = utils. \
                     count_friends_taking_course(asi_session.user_id, coursecode)
                 courseresults.append(details)

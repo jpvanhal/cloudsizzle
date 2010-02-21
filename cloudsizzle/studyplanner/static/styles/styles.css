@@ -651,6 +651,7 @@ form#privacy label {
 
 .notification-item form {
 	float: left;
+    margin-top: 5px;
 }
 
 .notification-item form input {

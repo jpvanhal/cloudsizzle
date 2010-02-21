@@ -109,12 +109,12 @@
                     <tbody>
                         {% for result in userresults %}
                             <tr>
-                                <td><a href="{% url profile result.userid %}"><img src="{{ ASI_BASE_URL }}{{ result.avatar.link.href }}/small_thumbnail" alt="" /></a></td>
-                                <td><a href="{% url profile result.userid %}">{{ result.username }}</a></td>
+                                <td><a href="{% url profile result.user_id %}"><img src="{{ ASI_BASE_URL }}{{ result.avatar.link.href }}/small_thumbnail" alt="" /></a></td>
+                                <td><a href="{% url profile result.user_id %}">{{ result.username }}</a></td>
                                 <td>{{ result.mutual_friends|length }}</td>
                                 <td>{{ result.mutual_courses|length }}</td>
                                 <td>
-                                    <form method="post" action="{% url addfriend result.userid %}">
+                                    <form method="post" action="{% url addfriend result.user_id %}">
                                         <div>
                                             <input type="submit" name="add_friend" value="Add friend" class="button" />
                                         </div>

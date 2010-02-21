@@ -151,7 +151,7 @@ $(document).ready(function(){
         });
     });
     
-    $('#recommend-friend-list form div').click(function () {
+    $('#recommend-friend-list form div:not(div.button)').click(function () {
         
         if (!$(this).children('input[type=checkbox]').attr('checked')) {
             $(this).children('input[type=checkbox]').attr('checked', true);

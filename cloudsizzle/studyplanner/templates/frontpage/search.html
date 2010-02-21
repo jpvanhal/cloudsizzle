@@ -115,6 +115,7 @@
                                 <td><a href="{% url profile result.user_id %}">{{ result.username }}</a></td>
                                 <td>{{ result.mutual_friends|length }}</td>
                                 <td>{{ result.mutual_courses|length }}</td>
+                                {% ifnotequal asi_session.user_id result.user_id %}
                                 <td>
                                     <form method="post" action="{% url addfriend result.user_id %}">
                                         <div>
@@ -122,6 +123,7 @@
                                         </div>
                                     </form>
                                 </td>
+                                {% endifnotequal %}
                             </tr>
                         {% endfor %}
                     </tbody>

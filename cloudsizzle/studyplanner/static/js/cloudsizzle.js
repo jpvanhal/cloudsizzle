@@ -135,4 +135,32 @@ $(document).ready(function(){
 
         return false;
     });
+    
+    $('#recommend-friend-list form input[type=checkbox]').hide();
+    
+    $('#recommend-friend-list form input[type=checkbox]:checked').each(function () {
+        $(this).parent('div').css('border', '2px solid #0252C0');
+        $(this).parent('div').css('background-color', '#e8eafe');
+        $(this).parent('div').css('margin-right', '6px');
+        $(this).parent('div').css('margin-bottom', '11px');
+    });
+    
+    $('#recommend-friend-list form div').click(function () {
+        
+        if (!$(this).children('input[type=checkbox]').attr('checked')) {
+            $(this).children('input[type=checkbox]').attr('checked', true);
+            $(this).css('border', '2px solid #0252C0');
+            $(this).css('background-color', '#e8eafe');
+            $(this).css('margin-right', '6px');
+            $(this).css('margin-bottom', '11px');
+        } else {
+            $(this).children('input[type=checkbox]').attr('checked', false);
+            $(this).css('border', 'none');
+            $(this).css('background-color', '#fff');
+            $(this).css('margin-right', '10px');
+            $(this).css('margin-bottom', '15px');
+        }
+        
+        return false;
+    });
 });

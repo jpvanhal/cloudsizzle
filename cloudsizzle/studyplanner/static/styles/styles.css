@@ -232,7 +232,6 @@ ul.friend-list li img {
 }
 
 #recommend-friend-list label img {
-	margin-right: 5px;
 	display: block;
 }
 
@@ -563,14 +562,17 @@ form div.checkbox input {
 	width: 50px;
 	word-wrap: break-word;
 	text-align: left;
+    margin-right: 0;
 }
 
 #recommend-friend-list form div {
-	text-align: left;
+    width: 50px;
 	float: left;
 	clear: none;
 	margin-right: 10px;
 	margin-bottom: 15px;
+    padding: 5px;
+	text-align: left;
 }
 
 #recommend-friend-list form div.first {
@@ -584,6 +586,7 @@ form div.checkbox input {
 }
 
 #recommend-friend-list div.button {
+    width: auto;
 	clear: both;
 }
 

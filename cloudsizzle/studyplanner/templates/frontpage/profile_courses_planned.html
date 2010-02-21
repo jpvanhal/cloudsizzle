@@ -4,7 +4,8 @@
 
 {% block profile-courses-content %}
     <h2>Planned courses</h2>
-    
+
+    {% if planned_courses %}
     <table class="profile-courses" id="planned-courses">
         <thead>
             <tr>
@@ -44,4 +45,7 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <p>No planned courses.</p>
+    {% endif %}
 {% endblock profile-courses-content %}

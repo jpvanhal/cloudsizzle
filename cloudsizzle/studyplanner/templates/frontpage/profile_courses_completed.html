@@ -4,7 +4,8 @@
 
 {% block profile-courses-content %}
     <h2>Completed studies</h2>
-    
+
+    {% if courses %}
     <table class="profile-courses">
         <thead>
             <tr>
@@ -27,5 +28,8 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <p>No completed studies.</p>
+    {% endif %}
 
 {% endblock profile-courses-content %}

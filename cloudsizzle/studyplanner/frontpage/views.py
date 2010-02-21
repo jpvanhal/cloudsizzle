@@ -83,8 +83,8 @@ def login_register(request):
             print "Calling api people.create"
             try:
                 api.people.create(username, password, email)
-            except ValueError:
-                register_form._errors['username'] = ErrorList([message])
+            except ValueError as error:
+                register_form._errors['username'] = ErrorList(error.args)
                 # And fall down to render_to_response
             else:
                 try:
@@ -102,7 +102,7 @@ def login_register(request):
     else:
         print "register view getted"
         register_form = RegisterForm()
-        
+
     login_form = LoginForm()
 
     return render_to_response(
@@ -296,9 +296,9 @@ def list_friends(request, user_id):
     if asi_session.user_id == user_id:
         pending_friend_ids = asi_session.get_pending_friend_requests()
 
-        for id_ in pending_friend_ids:
+        for friend_id in pending_friend_ids:
             try:
-                pending = api.people.get(id_)
+                pending = api.people.get(friend_id)
                 pending['num_mutual_friends'] = len(api.people.get_mutual_friends(
                                                     asi_session.user_id, friend_id))
                 pending['num_mutual_courses'] = len(utils.mutual_courses(
@@ -526,7 +526,6 @@ def search(request):
     if searchform.is_valid():
         query = searchform.cleaned_data['query']
         scope = searchform.cleaned_data['scope']
-        session = request.session['asi_session']
         userresults = []
         courseresults = []
 

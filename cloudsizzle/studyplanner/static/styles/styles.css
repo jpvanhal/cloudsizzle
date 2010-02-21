@@ -588,7 +588,7 @@ form div input.checkbox {
 }
 
 #recommend-friend-list div.button {
-    width: auto;
+    width: 200px;
 	clear: both;
 }
 
